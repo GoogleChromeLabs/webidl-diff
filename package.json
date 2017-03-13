@@ -18,7 +18,6 @@
     "www"
   ],
   "author": "Mark Dittmer",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/GoogleChrome/webidl-diff/issues"
   },
