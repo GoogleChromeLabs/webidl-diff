@@ -1,0 +1,36 @@
+{
+  "name": "webidl-diff",
+  "version": "0.0.1",
+  "description": "A web service for inspecting differences between Web IDL fragments published in web standards documents and browser vendor source code repositories.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoogleChrome/webidl-diff.git"
+  },
+  "keywords": [
+    "web",
+    "idl",
+    "diff",
+    "browser",
+    "interoperability",
+    "www"
+  ],
+  "author": "Mark Dittmer",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/GoogleChrome/webidl-diff/issues"
+  },
+  "homepage": "https://github.com/GoogleChrome/webidl-diff#readme",
+  "dependencies": {
+    "foam2": "git://github.com/foam-framework/foam2.git",
+    "webidl2-js": "git://github.com/mdittmer/webidl2-js.git"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-jasmine": "^1.1.0"
+  }
+}
