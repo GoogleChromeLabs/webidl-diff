@@ -3,12 +3,19 @@
 // found in the LICENSE file.
 'use strict';
 
-// Run all tests in Karma.
+const execSync = require('child_process').execSync;
+
+const FOAM_DIR = `${__dirname}/../node_modules/foam2-experimental`;
+
+// Outputs ../node_modules/foam2-experimental/foam-bin.js
+execSync(`node ${FOAM_DIR}/tools/build.js web`);
 
 const basePath = `${__dirname}/../test`;
-const deps = [];
+const deps = [
+  `${FOAM_DIR}/foam-bin.js`,
+];
 const entries = [
-  '../main/*.js',
+  '../lib/**/*.js',
 ];
 const helpers = [
   'any/**/*-helper*.js',
@@ -23,11 +30,6 @@ const integrations = [
   'browser/**/*-integration*.js',
 ];
 const reporters = ['progress'];
-const preprocessors = entries.reduce((acc, key) => {
-  acc[key] = ['webpack'];
-  return acc;
-}, {});
-
 function configurator(config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -44,10 +46,6 @@ function configurator(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters,
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors,
 
     // web server port
     port: 9876,
@@ -77,7 +75,7 @@ function configurator(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
   });
-};
+}
 
 configurator.deps = deps;
 configurator.entries = entries;

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A web service for inspecting differences between Web IDL fragments published in web standards documents and browser vendor source code repositories.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "testNode": "JASMINE_CONFIG_PATH=./config/jasmine.json jasmine"
   },
   "repository": {
     "type": "git",
