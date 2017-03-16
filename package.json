@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "description": "A web service for inspecting differences between Web IDL fragments published in web standards documents and browser vendor source code repositories.",
   "scripts": {
+    "coverage": "karma start ./config/karma.coverage.conf.js",
+    "coverageNode": "JASMINE_CONFIG_PATH=./config/jasmine.json istanbul cover --dir .node_coverage -- jasmine",
+    "test": "karma start ./config/karma.all.conf.js",
+    "testDev": "karma start ./config/karma.dev.conf.js",
+    "testIntegration": "karma start ./config/karma.integration.conf.js",
     "testNode": "JASMINE_CONFIG_PATH=./config/jasmine.json jasmine"
   },
   "repository": {
@@ -24,12 +29,15 @@
   "homepage": "https://github.com/GoogleChrome/webidl-diff#readme",
   "dependencies": {
     "foam2": "git://github.com/foam-framework/foam2.git",
+    "istanbul": "^0.4.5",
     "webidl2-js": "git://github.com/mdittmer/webidl2-js.git"
   },
   "devDependencies": {
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0"
   }
 }

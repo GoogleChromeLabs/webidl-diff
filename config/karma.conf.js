@@ -3,20 +3,22 @@
 // found in the LICENSE file.
 'use strict';
 
+require('./files.js');
+
 const execSync = require('child_process').execSync;
 
-const FOAM_DIR = `${__dirname}/../node_modules/foam2-experimental`;
+const ROOT_DIR = `${__dirname}/..`;
+const FOAM_DIR = `${ROOT_DIR}/node_modules/foam2`;
 
 // Outputs ../node_modules/foam2-experimental/foam-bin.js
 execSync(`node ${FOAM_DIR}/tools/build.js web`);
 
-const basePath = `${__dirname}/../test`;
+const basePath = `${ROOT_DIR}/test`;
 const deps = [
   `${FOAM_DIR}/foam-bin.js`,
 ];
-const entries = [
-  '../lib/**/*.js',
-];
+const entries = global.WEB_IDL_DIFF_FILES.slice()
+    .map(path => `${ROOT_DIR}/${path}`);
 const helpers = [
   'any/**/*-helper*.js',
   'browser/**/*-helper*.js',
@@ -77,6 +79,8 @@ function configurator(config) {
   });
 }
 
+configurator.ROOT_DIR = ROOT_DIR;
+configurator.FOAM_DIR = FOAM_DIR;
 configurator.deps = deps;
 configurator.entries = entries;
 configurator.helpers = helpers;
