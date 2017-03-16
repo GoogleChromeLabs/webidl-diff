@@ -1,1 +1,3 @@
 node_modules
+.web_coverage
+.node_coverage
