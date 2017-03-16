@@ -7,15 +7,21 @@ describe('Comparing parses', function() {
   var Outputer;
   var Parser;
 
-  beforeEach(function(done) {
-    var X = foam.__context__;
-    Promise.all([
-      X.arequire('org.chromium.webidl.Parser')
-          .then(function(P) { Parser = P; }),
-      X.arequire('org.chromium.webidl.Outputer')
-          .then(function(O) { Outputer = O; })
-    ]).then(function() { done(); });
+  // TODO(markdittmer): Use FOAM ClassLoader instead after
+  // https://github.com/foam-framework/foam2/issues/262 is resolved.
+  beforeEach(function() {
+    Parser = org.chromium.webidl.Parser;
+    Outputer = org.chromium.webidl.Outputer;
   });
+  // beforeEach(function(done) {
+  //   var X = foam.__context__;
+  //   Promise.all([
+  //     X.arequire('org.chromium.webidl.Parser')
+  //         .then(function(P) { Parser = P; }),
+  //     X.arequire('org.chromium.webidl.Outputer')
+  //         .then(function(O) { Outputer = O; })
+  //   ]).then(function() { done(); });
+  // });
 
   function cmpTest(input, name) {
     var firstParseValue = Parser.create().parseString(input).value;
