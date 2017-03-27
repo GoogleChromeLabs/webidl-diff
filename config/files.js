@@ -87,5 +87,10 @@
 
     // Web IDL parser
     `lib${sep}org${sep}chromium${sep}webidl${sep}Parser.js`,
+
+    // Gitiles crawler
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesRequestType.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesRequest.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesCrawler.js`,
   ];
 })();

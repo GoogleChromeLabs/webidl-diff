@@ -20,6 +20,7 @@ const deps = [
 const entries = global.WEB_IDL_DIFF_FILES.slice()
     .map(path => `${ROOT_DIR}/${path}`);
 const helpers = [
+  '../node_modules/foam2/test/helpers/testcontext.js',
   'any/**/*-helper*.js',
   'browser/**/*-helper*.js',
 ];
