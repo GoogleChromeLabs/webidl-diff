@@ -87,5 +87,13 @@
 
     // Web IDL parser
     `lib${sep}org${sep}chromium${sep}webidl${sep}Parser.js`,
+
+    // IDL file stuff.
+    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}GitilesIDLFile.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}GithubIDLFile.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}BlinkIDLFileDAO.js`,
   ];
 })();
