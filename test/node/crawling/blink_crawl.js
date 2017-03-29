@@ -16,7 +16,7 @@ describe('Blink crawl', function() {
         foam.lookup('org.chromium.webidl.crawlers.GitilesRequestType');
 
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000000;
   });
 
   afterEach(function() {

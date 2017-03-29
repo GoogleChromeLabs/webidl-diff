@@ -91,6 +91,9 @@
     // Gitiles crawler
     `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesRequestType.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesRequest.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}RetryDecorator.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}RateLimiter.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}RateLimitDecorator.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesRequestBuilder.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}crawlers${sep}GitilesCrawler.js`,
   ];
