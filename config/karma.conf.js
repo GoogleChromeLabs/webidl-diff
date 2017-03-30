@@ -16,6 +16,8 @@ execSync(`node ${FOAM_DIR}/tools/build.js web`);
 const basePath = `${ROOT_DIR}/test`;
 const deps = [
   `${FOAM_DIR}/foam-bin.js`,
+  `${FOAM_DIR}/test/helpers/generic_dao.js`,
+  `${FOAM_DIR}/test/helpers/testcontext.js`,
 ];
 const entries = global.WEB_IDL_DIFF_FILES.slice()
     .map(path => `${ROOT_DIR}/${path}`);
