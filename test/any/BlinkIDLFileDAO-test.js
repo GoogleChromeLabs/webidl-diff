@@ -23,9 +23,4 @@ describe('BlinkIDLFileDAO', function() {
       done();
     });
   });
-
-  it('should be ready to use after a 1s delay when mocking network responses', function(done) {
-    var dao = BlinkIDLFileDAO.create();
-    setTimeout(function() { dao.select().then(done, fail); }, 1000);
-  });
 });
