@@ -9,6 +9,7 @@ describe('IDLFileContents', function() {
   var blinkFilesDAO;
   var blinkFiles;
   var blinkFileContentsDAO;
+  var fromBaseFileBind;
 
   // NOTE: Tests in this file must not be FOAM context-sensitive because shared
   // test data are created once in beforeAll(), and each test will run in its
@@ -22,17 +23,23 @@ describe('IDLFileContents', function() {
     blinkFileContentsDAO = foam.lookup('foam.dao.MDAO').create({
       of: IDLFileContents
     });
+
+    // Use empty IDLFileContents as library for access to contextualized
+    // fromBaseFile().
+    var idlFileContents = IDLFileContents.create();
+    fromBaseFileBind = function(baseFile) {
+      return idlFileContents.fromBaseFile.bind(idlFileContents, baseFile);
+    };
   });
 
   it('should load Blink web platform IDL files', function(done) {
     blinkFiles.then(function(sink) {
-      var fileContentsAsLib = IDLFileContents.create();
-      var loadFile = fileContentsAsLib.fromBaseFile.bind(fileContentsAsLib);
 
       var array = sink.a;
       var promises = new Array(array.length);
       for (var i = 0; i < array.length; i++) {
-        array[i].fetch().then(loadFile);
+        var idlFile = array[i];
+        promises[i] = idlFile.fetch().then(fromBaseFileBind(idlFile));
       }
       Promise.all(promises).then(function(loadedFiles) {
         expect(array.length).toBe(loadedFiles.length);
