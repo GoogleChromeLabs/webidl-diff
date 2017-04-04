@@ -95,5 +95,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}BlinkIDLFileDAO.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}PlatformBlinkIDLFileDAO.js`,
   ];
 })();
