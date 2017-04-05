@@ -14,20 +14,20 @@ set -ev
 
 GIT="/usr/bin/git"
 
-DIR="$1"
-URL="$2"
-SPARSE_PATH="$3"
+DIR="${1}"
+URL="${2}"
+SPARSE_PATH="${3}"
 
 echo "::"
-echo ":: Cloning \"$SPARSE_PATH\" from \"$URL\" into \"$DIR\""
+echo ":: Cloning \"${SPARSE_PATH}\" from \"${URL}\" into \"${DIR}\""
 echo "::"
 
-rm -rf "$DIR"
-mkdir -p "$DIR"
-pushd "$DIR"
-"$GIT" init
-"$GIT" remote add origin "$URL"
-"$GIT" config core.sparseCheckout true
-echo "$SPARSE_PATH" >> .git/info/sparse-checkout
-"$GIT" pull --depth=1 origin master
-popd
+rm -rf "${DIR}"
+mkdir -p "${DIR}"
+pushd "${DIR}" > /dev/null
+"${GIT}" init
+"${GIT}" remote add origin "${URL}"
+"${GIT}" config core.sparseCheckout true
+echo "${SPARSE_PATH}" >> .git/info/sparse-checkout
+"${GIT}" pull --depth=1 origin master
+popd > /dev/null
