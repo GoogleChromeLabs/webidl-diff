@@ -8,6 +8,7 @@
     "test": "karma start ./config/karma.all.conf.js",
     "testDev": "karma start ./config/karma.dev.conf.js",
     "testIntegration": "karma start ./config/karma.integration.conf.js",
+    "testManual": "JASMINE_CONFIG_PATH=./config/jasmine_manual.json jasmine",
     "testNode": "JASMINE_CONFIG_PATH=./config/jasmine.json jasmine"
   },
   "repository": {

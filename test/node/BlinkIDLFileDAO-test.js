@@ -3,24 +3,21 @@
 // found in the LICENSE file.
 'use strict';
 
-describe('BlinkIDLFileDAO', function() {
-  var testCtx;
+describe('BlinkIDLFileDAO test', function() {
   var BlinkIDLFileDAO;
   var InternalException;
 
   beforeEach(function() {
-    testCtx = foam.__context__.createSubContext({});
-    global.fakeHTTPRoutes(testCtx);
-
-    BlinkIDLFileDAO = testCtx.lookup('org.chromium.webidl.BlinkIDLFileDAO');
-    InternalException = testCtx.lookup('foam.dao.InternalException');
+    BlinkIDLFileDAO = foam.lookup('org.chromium.webidl.BlinkIDLFileDAO');
+    InternalException = foam.lookup('foam.dao.InternalException');
   });
 
   it('should throw internal exception on use-synchronously after instantiation', function(done) {
     // Promise resolve = fail; promise reject = done.
-    BlinkIDLFileDAO.create().select().then(fail, function(error) {
+    BlinkIDLFileDAO.create().select().then(done.fail, function(error) {
       expect(InternalException.isInstance(error)).toBe(true);
       done();
     });
   });
 });
+2

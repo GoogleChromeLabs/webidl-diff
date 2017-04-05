@@ -90,6 +90,7 @@
 
     // IDL file stuff
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}GitilesIDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}GithubIDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
