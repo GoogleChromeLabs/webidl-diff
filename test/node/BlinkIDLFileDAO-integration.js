@@ -13,6 +13,8 @@ describe('BlinkIDLFileDAO integration', function() {
   beforeAll(function() {
     localRepositoryPath =
         require('path').resolve(__dirname, '../data/blink/git');
+    require('child_process').execSync(
+        `/usr/bin/git init "${localRepositoryPath}"`);
   });
 
   beforeEach(function() {
