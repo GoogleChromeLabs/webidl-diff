@@ -18,6 +18,11 @@ describe('BlinkIDLFileDAO manual', function() {
         require('path').resolve(__dirname, '../data/blink/manual_git');
   });
 
+  afterAll(function() {
+    // Must not be in place after tests complete.
+    execSync(`/bin/rm -rf ${localRepositoryPath}`);
+  });
+
   beforeEach(function() {
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     StoreAndForwardDAO = foam.lookup('org.chromium.webidl.StoreAndForwardDAO');
@@ -25,10 +30,12 @@ describe('BlinkIDLFileDAO manual', function() {
 
     originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000000;
+
+    // Must not be in place before each test (including first).
+    execSync(`/bin/rm -rf ${localRepositoryPath}`);
   });
 
   afterEach(function() {
-    execSync(`/bin/rm -rf ${localRepositoryPath}`);
     jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
   });
 
