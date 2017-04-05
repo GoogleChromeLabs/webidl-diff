@@ -4,6 +4,8 @@
 'use strict';
 
 describe('BlinkIDLFileDAO integration', function() {
+  var execSync = require('child_process').execSync;
+
   var IDLFileContents;
   var StoreAndForwardDAO;
   var BlinkIDLFileDAO;
@@ -13,8 +15,11 @@ describe('BlinkIDLFileDAO integration', function() {
   beforeAll(function() {
     localRepositoryPath =
         require('path').resolve(__dirname, '../data/blink/git');
-    require('child_process').execSync(
-        `/usr/bin/git init "${localRepositoryPath}"`);
+
+    var opts = {cwd: localRepositoryPath};
+    execSync('/usr/bin/git init', opts);
+    execSync("/usr/bin/git add $(/usr/bin/find . | /bin/grep '[.]idl$')", opts);
+    execSync('/usr/bin/git commit -m "Test commit"', opts);
   });
 
   beforeEach(function() {
