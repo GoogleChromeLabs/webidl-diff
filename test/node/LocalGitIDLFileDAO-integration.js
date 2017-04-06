@@ -3,18 +3,19 @@
 // found in the LICENSE file.
 'use strict';
 
-describe('BlinkIDLFileDAO integration', function() {
+describe('LocalGitIDLFileDAO integration', function() {
   var execSync = require('child_process').execSync;
 
+  var IDLFile;
   var IDLFileContents;
   var StoreAndForwardDAO;
-  var BlinkIDLFileDAO;
+  var LocalGitIDLFileDAO;
   var localRepositoryPath;
-  var includePaths;
+  var gitilesBaseURL;
 
   beforeAll(function() {
     localRepositoryPath =
-        require('path').resolve(__dirname, '../data/blink/git');
+        require('path').resolve(__dirname, '../data/git');
 
     var opts = {cwd: localRepositoryPath};
     execSync('/usr/bin/git init', opts);
@@ -30,21 +31,35 @@ describe('BlinkIDLFileDAO integration', function() {
   });
 
   beforeEach(function() {
+    IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     StoreAndForwardDAO = foam.lookup('org.chromium.webidl.StoreAndForwardDAO');
-    BlinkIDLFileDAO = foam.lookup('org.chromium.webidl.BlinkIDLFileDAO');
+    LocalGitIDLFileDAO = foam.lookup('org.chromium.webidl.LocalGitIDLFileDAO');
   });
 
   it('should yield mock included files from select() when composed with store-and-forward DAO', function(done) {
     StoreAndForwardDAO.create({
       of: IDLFileContents,
-      delegate: BlinkIDLFileDAO.create({
+      delegate: LocalGitIDLFileDAO.create({
+        repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
+        sparsePath: 'third_party/WebKit/Source',
         localRepositoryPath: localRepositoryPath,
+        findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
+        idlFileContentsFactory: function(path, contents) {
+          return IDLFileContents.create({
+            metadata: IDLFile.create({
+              repository: this.respositoryURL,
+              revision: this.commit,
+              path: path,
+            }),
+            contents: contents,
+          });
+        },
       }),
     }).orderBy(IDLFileContents.ID).select().then(
         function(sink) {
           var actualFileContents = sink.a;
-          var expectedPaths = global.testGitRepoData.blink.includePaths;
+          var expectedPaths = global.testGitRepoData.includePaths;
           expect(actualFileContents.length).toBe(expectedPaths.length);
           for (var i = 0; i < actualFileContents.length; i++) {
             var actualPath = actualFileContents[i].metadata.path;

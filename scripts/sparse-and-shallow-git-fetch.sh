@@ -27,7 +27,9 @@ mkdir -p "${DIR}"
 pushd "${DIR}" > /dev/null
 "${GIT}" init
 "${GIT}" remote add origin "${URL}"
-"${GIT}" config core.sparseCheckout true
-echo "${SPARSE_PATH}" >> .git/info/sparse-checkout
+if [ "${SPARSE_PATH}" != "" ]; then
+  "${GIT}" config core.sparseCheckout true
+  echo "${SPARSE_PATH}" >> .git/info/sparse-checkout
+fi
 "${GIT}" pull --depth=1 origin master
 popd > /dev/null

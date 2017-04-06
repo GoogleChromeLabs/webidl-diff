@@ -6,10 +6,8 @@
 // Expose data used for expectations regarding repos in test/data/<engine>/git.
 
 global.testGitRepoData = {
-  blink: {
-    includePaths: [
-      'third_party/WebKit/Source/include.idl',
-      'third_party/WebKit/Source/subdir/include.idl',
-    ],
-  },
+  includePaths: [
+    'third_party/WebKit/Source/include.idl',
+    'third_party/WebKit/Source/subdir/include.idl',
+  ],
 };
