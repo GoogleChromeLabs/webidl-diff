@@ -65,7 +65,7 @@ function configurator(config) {
     // start these browsers
     // available browser launchers:
     // https://npmjs.org/browse/keyword/karma-launcher
-    // If run in travisCI, use firefox, otherwise, use Chrome.
+    // If run in Travise CI, use firefox, otherwise use Chrome.
     browsers: process.env.TRAVIS ? ['Firefox'] : ['Chrome'],
 
     // Continuous Integration mode
@@ -79,6 +79,9 @@ function configurator(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity,
+
+    // Prevent Travis CI from killing Karma before it's done.
+    browserNoActivityTimeout: 150000,
   });
 }
 
