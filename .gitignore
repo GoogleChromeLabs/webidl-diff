@@ -1,4 +1,4 @@
-node_modules
-coverage
-.web_coverage
+.coverage
 .node_coverage
+.web_coverage
+node_modules
