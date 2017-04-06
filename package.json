@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "A web service for inspecting differences between Web IDL fragments published in web standards documents and browser vendor source code repositories.",
   "scripts": {
-    "coverage": "karma start ./config/karma.coverage.conf.js",
+    "coverage": "JASMINE_CONFIG_PATH=./config/jasmine.json istanbul cover -- ./scripts/all-tests.js",
     "coverageNode": "JASMINE_CONFIG_PATH=./config/jasmine.json istanbul cover --dir .node_coverage -- jasmine",
+    "coverageWeb": "karma start ./config/karma.coverage.conf.js",
     "test": "karma start ./config/karma.all.conf.js",
     "testDev": "karma start ./config/karma.dev.conf.js",
     "testIntegration": "karma start ./config/karma.integration.conf.js",
@@ -34,11 +35,14 @@
     "webidl2-js": "git://github.com/mdittmer/webidl2-js.git"
   },
   "devDependencies": {
+    "codecov": "^2.1.0",
+    "istanbul": "^0.4.5",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^1.1.0"
   }
 }
