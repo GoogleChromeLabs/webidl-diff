@@ -20,8 +20,13 @@ describe('BlinkIDLFileDAO integration', function() {
     execSync('/usr/bin/git init', opts);
     execSync('/usr/bin/git config user.email "test@example.com"', opts);
     execSync('/usr/bin/git config user.name "Tester"', opts);
-    execSync("/usr/bin/git add $(/usr/bin/find . | /bin/grep '[.]idl$')", opts);
+    execSync('/usr/bin/git add .', opts);
     execSync('/usr/bin/git commit -m "Test commit"', opts);
+  });
+
+  afterAll(function() {
+    var opts = {cwd: localRepositoryPath};
+    execSync(`/bin/rm -rf "${localRepositoryPath}/.git"`, opts);
   });
 
   beforeEach(function() {
