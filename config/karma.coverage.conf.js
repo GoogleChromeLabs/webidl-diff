@@ -23,7 +23,11 @@ module.exports = function(config) {
     reporters: (base.reporters || []).concat(['coverage']),
     preprocessors,
     coverageReporter: {
-      type: 'html',
+      reporters: [
+        {type: 'lcov'},
+        {type: 'html'},
+        {type: 'json'},
+      ],
       dir: `${base.ROOT_DIR}/.web_coverage`,
     },
   });
