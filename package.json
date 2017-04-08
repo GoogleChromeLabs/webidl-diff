@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A web service for inspecting differences between Web IDL fragments published in web standards documents and browser vendor source code repositories.",
   "scripts": {
-    "coverage": "npm run coverageNode && npm run coverageWeb && istanbul-combine -d .coverage -p summary -r lcov -r html -b . .node_coverage/coverage.json .web_coverage/coverage.json",
+    "coverage": "npm run coverageNode && npm run coverageWeb && istanbul-combine -d .coverage -p summary -r lcov -r html -b . .node_coverage/coverage.json .web_coverage/*/coverage*.json",
     "coverageNode": "JASMINE_CONFIG_PATH=./config/jasmine.json istanbul cover --dir .node_coverage -- jasmine",
     "coverageWeb": "karma start ./config/karma.coverage.conf.js",
     "test": "karma start ./config/karma.all.conf.js",
