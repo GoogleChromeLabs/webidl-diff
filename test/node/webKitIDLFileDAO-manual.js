@@ -12,7 +12,7 @@ var config = {
   findExcludePatterns: ['*/testing/*', '*/test/*'],
 };
 config.idlFileContentsFactory = function(path, contents) {
-  // Classes are injected by integrationLocalGitTest.
+  // Classes are injected by manualLocalGitTest.
   return config.IDLFileContents.create({
     metadata: config.GithubIDLFile.create({
       repository: this.respositoryURL,
