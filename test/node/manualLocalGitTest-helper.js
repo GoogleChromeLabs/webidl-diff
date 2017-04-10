@@ -4,9 +4,7 @@
 'use strict';
 
 global.manualLocalGitTest = function(data) {
-  console.log('Setting up test');
   describe(data.description, function() {
-    console.log('Describe');
     var execSync = require('child_process').execSync;
     var originalTimeout;
 
@@ -43,6 +41,7 @@ global.manualLocalGitTest = function(data) {
         }),
       }).select(foam.lookup('foam.mlang.sink.Count').create()).then(
         function(sink) {
+          console.log(sink.value, 'IDL files found');
           expect(sink.value).toBeGreaterThan(0);
           done();
         }, done.fail);
