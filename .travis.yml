@@ -8,6 +8,5 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
- - npm run coverageNode
- - npm run coverageWeb
- - codecov
+ - npm run coverage
+ - codecov -f .coverage/coverage-final.json -f .coverage/lcov.info
