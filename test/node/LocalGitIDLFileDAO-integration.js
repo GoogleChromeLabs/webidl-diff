@@ -10,10 +10,13 @@ describe('LocalGitIDLFileDAO integration', function() {
   var IDLFileContents;
   var StoreAndForwardDAO;
   var LocalGitIDLFileDAO;
+  var repositoryURL;
   var localRepositoryPath;
   var gitilesBaseURL;
+  var gitHash;
 
   beforeAll(function() {
+    repositoryURL = 'https://chromium.googlesource.com/chromium/src.git';
     localRepositoryPath =
         require('path').resolve(__dirname, '../data/git');
 
@@ -23,6 +26,7 @@ describe('LocalGitIDLFileDAO integration', function() {
     execSync('/usr/bin/git config user.name "Tester"', opts);
     execSync('/usr/bin/git add .', opts);
     execSync('/usr/bin/git commit -m "Test commit"', opts);
+    gitHash = execSync('/usr/bin/git rev-parse HEAD', opts).toString().trim();
   });
 
   afterAll(function() {
@@ -37,18 +41,18 @@ describe('LocalGitIDLFileDAO integration', function() {
     LocalGitIDLFileDAO = foam.lookup('org.chromium.webidl.LocalGitIDLFileDAO');
   });
 
-  it('should yield mock included files from select() when composed with store-and-forward DAO', function(done) {
-    StoreAndForwardDAO.create({
+  function daoFactory() {
+    return StoreAndForwardDAO.create({
       of: IDLFileContents,
       delegate: LocalGitIDLFileDAO.create({
-        repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
+        repositoryURL: repositoryURL,
         sparsePath: 'third_party/WebKit/Source',
         localRepositoryPath: localRepositoryPath,
         findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
         idlFileContentsFactory: function(path, contents) {
           return IDLFileContents.create({
             metadata: IDLFile.create({
-              repository: this.respositoryURL,
+              repository: this.repositoryURL,
               revision: this.commit,
               path: path,
             }),
@@ -56,7 +60,11 @@ describe('LocalGitIDLFileDAO integration', function() {
           });
         },
       }),
-    }).orderBy(IDLFileContents.ID).select().then(
+    });
+  }
+
+  it('should yield mock included files from select() when composed with store-and-forward DAO', function(done) {
+    daoFactory().orderBy(IDLFileContents.ID).select().then(
         function(sink) {
           var actualFileContents = sink.a;
           var expectedPaths = global.testGitRepoData.includePaths;
@@ -68,5 +76,31 @@ describe('LocalGitIDLFileDAO integration', function() {
           }
           done();
         }, done.fail);
+  });
+
+  it('should find() mock included files', function(done) {
+    var dao = daoFactory();
+
+    var expectedPaths = global.testGitRepoData.includePaths;
+    Promise.all(global.testGitRepoData.includePaths.map(function(path) {
+      return dao.find([repositoryURL, gitHash, path]);
+    })).then(function(results) {
+      for (var i = 0; i < results.length; i++) {
+        expect(results[i]).not.toBeNull();
+      }
+      done();
+    }, done.fail);
+  });
+
+  it('should reject put()', function(done) {
+    daoFactory().put(IDLFile.create()).then(done.fail, done);
+  });
+
+  it('should reject remove()', function(done) {
+    daoFactory().remove(IDLFile.create()).then(done.fail, done);
+  });
+
+  it('should reject removeAll()', function(done) {
+    daoFactory().removeAll().then(done.fail, done);
   });
 });
