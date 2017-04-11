@@ -3,14 +3,14 @@
 // found in the LICENSE file.
 'use strict';
 
-var githubBaseURL = 'https://github.com/WebKit/webkit';
+var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
 var config = {
-  description: 'WebKit IDL file DAO manual test',
-  repositoryURL: 'https://github.com/WebKit/webkit.git',
-  localRepositoryPath: require('path').resolve(__dirname, '../data/WebKit/git'),
-  sparsePath: 'Source',
-  findExcludePatterns: ['*/testing/*', '*/test/*'],
-  extension: 'idl',
+  description: 'Gecko IDL file DAO manual test',
+  repositoryURL: 'https://github.com/mozilla/gecko-dev.git',
+  localRepositoryPath: require('path').resolve(__dirname, '../data/gecko/git'),
+  sparsePath: 'dom',
+  findExcludePatterns: ['*/test/*'],
+  extension: 'webidl',
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by manualLocalGitTest.
