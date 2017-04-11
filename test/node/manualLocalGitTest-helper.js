@@ -38,6 +38,7 @@ global.manualLocalGitTest = function(data) {
           localRepositoryPath: data.localRepositoryPath,
           findExcludePatterns: data.findExcludePatterns,
           idlFileContentsFactory: data.idlFileContentsFactory,
+          extension: data.extension,
         }),
       }).select(foam.lookup('foam.mlang.sink.Count').create()).then(
         function(sink) {

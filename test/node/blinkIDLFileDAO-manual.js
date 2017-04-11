@@ -10,12 +10,13 @@ var config = {
   localRepositoryPath: require('path').resolve(__dirname, '../data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
+  extension: 'idl',
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by manualLocalGitTest.
   return config.IDLFileContents.create({
     metadata: config.GitilesIDLFile.create({
-      repository: this.respositoryURL,
+      repository: this.repositoryURL,
       gitilesBaseURL: gitilesBaseURL,
       revision: this.commit,
       path: path,
