@@ -11,6 +11,11 @@
   // TODO(markdittmer): Use FOAM ClassLoader instead after
   // https://github.com/foam-framework/foam2/issues/262 is resolved.
   (isServer ? global : window).WEB_IDL_DIFF_FILES = [
+    // Logging
+    `lib${sep}org${sep}chromium${sep}webidl${sep}LogLevel.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}Logger.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}SimpleLogger.js`,
+
     // Basic parsers
     `lib${sep}org${sep}chromium${sep}webidl${sep}parsers${sep}Plus0.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}parsers${sep}ParserWithAction.js`,
