@@ -85,8 +85,9 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Stringifier.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Float.js`,
 
-    // Web IDL parser
+    // Web IDL parsers
     `lib${sep}org${sep}chromium${sep}webidl${sep}Parser.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}WebKitParser.js`,
 
     // IDL file stuff
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,

@@ -10,8 +10,8 @@ describe('Comparing parses', function() {
   // TODO(markdittmer): Use FOAM ClassLoader instead after
   // https://github.com/foam-framework/foam2/issues/262 is resolved.
   beforeEach(function() {
-    Parser = org.chromium.webidl.Parser;
-    Outputer = org.chromium.webidl.Outputer;
+    Parser = foam.lookup('org.chromium.webidl.Parser');
+    Outputer = foam.lookup('org.chromium.webidl.Outputer');
   });
   // beforeEach(function(done) {
   //   var X = foam.__context__;
@@ -24,7 +24,11 @@ describe('Comparing parses', function() {
   // });
 
   function cmpTest(input, name) {
-    var firstParseValue = Parser.create().parseString(input).value;
+    var firstParse = Parser.create().parseString(input);
+
+    expect(firstParse.pos).toBe(input.length);
+
+    var firstParseValue = firstParse.value;
     var outputer = Outputer.create();
 
     for (var i = 0; i < firstParseValue.length; i++) {
