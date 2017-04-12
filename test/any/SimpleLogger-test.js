@@ -7,7 +7,7 @@ describe('SimpleLogger', function() {
   var captureLogger;
   var testCtx;
   var LogLevel;
-  var logLevels = ['debug', 'log', 'info', 'warn', 'error'];
+  var logLevels = ['debug', 'info', 'warn', 'error'];
 
   beforeEach(function() {
     foam.CLASS({
@@ -56,7 +56,7 @@ describe('SimpleLogger', function() {
     testCtx = foam.lookup('org.chromium.webidl.test.SimpleLogger').create(
       null,
       captureLogger =
-        foam.lookup('org.chromium.webidl.test.CaptureLogger').create()
+          foam.lookup('org.chromium.webidl.test.CaptureLogger').create()
     ).__subContext__;
   });
 
@@ -68,6 +68,13 @@ describe('SimpleLogger', function() {
       ]]);
       captureLogger.clear();
     });
+  });
+
+  it('should send "log" method to log level "info"', function() {
+    testCtx.log('frobinator');
+    expect(captureLogger.infos).toEqual([[
+      LogLevel.INFO.shortName, '[DATE]', 'frobinator'
+    ]]);
   });
 
   it('should output varied objects', function() {
