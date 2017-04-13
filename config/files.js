@@ -86,6 +86,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Float.js`,
 
     // Web IDL parsers
+    `lib${sep}org${sep}chromium${sep}webidl${sep}BaseParser.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}Parser.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}WebKitParser.js`,
 

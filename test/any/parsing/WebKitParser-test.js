@@ -19,13 +19,14 @@ describe('WebKitParser', function() {
 
   it('should parser example fragment from Location interface', function() {
     var p = parse(
-      'SetterCallWith=ActiveWindow&FirstWindow',
+      'SetterCallWith=ActiveWindow&FirstWindow | MainWindow',
       'ExtendedAttributeLogicalOperators');
     expect(p.value).toBeDefined();
     expect(p.value.name.literal).toBe('SetterCallWith');
-    expect(p.value.args.length).toBe(2);
+    expect(p.value.args.length).toBe(3);
     expect(p.value.args[0].literal).toBe('ActiveWindow');
     expect(p.value.args[1].literal).toBe('FirstWindow');
+    expect(p.value.args[2].literal).toBe('MainWindow');
   });
   it('should parse example interface from Location interface', function() {
     var p = parse(`
