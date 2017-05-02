@@ -94,6 +94,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}BaseParser.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}Parser.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}WebKitParser.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}GeckoParser.js`,
 
     // IDL file stuff
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
