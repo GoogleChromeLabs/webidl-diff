@@ -40,4 +40,14 @@ describe('GeckoParser', function() {
     `);
     expect(p.value).toBeDefined();
   });
+  it('should report parse complete status to console', function() {
+    console.info = jasmine.createSpy();
+    var p = GeckoParser.create().logParse('interface Frobinator;', 'InterfaceFwdDecl');
+    expect(console.info).toHaveBeenCalledWith('Parse complete');
+  });
+  it('should report parse incomplete status to console', function() {
+    console.warn = jasmine.createSpy();
+    var p = GeckoParser.create().logParse('interface', 'InterfaceFwdDecl');
+    expect(console.warn).toHaveBeenCalledWith('Parse incomplete');
+  });
 });

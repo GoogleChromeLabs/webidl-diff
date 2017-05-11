@@ -49,4 +49,22 @@ describe('WebKitParser', function() {
     `);
     expect(p.value).toBeDefined();
   });
+  it('should report parse complete status to console', function() {
+    console.info = jasmine.createSpy();
+    var p = WebKitParser.create().logParse(`
+        interface Location {
+          [SetterCallWith=ActiveWindow&FirstWindow, DoNotCheckSecurityOnSetter] stringifier attribute USVString href;
+        };
+    `);
+    expect(console.info).toHaveBeenCalledWith('Parse complete');
+  });
+  it('should report parse incomplete status to console', function() {
+    console.warn = jasmine.createSpy();
+    var p = WebKitParser.create().logParse(`
+        interface Location {
+          [SetterCallWith=ActiveWindow&FirstWindow, stringifier attribute USVString href;
+        };
+    `);
+    expect(console.warn).toHaveBeenCalledWith('Parse incomplete');
+  });
 });
