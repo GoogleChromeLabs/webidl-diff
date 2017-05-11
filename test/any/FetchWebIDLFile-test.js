@@ -5,12 +5,17 @@
 
 describe('FetchWebIDLFile', function() {
   var IDLFile;
-  var payloadContent;
+  var GithubIDLFile;
+  var GitilesIDLFile;
+  var payloadContent = 'Some sort of file content';
+
+  beforeAll(function() {
+    IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
+    GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
+    GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
+  });
 
   beforeEach(function() {
-    IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
-    payloadContent = 'Some sort of file content';
-
     foam.CLASS({
       package: 'org.chromium.webidl.test',
       name: 'MockHTTPRequest',
@@ -23,8 +28,15 @@ describe('FetchWebIDLFile', function() {
               status: 200,
               payload: Promise.resolve(payloadContent)
             }));
+          } else if (this.url == 'https://chromium.googlesource.com/chromium/src/+/0/someFile.idl?format=TEXT') {
+            // Gitiles return results in Base64 encoded text
+            var base64Potato = 'UG90YXRv';
+            return Promise.resolve(this.HTTPResponse.create({
+              status: 200,
+              payload: Promise.resolve(base64Potato)
+            }));
           } else {
-            // Mocking a failure HTTP Request
+            // Mock a failure HTTP Request
             return Promise.resolve(this.HTTPResponse.create({
               status: 404,
               payload: Promise.resolve('The request resource was not found')
@@ -37,10 +49,9 @@ describe('FetchWebIDLFile', function() {
     foam.register(foam.lookup('org.chromium.webidl.test.MockHTTPRequest'), 'foam.net.HTTPRequest');
   });
 
-  it('Attempting to fetch non-existant WebIDL file', function(done) {
+  it('should fail to fetch non-existant WebIDL file', function(done) {
     var file = IDLFile.create({
       repository: 'http://someRandomURL.test/',
-      revision: '0',
       path: 'file.idl',
       rawURL: 'http://someRandomURL.test/file.idl'
     });
@@ -53,17 +64,47 @@ describe('FetchWebIDLFile', function() {
     });
   });
 
-
-  it('Fetching existant WebIDL file', function(done) {
+  it('should succeed fetching existant WebIDL file', function(done) {
     var file = IDLFile.create({
       repository: 'http://test.url',
-      revision: '0',
       path: 'someFile.idl',
       rawURL: 'http://test.url/someFile.idl'
     });
 
     file.fetch().then(function(payload) {
       expect(payload).toEqual(payloadContent);
+      done();
+    }, function(reason) {
+      done.fail(new Error("Promise was not resolved when it was expected to be"));
+    });
+  });
+
+  it('should verify GithubIDLFile properties are correct', function() {
+    var file = GithubIDLFile.create({
+      repository: 'https://github.com/mozilla/gecko-dev',
+      githubBaseURL: 'https://github.com/mozilla/gecko-dev',
+      revision: '0',
+      path: 'someFile.idl'
+    });
+
+    expect(file.rawURL).toEqual('https://github.com/mozilla/gecko-dev/raw/0/someFile.idl');
+    expect(file.documentURL).toEqual('https://github.com/mozilla/gecko-dev/blob/0/someFile.idl');
+  });
+
+  it('should verify GitilesIDLFile properties are correct', function(done) {
+    var file = GitilesIDLFile.create({
+      repository: 'https://chromium.googlesource.com/chromium/src/+',
+      gitilesBaseURL: 'https://chromium.googlesource.com/chromium/src/+',
+      revision: '0',
+      path: 'someFile.idl'
+    });
+
+    expect(file.rawURL).toEqual('https://chromium.googlesource.com/chromium/src/+/0/someFile.idl?format=TEXT');
+    expect(file.documentURL).toEqual('https://chromium.googlesource.com/chromium/src/+/0/someFile.idl');
+
+    // Testing Gitiles fetch override
+    file.fetch().then(function(payload) {
+      expect(payload).toEqual('Potato');
       done();
     }, function(reason) {
       done.fail(new Error("Promise was not resolved when it was expected to be"));
