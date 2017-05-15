@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/GoogleChrome/webidl-diff#readme",
   "dependencies": {
-    "foam2": "git://github.com/foam-framework/foam2.git#v2.0.0-beta.1",
+    "foam2": "git://github.com/foam-framework/foam2.git#beta-1",
     "istanbul": "^0.4.5",
     "webidl2-js": "git://github.com/mdittmer/webidl2-js.git"
   },
