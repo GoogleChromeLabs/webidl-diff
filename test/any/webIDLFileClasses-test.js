@@ -30,7 +30,7 @@ describe('Web IDL file classes', function() {
         GITILES_TEST_RAW_URL: 'https://chromium.googlesource.com/chromium/src/+/0/someFile.idl?format=TEXT',
         GITILES_TEST_DOCUMENT_URL: 'https://chromium.googlesource.com/chromium/src/+/0/someFile.idl',
         TEXT_POTATO: 'Potato',
-        BASE_64_POTATO: 'UG90YXRv' // TEXT_POTATO in base64
+        BASE_64_POTATO: 'UG90YXRv' // TEXT_POTATO in base64.
       },
 
       properties: [
@@ -45,7 +45,7 @@ describe('Web IDL file classes', function() {
             });
 
             map[this.GITILES_TEST_RAW_URL] = this.HTTPResponse.create({
-              // Gitiles return results in Base64 encoded text
+              // Gitiles return results in Base64 encoded text.
               status: 200,
               payload: Promise.resolve(this.BASE_64_POTATO)
             });
@@ -65,7 +65,7 @@ describe('Web IDL file classes', function() {
           if (response !== undefined) {
             return Promise.resolve(response);
           } else {
-            // Mock a failure HTTP Request
+            // Mock a failure HTTP Request.
             return Promise.resolve(this.HTTPResponse.create({
               status: 404,
               payload: Promise.resolve('The request resource was not found')

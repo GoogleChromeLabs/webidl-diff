@@ -8,7 +8,7 @@ describe('BaseParser', function() {
     foam.CLASS({
       name: 'TestParser',
       extends: 'org.chromium.webidl.BaseParser',
-      implements: [ 'foam.parse.Parsers' ],
+      implements: ['foam.parse.Parsers'],
 
       properties: [
         {
@@ -21,7 +21,7 @@ describe('BaseParser', function() {
 
       methods: [
         function symbolsFactory() {
-          return { START: this.literal('interface Frobinator;') };
+          return {START: this.literal('interface Frobinator;')};
         }
       ]
     });
