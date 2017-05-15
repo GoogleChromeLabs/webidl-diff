@@ -50,6 +50,11 @@ describe('Comparing parses', function() {
   );
 
   it(
+    'parse(spec) == parse(stringify(parse(spec)))',
+    cmpTest.bind(this, global.additional_idl_spec, 'additional_idl_spec')
+  );
+
+  it(
     'parse(blink) == parse(stringify(parse(blink)))',
     cmpTest.bind(this, global.all_blink_idl, 'blink')
   );

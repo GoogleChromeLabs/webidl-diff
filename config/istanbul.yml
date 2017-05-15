@@ -3,5 +3,5 @@ check:
     statements: 85
     lines: 85
     # TODO(markdittmer): Write tests to bump branch threshold up to 80%.
-    branches: 70
+    branches: 80
     functions: 80
