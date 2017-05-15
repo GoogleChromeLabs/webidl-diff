@@ -8,34 +8,20 @@ describe('BaseParser', function() {
     foam.CLASS({
       name: 'TestParser',
       extends: 'org.chromium.webidl.BaseParser',
-
-      constants: {
-        PARSE_COMPLETE: 'Parse complete',
-        PARSE_INCOMPLETE: 'Parse incomplete'
-      },
+      implements: [ 'foam.parse.Parsers' ],
 
       properties: [
         {
           name: 'separator',
           factory: function() {
-            return this.Parsers.create().literal(' ');
+            return this.literal(' ');
           }
         }
       ],
 
       methods: [
         function symbolsFactory() {
-          return Object.assign(this.SUPER(), foam.Function.withArgs(
-              function(literal) {
-                return {
-                  START: literal('interface Frobinator;')
-                }
-              },
-              this.Parsers.create({ separator: this.separator }),
-              this));
-        },
-        function actionsFactory() {
-          return {};
+          return { START: this.literal('interface Frobinator;') };
         }
       ]
     });
