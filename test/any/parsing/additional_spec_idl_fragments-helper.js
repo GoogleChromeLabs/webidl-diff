@@ -5,7 +5,7 @@
 // Some IDL scraped from various specs in Jan 2017. Stored in a js file for ease
 // of synchronous inclusion in in diverse test environments.
 
-global.some_spec_idl = `
+global.ADDITIONAL_SPEC_IDL_FRAGMENTS = `
 partial interface HTMLLinkElement {
   attribute DOMString integrity;
 };

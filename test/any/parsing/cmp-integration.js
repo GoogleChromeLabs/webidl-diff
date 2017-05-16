@@ -40,22 +40,22 @@ describe('Comparing parses', function() {
         foam.util.compare(firstFragment, secondFragment),
         'parse(' + name + ')[' + i + '] == parse(stringify(parse(' + name +
           ')[' + i + ']))'
-      );
+      ).toBe(0);
     }
   }
 
   it(
-    'parse(spec) == parse(stringify(parse(spec)))',
-    cmpTest.bind(this, global.some_spec_idl, 'spec')
+    'parse(additionalSpecFragments) == parse(stringify(parse(additionalSpecFragments)))',
+    cmpTest.bind(this, global.ADDITIONAL_SPEC_IDL_FRAGMENTS, 'additionalSpecFragments')
   );
 
   it(
-    'parse(spec) == parse(stringify(parse(spec)))',
-    cmpTest.bind(this, global.additional_idl_spec, 'additional_idl_spec')
+    'parse(specialOperationsSpec) == parse(stringify(parse(specialOperationsSpec)))',
+    cmpTest.bind(this, global.SPECIAL_OPERATIONS_SPEC_IDL, 'specialOperationsSpec')
   );
 
   it(
     'parse(blink) == parse(stringify(parse(blink)))',
-    cmpTest.bind(this, global.all_blink_idl, 'blink')
+    cmpTest.bind(this, global.ALL_BLINK_IDL, 'blink')
   );
 });

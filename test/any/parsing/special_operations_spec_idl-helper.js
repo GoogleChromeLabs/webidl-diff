@@ -5,7 +5,7 @@
 // Fragments of IDL scraped from various sources in May 2017. Stored in a js file for ease
 // of synchronous inclusion in diverse test environments.
 
-global.additional_idl_spec = `
+global.SPECIAL_OPERATIONS_SPEC_IDL = `
 interface TestSystem {
   legacycaller boolean someFunction1();
   creator int someFunction2();
@@ -66,6 +66,9 @@ interface nullableTypes {
 interface Student {
   attribute unsigned long id;
   stringifier attribute DOMString name;
+};
+
+interface Stringified {
   stringifier DOMString ();
 };
 
