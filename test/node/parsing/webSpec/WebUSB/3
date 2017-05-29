@@ -1,0 +1,17 @@
+let button = document.getElementById('request-device');
+button.addEventListener('click', async () => {
+  let device;
+  try {
+    device = await navigator.usb.requestDevice({ filters: [{
+        vendorId: 0xABCD,
+        classCode: 0xFF, // vendor-specific
+        protocolCode: 0x01
+    }]});
+  } catch () {
+    // No device was selected.
+  }
+
+  if (device !== undefined) {
+    // Add |device| to the UI.
+  }
+});
