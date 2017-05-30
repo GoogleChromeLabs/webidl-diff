@@ -1,0 +1,2 @@
+typedef long long GLint64;
+typedef unsigned long long GLuint64;
