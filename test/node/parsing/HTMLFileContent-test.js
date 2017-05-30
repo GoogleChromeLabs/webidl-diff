@@ -4,12 +4,39 @@
 'use strict';
 
 describe('HTMLFileContent', function() {
-  var HTMLParser;
-  //var Outputer;
+  var HTMLFileContent;
   var Parser;
 
+  function cmpTest(testName, testDirectory, expectedPre, expectedIDL) {
+    var fs = require('fs');
+    var spec = fs.readFileSync(`${testDirectory}/spec.html`).toString();
+    var htmlSpec = HTMLFileContent.create({ file: spec });
+    var preBlocks = htmlSpec.pre;
+    var idlFragments = preBlocks.filter(function(block) {
+      return block.isIDL;
+    });
+
+    // Determine the number of fragments that were found
+    expect(preBlocks.length).toBe(expectedPre)
+    expect(idlFragments.length).toBe(expectedIDL);
+
+    fs.readdir(testDirectory, function(err, files) {
+      // Go through each of the expected results in the folder
+      files.forEach(function(filename) {
+        var testNum = Number(filename);
+
+        if (!isNaN(testNum) && testNum < preBlocks.length) {
+          var expectedContent = fs.readFileSync(`${testDirectory}/${filename}`).toString();
+          expect(preBlocks[testNum].content.trim()).toBe(expectedContent.trim());
+        } else if (filename !== 'spec.html') {
+          console.warn(`${filename} was not used in ${testName} spec test`);
+        }
+      });
+    });
+  }
+
   beforeEach(function() {
-    HTMLParser = foam.lookup('org.chromium.webidl.HTMLParser');
+    HTMLFileContent = foam.lookup('org.chromium.webidl.HTMLFileContent');
   });
 
   it('should parse a pre tag with no content', function() {
@@ -31,28 +58,27 @@ describe('HTMLFileContent', function() {
               [TreatNullAs=EmptyString] DOMString sentence);
         };
     </pre>`;
-    var ret = HTMLParser.create().parse(content);
+    var ret = HTMLFileContent.create(content);
+  });
+
+  it('should parse the UI Events spec HTML file', function() {
+    var testDirectory = `${__dirname}/UIEvent`;
+    var expectedFragments = 28;
+    var expectedIDLFrags = 18;
+    cmpTest('UI Events', testDirectory, expectedFragments, expectedIDLFrags);
   });
 
   it('should parse the WebUSB spec HTML file ', function() {
-    var fs = require('fs');
-    var testDirectory = `${__dirname}/webSpec/WebUSB`;
-    var spec = fs.readFileSync(`${testDirectory}/spec.html`).toString();
-    var idlFragments = HTMLParser.create().parse(spec);
+    var testDirectory = `${__dirname}/WebUSB`;
+    var expectedFragments = 15;
+    var expectedIDLFrags = 11;
+    cmpTest('WebUSB', testDirectory, expectedFragments, expectedIDLFrags);
+  });
 
-    expect(idlFragments.length).toBe(15);
-    fs.readdir(testDirectory, function(err, files) {
-      // Go through each of the expected results in the folder
-      files.forEach(function(filename) {
-        var testNum = Number(filename);
-
-        if (!isNaN(testNum) && testNum < idlFragments.length) {
-          var expectedIDL = fs.readFileSync(`${testDirectory}/${filename}`).toString();
-          expect(idlFragments[testNum].idl).toBe(expectedIDL);
-        } else if (filename !== 'spec.html') {
-          console.warn(`${filename} was not used in WebUSB spec test`);
-        }
-      });
-    });
+  it('should parse the whatwg HTML standard', function() {
+    var testDirectory = `${__dirname}/whatwg`;
+    var expectedFragments = 542;
+    var expectedIDLFrags = 45;
+    cmpTest('whatwg HTML', testDirectory, expectedFragments, expectedIDLFrags);
   });
 });

@@ -91,7 +91,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Float.js`,
 
     // HTML File Content Parser
-    `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLParser.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContent.js`,
 
     // Web IDL parsers
     `lib${sep}org${sep}chromium${sep}webidl${sep}BaseParser.js`,
