@@ -2929,4 +2929,7 @@ enum ReferrerPolicy {
   "strict-origin-when-cross-origin",
   "unsafe-url"
 };
+
+// Testing ExtendedAttributes in UnionTypes
+typedef ([AllowShared] Uint32Array or sequence<GLuint>) Uint32List;
 `;
