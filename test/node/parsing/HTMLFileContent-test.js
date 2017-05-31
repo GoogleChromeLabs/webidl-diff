@@ -48,16 +48,16 @@ describe('HTMLFileContent', function() {
 
   it('should parse a HTML file with one Web IDL Block', function() {
     var idl = `[Constructor]
-        interface Dahut : Mammal {
-          const unsigned short LEVROGYROUS = 0;
-          const unsigned short DEXTROGYROUS = 1;
-          readonly attribute DOMString chirality;
-          attribute unsigned long age;
-          Dahut turnAround(float angle, boolean fall);
-          unsigned long trip();
-          void yell([AllowAny] unsigned long volume,
-              [TreatNullAs=EmptyString] DOMString sentence);
-        };`;
+      interface Dahut : Mammal {
+        const unsigned short LEVROGYROUS = 0;
+        const unsigned short DEXTROGYROUS = 1;
+        readonly attribute DOMString chirality;
+        attribute unsigned long age;
+        Dahut turnAround(float angle, boolean fall);
+        unsigned long trip();
+        void yell([AllowAny] unsigned long volume,
+          [TreatNullAs=EmptyString] DOMString sentence);
+    };`;
     var content = `<pre class="idl">${idl}</pre>`;
     var htmlFile = HTMLFileContent.create({ file: content });
     expect(htmlFile).toBeDefined();
