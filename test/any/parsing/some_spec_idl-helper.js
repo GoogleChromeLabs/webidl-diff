@@ -2932,4 +2932,9 @@ enum ReferrerPolicy {
 
 // Testing ExtendedAttributes with types
 typedef ([AllowShared] Uint32Array or sequence<GLuint>) Uint32List;
+interface ExtAttrTest {
+  attribute [Clamp] octet blue;
+  void setColorClamped([Clamp] octet red, [Clamp] octet green, [Clamp] octet blue);
+  iterable<[Exposed] int>;
+};
 `;
