@@ -2930,6 +2930,6 @@ enum ReferrerPolicy {
   "unsafe-url"
 };
 
-// Testing ExtendedAttributes in UnionTypes
+// Testing ExtendedAttributes with types
 typedef ([AllowShared] Uint32Array or sequence<GLuint>) Uint32List;
 `;
