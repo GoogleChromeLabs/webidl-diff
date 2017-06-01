@@ -40,7 +40,7 @@ describe('Comparing parses', function() {
         foam.util.compare(firstFragment, secondFragment),
         'parse(' + name + ')[' + i + '] == parse(stringify(parse(' + name +
           ')[' + i + ']))'
-      );
+      ).toBe(0);
     }
   }
 
