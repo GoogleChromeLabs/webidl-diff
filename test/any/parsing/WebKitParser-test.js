@@ -41,7 +41,11 @@ describe('WebKitParser', function() {
         #ifndef FOO
         interface Location {
           #if BAR
-          [SetterCallWith=ActiveWindow&FirstWindow, DoNotCheckSecurityOnSetter]
+            [
+                SetterCallWith=ActiveWindow&FirstWindow,
+                DoNotCheckSecurityOnSetter,
+                UUID(d87956fa-afe0-4c3d-93fe-275ee2c2a737)
+            ]
           #endif
           stringifier attribute USVString href;
         };
