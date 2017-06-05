@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 
 # Sparse and shallow git repository fetch.
 # $1 - path where local repository should be checked out.
@@ -12,8 +12,6 @@ fi
 
 set -ev
 
-GIT="/usr/bin/git"
-
 DIR="${1}"
 URL="${2}"
 SPARSE_PATH="${3}"
@@ -25,11 +23,11 @@ echo "::"
 rm -rf "${DIR}"
 mkdir -p "${DIR}"
 pushd "${DIR}" > /dev/null
-"${GIT}" init
-"${GIT}" remote add origin "${URL}"
+git init
+git remote add origin "${URL}"
 if [ "${SPARSE_PATH}" != "" ]; then
-  "${GIT}" config core.sparseCheckout true
+  git config core.sparseCheckout true
   echo "${SPARSE_PATH}" >> .git/info/sparse-checkout
 fi
-"${GIT}" pull --depth=1 origin master
+git pull --depth=1 origin master
 popd > /dev/null

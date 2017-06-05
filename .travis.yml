@@ -8,5 +8,6 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
+ - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then npm run testManual; fi
  - npm run coverage
  - codecov -f .coverage/coverage-final.json -f .coverage/lcov.info
