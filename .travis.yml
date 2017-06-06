@@ -9,5 +9,4 @@ before_script:
   - sleep 3 # give xvfb some time to start
 script:
  - if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then npm run testManual; fi
- - if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then npm run coverage; fi
- - if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then codecov -f .coverage/coverage-final.json -f .coverage/lcov.info; fi
+ - if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then npm run coverage && codecov -f .coverage/coverage-final.json -f .coverage/lcov.info; fi
