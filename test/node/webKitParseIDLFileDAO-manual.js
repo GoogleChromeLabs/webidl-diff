@@ -14,7 +14,7 @@ var config = {
   parser: 'WebKitParser',
 };
 config.idlFileContentsFactory = function(path, contents) {
-  // Classes are injected by parseIDLFileDAOTest
+  // Classes are injected by parseIDLFileDAOTest.
   return config.IDLFileContents.create({
     metadata: config.GithubIDLFile.create({
       repository: this.repositoryURL,
