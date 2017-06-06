@@ -45,12 +45,17 @@ describe('Comparing parses', function() {
   }
 
   it(
-    'parse(spec) == parse(stringify(parse(spec)))',
-    cmpTest.bind(this, global.some_spec_idl, 'spec')
+    'parse(additionalSpecFragments) == parse(stringify(parse(additionalSpecFragments)))',
+    cmpTest.bind(this, global.ADDITIONAL_SPEC_IDL_FRAGMENTS, 'additionalSpecFragments')
+  );
+
+  it(
+    'parse(specialOperationsSpec) == parse(stringify(parse(specialOperationsSpec)))',
+    cmpTest.bind(this, global.SPECIAL_OPERATIONS_SPEC_IDL, 'specialOperationsSpec')
   );
 
   it(
     'parse(blink) == parse(stringify(parse(blink)))',
-    cmpTest.bind(this, global.all_blink_idl, 'blink')
+    cmpTest.bind(this, global.ALL_BLINK_IDL, 'blink')
   );
 });

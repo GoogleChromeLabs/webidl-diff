@@ -5,7 +5,7 @@
 // All of Blink's IDL scraped in Jan 2017. Stored in a js file for ease of
 // synchronous inclusion in in diverse test environments.
 
-global.all_blink_idl = `
+global.ALL_BLINK_IDL = `
 /*
  * Copyright (C) 2013 Google Inc. All rights reserved.
  *
