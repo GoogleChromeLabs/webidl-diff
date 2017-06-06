@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 
 # Sparse and shallow git repository fetch.
 # $1 - path where local repository should be checked out.
@@ -13,6 +13,8 @@ fi
 set -ev
 
 GIT="/usr/bin/git"
+RM="/bin/rm"
+MKDIR="/bin/mkdir"
 
 DIR="${1}"
 URL="${2}"
@@ -22,8 +24,8 @@ echo "::"
 echo ":: Cloning \"${SPARSE_PATH}\" from \"${URL}\" into \"${DIR}\""
 echo "::"
 
-rm -rf "${DIR}"
-mkdir -p "${DIR}"
+"${RM}" -rf "${DIR}"
+"${MKDIR}" -p "${DIR}"
 pushd "${DIR}" > /dev/null
 "${GIT}" init
 "${GIT}" remote add origin "${URL}"
