@@ -14,7 +14,7 @@ var config = {
   parser: 'GeckoParser'
 };
 config.idlFileContentsFactory = function(path, contents) {
-  // Classes are injected by manualLocalGitTest.
+  // Classes are injected by parseIDLFileDAOTest.
   return config.IDLFileContents.create({
     metadata: config.GithubIDLFile.create({
       repository: this.repositoryURL,

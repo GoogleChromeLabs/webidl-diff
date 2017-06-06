@@ -11,9 +11,11 @@ var config = {
   sparsePath: 'third_party/WebKit/Source',
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',
-  parser: 'Blink'
+  // Using the default parser for Blink IDL.
+  parser: 'Parser',
 };
 config.idlFileContentsFactory = function(path, contents) {
+  // Classes are injected by parseIDLFileDAOTest.
   return config.IDLFileContents.create({
     metadata: config.GitilesIDLFile.create({
       repository: this.repositoryURL,

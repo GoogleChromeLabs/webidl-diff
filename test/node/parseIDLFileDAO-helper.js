@@ -15,9 +15,7 @@ global.parseIDLFileDAOTest = function(data) {
     beforeEach(function() {
       data.GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
       data.GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
-      data.BlinkParser = foam.lookup('org.chromium.webidl.Parser');
-      data.GeckoParser = foam.lookup('org.chromium.webidl.GeckoParser');
-      data.WebKitParser = foam.lookup('org.chromium.webidl.WebKitParser');
+      data.Parser = foam.lookup(`org.chromium.webidl.${data.parser}`);
       data.IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
       data.StoreAndForwardDAO =
           foam.lookup('org.chromium.webidl.StoreAndForwardDAO');
@@ -48,15 +46,7 @@ global.parseIDLFileDAOTest = function(data) {
             expect(results.length).toBeGreaterThan(0);
 
             // Select correct parser based on data.
-            var parser;
-            if (data.parser === 'GeckoParser') {
-              parser = data.GeckoParser.create();
-            } else if (data.parser === 'WebKitParser') {
-              parser = data.WebKitParser.create();
-            } else {
-              // By default, we use the Blink parser.
-              parser = data.BlinkParser.create();
-            }
+            var parser = data.Parser.create();
 
             results.forEach(function(result) {
               var idl = result.contents;
