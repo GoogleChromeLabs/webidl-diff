@@ -41,7 +41,7 @@ describe('WebKitParser', function() {
         #ifndef FOO
         interface Location {
           #if BAR
-            [SetterCallWith=ActiveWindow&FirstWindow, DoNotCheckSecurityOnSetter]
+          [SetterCallWith=ActiveWindow&FirstWindow, DoNotCheckSecurityOnSetter]
           #endif
           stringifier attribute USVString href;
         };
