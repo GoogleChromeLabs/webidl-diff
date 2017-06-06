@@ -45,7 +45,6 @@ global.parseIDLFileDAOTest = function(data) {
             var results = sink.array;
             expect(results.length).toBeGreaterThan(0);
 
-            // Select correct parser based on data.
             var parser = data.Parser.create();
 
             results.forEach(function(result) {
