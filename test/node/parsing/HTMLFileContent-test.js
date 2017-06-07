@@ -7,14 +7,13 @@ describe('HTMLFileContent', function() {
   var HTMLFileContent;
   var Parser;
 
-  function cmpTest(testName, testDirectory, expectedPre, expectedIDL) {
+  function cmpTest(testName, testDirectory, expectedIDL) {
     var fs = require('fs');
     var spec = fs.readFileSync(`${testDirectory}/spec.html`).toString();
     var htmlSpec = HTMLFileContent.create({ file: spec });
     var idlFragments = htmlSpec.idlFragments;
 
     // Determine the number of fragments that were found.
-    //expect(preBlocks.length).toBe(expectedPre)
     expect(idlFragments.length).toBe(expectedIDL);
 
     fs.readdir(testDirectory, function(err, files) {
@@ -24,7 +23,7 @@ describe('HTMLFileContent', function() {
 
         if (!isNaN(testNum) && testNum < idlFragments.length) {
           var expectedContent = fs.readFileSync(`${testDirectory}/${filename}`).toString();
-          expect(idlFragments[testNum].content.trim()).toBe(expectedContent.trim());
+          expect(idlFragments[testNum].trim()).toBe(expectedContent.trim());
         } else if (filename !== 'spec.html') {
           fail(`File ${filename} was not used in ${testName} spec test`);
         }
@@ -64,36 +63,31 @@ describe('HTMLFileContent', function() {
 
   it('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
-    var expectedFragments = 27;
-    var expectedIDLFrags = 18;
-    cmpTest('UI Events', testDirectory, expectedFragments, expectedIDLFrags);
+    var expectedFragments = 18;
+    cmpTest('UI Events', testDirectory, expectedFragments);
   });
 
   it('should parse the WebGL spec HTML file (khronos)', function() {
     var testDirectory = `${__dirname}/WebGL`;
     var expectedFragments = 7;
-    var expectedIDLFrags = 7;
-    cmpTest('WebGL', testDirectory, expectedFragments, expectedIDLFrags);
+    cmpTest('WebGL', testDirectory, expectedFragments);
   });
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
     var testDirectory = `${__dirname}/WebUSB`;
-    var expectedFragments = 12;
-    var expectedIDLFrags = 11;
-    cmpTest('WebUSB', testDirectory, expectedFragments, expectedIDLFrags);
+    var expectedFragments = 11;
+    cmpTest('WebUSB', testDirectory, expectedFragments);
   });
 
   it('should parse the XMLHttpRequest spec HTML file (whatwg)', function() {
     var testDirectory = `${__dirname}/XMLHttpRequest`;
     var expectedFragments = 4;
-    var expectedIDLFrags = 4;
-    cmpTest('XMLHttpRequest', testDirectory, expectedFragments, expectedIDLFrags);
+    cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
   it('should parse the whatwg HTML standard', function() {
     var testDirectory = `${__dirname}/whatwg`;
-    var expectedFragments = 155;
-    var expectedIDLFrags = 45;
-    cmpTest('whatwg HTML', testDirectory, expectedFragments, expectedIDLFrags);
+    var expectedFragments = 45;
+    cmpTest('whatwg HTML', testDirectory, expectedFragments);
   });
 });
