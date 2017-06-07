@@ -11,23 +11,20 @@ describe('HTMLFileContent', function() {
     var fs = require('fs');
     var spec = fs.readFileSync(`${testDirectory}/spec.html`).toString();
     var htmlSpec = HTMLFileContent.create({ file: spec });
-    var preBlocks = htmlSpec.pre;
-    var idlFragments = preBlocks.filter(function(block) {
-      return block.isIDL;
-    });
+    var idlFragments = htmlSpec.idlFragments;
 
-    // Determine the number of fragments that were found
-    expect(preBlocks.length).toBe(expectedPre)
+    // Determine the number of fragments that were found.
+    //expect(preBlocks.length).toBe(expectedPre)
     expect(idlFragments.length).toBe(expectedIDL);
 
     fs.readdir(testDirectory, function(err, files) {
-      // Go through each of the expected results in the folder
+      // Go through each of the expected results in the folder.
       files.forEach(function(filename) {
         var testNum = Number(filename);
 
-        if (!isNaN(testNum) && testNum < preBlocks.length) {
+        if (!isNaN(testNum) && testNum < idlFragments.length) {
           var expectedContent = fs.readFileSync(`${testDirectory}/${filename}`).toString();
-          expect(preBlocks[testNum].content.trim()).toBe(expectedContent.trim());
+          expect(idlFragments[testNum].content.trim()).toBe(expectedContent.trim());
         } else if (filename !== 'spec.html') {
           fail(`File ${filename} was not used in ${testName} spec test`);
         }
@@ -43,7 +40,7 @@ describe('HTMLFileContent', function() {
     var content = '<pre class="idl"></pre>';
     var htmlFile = HTMLFileContent.create({ file: content });
     expect(htmlFile).toBeDefined();
-    expect(htmlFile.pre.length).toBe(1);
+    expect(htmlFile.idlFragments.length).toBe(1);
   });
 
   it('should parse a HTML file with one Web IDL Block', function() {
@@ -61,8 +58,8 @@ describe('HTMLFileContent', function() {
     var content = `<pre class="idl">${idl}</pre>`;
     var htmlFile = HTMLFileContent.create({ file: content });
     expect(htmlFile).toBeDefined();
-    expect(htmlFile.pre.length).toBe(1);
-    expect(htmlFile.pre[0].content).toBe(idl);
+    expect(htmlFile.idlFragments.length).toBe(1);
+    expect(htmlFile.idlFragments[0]).toBe(idl);
   });
 
   it('should parse the UI Events spec HTML file (w3c)', function() {
