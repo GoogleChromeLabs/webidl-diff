@@ -90,8 +90,9 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Stringifier.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Float.js`,
 
-    // HTML File Content Parser
-    `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContent.js`,
+    // HTML File Content and Extractor
+    `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractor.js`,
 
     // Web IDL parsers
     `lib${sep}org${sep}chromium${sep}webidl${sep}BaseParser.js`,

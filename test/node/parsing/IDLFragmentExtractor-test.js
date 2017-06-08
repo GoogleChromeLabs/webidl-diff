@@ -3,15 +3,23 @@
 // found in the LICENSE file.
 'use strict';
 
-describe('HTMLFileContent', function() {
-  var HTMLFileContent;
+describe('IDLFragmentExtractor', function() {
+  var HTMLFileContents;
+  var IDLFragmentExtractor;
   var Parser;
 
   function cmpTest(testName, testDirectory, expectedIDL) {
     var fs = require('fs');
-    var spec = fs.readFileSync(`${testDirectory}/spec.html`).toString();
-    var htmlSpec = HTMLFileContent.create({ file: spec });
-    var idlFragments = htmlSpec.idlFragments;
+    var dir = `${testDirectory}/spec.html`;
+    var spec = fs.readFileSync(dir).toString();
+    var htmlFile = HTMLFileContents.create({
+      url: dir, // Setting URL to dir for testing purposes only.
+      timestamp: new Date(),
+      content: spec,
+    });
+
+    var extractor = IDLFragmentExtractor.create({file: htmlFile});
+    var idlFragments = extractor.idlFragments;
 
     // Determine the number of fragments that were found.
     expect(idlFragments.length).toBe(expectedIDL);
@@ -32,14 +40,20 @@ describe('HTMLFileContent', function() {
   }
 
   beforeEach(function() {
-    HTMLFileContent = foam.lookup('org.chromium.webidl.HTMLFileContent');
+    HTMLFileContents = foam.lookup('org.chromium.webidl.HTMLFileContents');
+    IDLFragmentExtractor = foam.lookup('org.chromium.webidl.IDLFragmentExtractor');
   });
 
   it('should parse a pre tag with no content', function() {
     var content = '<pre class="idl"></pre>';
-    var htmlFile = HTMLFileContent.create({ file: content });
-    expect(htmlFile).toBeDefined();
-    expect(htmlFile.idlFragments.length).toBe(1);
+    var htmlFile = HTMLFileContents.create({
+      url: 'http://basicTest.url',
+      timestamp: new Date(),
+      content: content,
+    });
+    var extractor = IDLFragmentExtractor.create({file: htmlFile});
+    expect(extractor).toBeDefined();
+    expect(extractor.idlFragments.length).toBe(1);
   });
 
   it('should parse a HTML file with one Web IDL Block', function() {
@@ -55,10 +69,15 @@ describe('HTMLFileContent', function() {
           [TreatNullAs=EmptyString] DOMString sentence);
     };`;
     var content = `<pre class="idl">${idl}</pre>`;
-    var htmlFile = HTMLFileContent.create({ file: content });
-    expect(htmlFile).toBeDefined();
-    expect(htmlFile.idlFragments.length).toBe(1);
-    expect(htmlFile.idlFragments[0]).toBe(idl);
+    var htmlFile = HTMLFileContents.create({
+      url: 'http://something.url',
+      timestamp: new Date(),
+      content: content,
+    });
+    var extractor = IDLFragmentExtractor.create({file: htmlFile});
+    expect(extractor).toBeDefined();
+    expect(extractor.idlFragments.length).toBe(1);
+    expect(extractor.idlFragments[0]).toBe(idl);
   });
 
   it('should parse the UI Events spec HTML file (w3c)', function() {
