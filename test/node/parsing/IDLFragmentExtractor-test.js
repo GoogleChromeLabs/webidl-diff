@@ -80,6 +80,36 @@ describe('IDLFragmentExtractor', function() {
     expect(extractor.idlFragments[0]).toBe(idl);
   });
 
+  it('should parse a HTML file with nested excludes', function() {
+    var firstIDL = `
+      interface Potato {
+        attribute unsigned long weight;
+      };`;
+    var secondIDL = `
+      interface Tomato {
+        attribute unsigned long weight;
+      };`;
+    var content = `
+      <html>
+        <div class="example">
+          <div class="note">Something here</div>
+          <div class="example">
+            <pre class="idl">${firstIDL}</pre>
+          </div>
+        </div>
+        <pre class="idl">${secondIDL}</pre>
+      </html>`;
+    var htmlFile = HTMLFileContents.create({
+      url: 'http://something.url',
+      timestamp: new Date(),
+      content: content,
+    });
+    var extractor = IDLFragmentExtractor.create({file: htmlFile});
+    expect(extractor).toBeDefined();
+    expect(extractor.idlFragments.length).toBe(1);
+    expect(extractor.idlFragments[0]).toBe(secondIDL);
+  });
+
   it('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
     var expectedFragments = 18;
