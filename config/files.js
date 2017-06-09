@@ -105,6 +105,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitIDLFileDAO.js`,
 
+    `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
   ];
 })();
