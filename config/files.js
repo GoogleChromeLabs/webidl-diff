@@ -105,7 +105,11 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitIDLFileDAO.js`,
 
+    // Runners
+    `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
+
     `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`
   ];
 })();
