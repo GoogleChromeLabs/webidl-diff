@@ -21,9 +21,8 @@ const blinkConfig = require('./blinkConfig.js').config;
 const geckoConfig = require('./geckoConfig.js').config;
 const webKitConfig = require('./webKitConfig.js').config;
 
-var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
-var HTMLFileContents = foam.lookup('org.chromium.webidl.HTMLFileContents');
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
+var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
 var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner')
 
 // Preparing pipelines
@@ -39,27 +38,30 @@ var builder = PipelineBuilder.create(null, ctx);
 //           (Other) 2-> To Datastore -> ...
 // -> Put partials together -> Diff -> Back to datastore
 
-//var firstSharedPL = builder.then(LocalGitRunner.create());
 
-//var blinkIntermPL = firstSharedPL.then(URLExtractor...);
-//var corePipeline = firstSharedPL.then(ParserRunner.create());
+var pipeline = builder.then(ParserRunner.create());
+pipeline.first(FetchSpecRunner.create()).first(LocalGitRunner.create());
+pipeline.first(LocalGitRunner.create());
+
+// boxes[0] -> Blink
+// boxes[1] -> Others
+var boxes = pipeline.buildAll();
 
 
-var firstSharedPL = builder.then(LocalGitRunner.create())
-                           .then(ParserRunner.create()) // Temporarily placed here..
-                           .build();
-
+//var regularPL = builder.then(LocalGitRunner.create())
+//                       .then(ParserRunner.create()) // Temporarily placed here..
+//                       .build();
 
 // Convert to build all eventually...
 // var boxes = builder.buildAll();
 // Blink Pipeline
-firstSharedPL.send(foam.box.Message.create({ object: { config: blinkConfig, freshRepo: false } }));
+boxes[0].send(foam.box.Message.create({ object: { config: blinkConfig, freshRepo: false } }));
 
 // Gecko Pipeline
-//firstSharedPL.send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
+//boxes[1].send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
 
 // Webkit Pipeline
-//firstSharedPL.send(foam.box.Message.create({ object: { config: webKitConfig, freshRepo: false } }));
+//boxes[1].send(foam.box.Message.create({ object: { config: webKitConfig, freshRepo: false } }));
 
 
 //var IDLFiles = foam.dao.EasyDAO.create({of: IDLFileContents, delegate: foam.dao.ArrayDAO.create()});

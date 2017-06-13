@@ -107,6 +107,7 @@
 
     // Runners
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
 
     `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
