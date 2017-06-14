@@ -8,21 +8,21 @@ describe('IDLFragmentExtractor', function() {
   var IDLFragmentExtractor;
   var Parser;
 
-  function cmpTest(testName, testDirectory, expectedIDL) {
+  function cmpTest(testName, testDirectory, numExpectedIDLFragments) {
     var fs = require('fs');
     var dir = `${testDirectory}/spec.html`;
     var spec = fs.readFileSync(dir).toString();
     var htmlFile = HTMLFileContents.create({
       url: dir, // Setting URL to dir for testing purposes only.
       timestamp: new Date(),
-      content: spec,
+      contents: spec,
     });
 
     var extractor = IDLFragmentExtractor.create({file: htmlFile});
     var idlFragments = extractor.idlFragments;
 
     // Determine the number of fragments that were found.
-    expect(idlFragments.length).toBe(expectedIDL);
+    expect(idlFragments.length).toBe(numExpectedIDLFragments);
 
     fs.readdir(testDirectory, function(err, files) {
       // Go through each of the expected results in the folder.
@@ -30,7 +30,8 @@ describe('IDLFragmentExtractor', function() {
         var testNum = Number(filename);
 
         if (!isNaN(testNum) && testNum < idlFragments.length) {
-          var expectedContent = fs.readFileSync(`${testDirectory}/${filename}`).toString();
+          var path = `${testDirectory}/${filename}`;
+          var expectedContent = fs.readFileSync(path).toString();
           expect(idlFragments[testNum].trim()).toBe(expectedContent.trim());
         } else if (filename !== 'spec.html') {
           fail(`File ${filename} was not used in ${testName} spec test`);
@@ -45,11 +46,23 @@ describe('IDLFragmentExtractor', function() {
   });
 
   it('should parse a pre tag with no content', function() {
-    var content = '<pre class="idl"></pre>';
+    var contents = '<pre class="idl"></pre>';
     var htmlFile = HTMLFileContents.create({
       url: 'http://basicTest.url',
       timestamp: new Date(),
-      content: content,
+      contents: contents,
+    });
+    var extractor = IDLFragmentExtractor.create({file: htmlFile});
+    expect(extractor).toBeDefined();
+    expect(extractor.idlFragments.length).toBe(1);
+  });
+
+  it('should parse a pre tag with multiple attributes', function() {
+    var contents = '<pre class="text potato" class="idl"></pre>';
+    var htmlFile = HTMLFileContents.create({
+      url: 'http://basicTest.url',
+      timestamp: new Date(),
+      contents: contents,
     });
     var extractor = IDLFragmentExtractor.create({file: htmlFile});
     expect(extractor).toBeDefined();
@@ -68,11 +81,11 @@ describe('IDLFragmentExtractor', function() {
         void yell([AllowAny] unsigned long volume,
           [TreatNullAs=EmptyString] DOMString sentence);
     };`;
-    var content = `<pre class="idl">${idl}</pre>`;
+    var contents = `<pre class="idl">${idl}</pre>`;
     var htmlFile = HTMLFileContents.create({
       url: 'http://something.url',
       timestamp: new Date(),
-      content: content,
+      contents: contents,
     });
     var extractor = IDLFragmentExtractor.create({file: htmlFile});
     expect(extractor).toBeDefined();
@@ -89,7 +102,7 @@ describe('IDLFragmentExtractor', function() {
       interface Tomato {
         attribute unsigned long weight;
       };`;
-    var content = `
+    var contents = `
       <html>
         <div class="example">
           <div class="note">Something here</div>
@@ -102,7 +115,7 @@ describe('IDLFragmentExtractor', function() {
     var htmlFile = HTMLFileContents.create({
       url: 'http://something.url',
       timestamp: new Date(),
-      content: content,
+      contents: contents,
     });
     var extractor = IDLFragmentExtractor.create({file: htmlFile});
     expect(extractor).toBeDefined();
