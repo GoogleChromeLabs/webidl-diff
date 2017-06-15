@@ -21,9 +21,14 @@ const blinkConfig = require('./blinkConfig.js').config;
 const geckoConfig = require('./geckoConfig.js').config;
 const webKitConfig = require('./webKitConfig.js').config;
 
+// URL Filters
+var includeRegexp = /(dev[.]w3[.]org|[.]github[.]io|spec[.]whatwg[.]org|css-houdini[.]org|csswg[.]org|svgwg[.]org|drafts[.]fxtf[.]org|www[.]khronos[.]org[/](registry[/]webgl[/]specs[/]latest[/][12][.]0|registry[/]typedarray[/]specs[/]latest)|www[.]w3[.]org[/]TR[/]geolocation-API[/]|dvcs.w3.org[/]hg[/]speech-api[/]raw-file[/]tip[/]webspeechapi[.]html)/;
+var excludeRegexp = /web[.]archive[.]org/;
+
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
 var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
+var IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
 var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner')
 
 // Preparing pipelines
@@ -41,18 +46,26 @@ var builder = PipelineBuilder.create(null, ctx);
 
 
 var pipeline = builder.then(ParserRunner.create());
-//pipeline.first(LocalGitRunner.create()).first(FetchSpecRunner.create());
-pipeline.first(FetchSpecRunner.create())
-        .first(URLExtractor.create())
+pipeline.first(IDLFragmentExtractorRunner.create())
+        .first(FetchSpecRunner.create())
         .first(LocalGitRunner.create());
 pipeline.first(LocalGitRunner.create());
+
+//var pipeline = builder.then(FetchSpecRunner.create());
+//pipeline.first(LocalGitRunner.create());
+//pipeline.first(LocalGitRunner.create());
 
 // boxes[0] -> Blink
 // boxes[1] -> Others
 var boxes = pipeline.buildAll();
 
 // Blink Pipeline
-boxes[0].send(foam.box.Message.create({ object: { config: blinkConfig, freshRepo: false } }));
+boxes[0].send(foam.box.Message.create({ object: {
+  config: blinkConfig,
+  freshRepo: false,
+  includeRegexp: includeRegexp,
+  excludeRegexp: excludeRegexp,
+}}));
 
 // Gecko Pipeline
 //boxes[1].send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
