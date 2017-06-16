@@ -23,7 +23,7 @@ const webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
 var includeRegexp = /(dev[.]w3[.]org|[.]github[.]io|spec[.]whatwg[.]org|css-houdini[.]org|csswg[.]org|svgwg[.]org|drafts[.]fxtf[.]org|www[.]khronos[.]org[/](registry[/]webgl[/]specs[/]latest[/][12][.]0|registry[/]typedarray[/]specs[/]latest)|www[.]w3[.]org[/]TR[/]geolocation-API[/]|dvcs.w3.org[/]hg[/]speech-api[/]raw-file[/]tip[/]webspeechapi[.]html)/;
-var excludeRegexp = /web[.]archive[.]org/;
+var excludeRegexp = /web[.]archive[.]org|whatwg[.]org/;
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
