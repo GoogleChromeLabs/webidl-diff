@@ -47,20 +47,18 @@ var builder = PipelineBuilder.create(null, ctx);
 // -> Put partials together -> Diff -> Back to datastore
 
 
-var pipeline = builder.then(ParserRunner.create());
-//                      .then(CanonicalizeRunner.create());
+var pipeline = builder.then(ParserRunner.create())
+                      .then(CanonicalizeRunner.create());
 
-pipeline.first(LocalGitRunner.create());            // Common pipeline
-pipeline.first(IDLFragmentExtractorRunner.create()) // Special blink path
-        .first(FetchSpecRunner.create())
-        .first(LocalGitRunner.create());
-
-
-pipeline.then(CanonicalizeRunner.create());
+builder.first(LocalGitRunner.create());            // Common pipeline
+builder.first(IDLFragmentExtractorRunner.create()) // Special blink path
+       .first(FetchSpecRunner.create())
+       .first(LocalGitRunner.create());
 
 // boxes[0] -> Common
 // boxes[1] -> Special Blink Path
 var boxes = pipeline.buildAll();
+
 
 var blinkMsg = foam.box.Message.create({ object: {
   config: blinkConfig,
