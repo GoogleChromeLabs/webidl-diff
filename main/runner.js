@@ -23,7 +23,7 @@ const webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
 var includeRegexp = /(dev[.]w3[.]org|[.]github[.]io|spec[.]whatwg[.]org|css-houdini[.]org|csswg[.]org|svgwg[.]org|drafts[.]fxtf[.]org|www[.]khronos[.]org[/](registry[/]webgl[/]specs[/]latest[/][12][.]0|registry[/]typedarray[/]specs[/]latest)|www[.]w3[.]org[/]TR[/]geolocation-API[/]|dvcs.w3.org[/]hg[/]speech-api[/]raw-file[/]tip[/]webspeechapi[.]html)/;
-var excludeRegexp = /web[.]archive[.]org|whatwg[.]org/;
+var excludeRegexp = /web[.]archive[.]org/;
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
@@ -46,26 +46,27 @@ var builder = PipelineBuilder.create(null, ctx);
 
 
 var pipeline = builder.then(ParserRunner.create());
-pipeline.first(IDLFragmentExtractorRunner.create())
+pipeline.first(LocalGitRunner.create()); // Common pipeline
+pipeline.first(IDLFragmentExtractorRunner.create()) // Special blink path
         .first(FetchSpecRunner.create())
         .first(LocalGitRunner.create());
-pipeline.first(LocalGitRunner.create());
 
-//var pipeline = builder.then(FetchSpecRunner.create());
-//pipeline.first(LocalGitRunner.create());
-//pipeline.first(LocalGitRunner.create());
-
-// boxes[0] -> Blink
-// boxes[1] -> Others
+// boxes[0] -> Common
+// boxes[1] -> Special Blink Path
 var boxes = pipeline.buildAll();
 
-// Blink Pipeline
-boxes[0].send(foam.box.Message.create({ object: {
+
+var blinkMsg = foam.box.Message.create({ object: {
   config: blinkConfig,
   freshRepo: false,
   includeRegexp: includeRegexp,
   excludeRegexp: excludeRegexp,
-}}));
+}});
+
+
+// Blink Pipeline
+boxes[0].send(blinkMsg);
+boxes[1].send(blinkMsg);
 
 // Gecko Pipeline
 //boxes[1].send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
