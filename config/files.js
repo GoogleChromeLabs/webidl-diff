@@ -110,6 +110,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizeRunner.js`,
 
     `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,

@@ -30,6 +30,8 @@ var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
 var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
 var IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
 var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner')
+var CanonicalizeRunner = foam.lookup('org.chromium.webidl.CanonicalizeRunner');
+
 
 // Preparing pipelines
 var ctx = foam.box.Context.create();
@@ -46,15 +48,19 @@ var builder = PipelineBuilder.create(null, ctx);
 
 
 var pipeline = builder.then(ParserRunner.create());
-pipeline.first(LocalGitRunner.create()); // Common pipeline
+//                      .then(CanonicalizeRunner.create());
+
+pipeline.first(LocalGitRunner.create());            // Common pipeline
 pipeline.first(IDLFragmentExtractorRunner.create()) // Special blink path
         .first(FetchSpecRunner.create())
         .first(LocalGitRunner.create());
 
+
+pipeline.then(CanonicalizeRunner.create());
+
 // boxes[0] -> Common
 // boxes[1] -> Special Blink Path
 var boxes = pipeline.buildAll();
-
 
 var blinkMsg = foam.box.Message.create({ object: {
   config: blinkConfig,
@@ -65,7 +71,7 @@ var blinkMsg = foam.box.Message.create({ object: {
 
 
 // Blink Pipeline
-boxes[0].send(blinkMsg);
+//boxes[0].send(blinkMsg);
 boxes[1].send(blinkMsg);
 
 // Gecko Pipeline
