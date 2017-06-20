@@ -33,7 +33,7 @@ describe('URL Extractor', function() {
     var extractor = URLExtractor.create();
     var urls = [ 'http://www.google.com', 'https://www.google.com/',
         'ftp://www.google.com', 'http://google.com', 'https://google.com',
-        'https://google.com/potato', 'www.google.com' ];
+        'https://google.com/potato?hello=true', 'www.google.com' ];
     var file = IDLFileContents.create({
       contents: `
         Hello World! ${urls[0]} Some other thing
