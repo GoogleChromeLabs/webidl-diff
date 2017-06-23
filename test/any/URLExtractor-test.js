@@ -31,9 +31,9 @@ describe('URL Extractor', function() {
 
   it('should return all HTTP(s) URLs within the text fragment', function() {
     var extractor = URLExtractor.create();
-    var urls = [ 'http://www.google.com', 'https://www.google.com/',
+    var urls = ['http://www.google.com', 'https://www.google.com/',
         'ftp://www.google.com', 'http://google.com', 'https://google.com',
-        'https://google.com/potato?hello=true', 'www.google.com' ];
+        'https://google.com/potato?hello=true', 'www.google.com'];
     var file = IDLFileContents.create({
       contents: `
         Hello World! ${urls[0]} Some other thing
@@ -59,10 +59,10 @@ describe('URL Extractor', function() {
   });
 
   it('should return all whitelisted HTTP(s) URLs', function() {
-    var includeRegexp = /google\.com/;
-    var extractor = URLExtractor.create({includeRegexp: includeRegexp});
-    var urls = [ 'http://google.com', 'http://potato.com', 'https://google.ca',
-      'https://calendar.google.com', 'http://about.potato.com' ];
+    var include = [/google\.com/];
+    var extractor = URLExtractor.create({include: include});
+    var urls = ['http://google.com', 'http://potato.com', 'https://google.ca',
+      'https://calendar.google.com', 'http://about.potato.com'];
     var file = IDLFileContents.create({
       contents: `
         This url should be accepted ${urls[0]}
@@ -80,10 +80,10 @@ describe('URL Extractor', function() {
   });
 
   it('should return only non-blacklisted HTTP(s) URLs', function() {
-    var excludeRegexp = /potato\.com|.*\.google\.com/;
-    var extractor = URLExtractor.create({excludeRegexp: excludeRegexp});
-    var urls = [ 'http://google.com', 'http://potato.com', 'https://google.ca',
-      'https://calendar.google.com', 'http://about.potato.com' ];
+    var exclude = [/potato\.com/, /.*\.google\.com/];
+    var extractor = URLExtractor.create({exclude: exclude});
+    var urls = ['http://google.com', 'http://potato.com', 'https://google.ca',
+      'https://calendar.google.com', 'http://about.potato.com'];
     var file = IDLFileContents.create({
       contents: `
         This url should be accepted ${urls[0]},
@@ -102,14 +102,14 @@ describe('URL Extractor', function() {
   });
 
   it('should return whitelisted, but not blacklisted HTTP(s) URLs', function() {
-    var includeRegexp = /google\.(com|ca)/;
-    var excludeRegexp = /calendar\.google\.com/;
+    var include = [/google\.(com|ca)/];
+    var exclude = [/calendar\.google\.com/];
     var extractor = URLExtractor.create({
-      excludeRegexp: excludeRegexp,
-      includeRegexp: includeRegexp,
+      exclude: exclude,
+      include: include,
     });
-    var urls = [ 'https://www.google.com', 'http://calendar.google.com',
-    'http://mail.google.com', 'https://about.potato.com', 'http://google.ca' ];
+    var urls = ['https://www.google.com', 'http://calendar.google.com',
+    'http://mail.google.com', 'https://about.potato.com', 'http://google.ca'];
     var file = IDLFileContents.create({
       contents: `
         This url should be accepted ${urls[0]}
