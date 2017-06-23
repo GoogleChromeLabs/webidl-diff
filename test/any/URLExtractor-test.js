@@ -36,8 +36,7 @@ describe('URL Extractor', function() {
         'https://google.com/potato?hello=true', 'www.google.com'];
     var file = IDLFileContents.create({
       contents: `
-        Hello World! ${urls[0]} Some other thing
-        potato ${urls[1]} test
+        Hello World! ${urls[0]} Some other thing potato ${urls[1]} test
         test ${urls[2]} potato
         test ${urls[3]} test
         potato ${urls[4]} potato
@@ -58,6 +57,23 @@ describe('URL Extractor', function() {
     // urls[6] not matched, since it does not begin with protocol
   });
 
+  it('should match URLs up until the anchor', function() {
+    var extractor = URLExtractor.create();
+    var urls = [ 'http://www.google.com#test', 'https://google.com#test#test2' ];
+    var file = IDLFileContents.create({
+      contents: `
+        No anchor test 1 ${urls[0]}
+        No anchor test 2 ${urls[1]}
+      `,
+    });
+
+    var results = extractor.extract(file);
+    expect(results).toBeDefined();
+    expect(results.length).toBe(2);
+    expect(results[0]).toBe('http://www.google.com');
+    expect(results[1]).toBe('https://google.com');
+  });
+
   it('should return all whitelisted HTTP(s) URLs', function() {
     var include = [/google\.com/];
     var extractor = URLExtractor.create({include: include});
@@ -69,6 +85,7 @@ describe('URL Extractor', function() {
         This url is not whitelisted ${urls[1]}
         This url is not whitelisted ${urls[2]}
         This url should be accepted ${urls[3]}
+        This url is not whitelisted ${urls[4]}
       `,
     });
 
