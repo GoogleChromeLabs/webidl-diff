@@ -1,0 +1,61 @@
+enum USBRequestType {
+  "standard",
+  "class",
+  "vendor"
+};
+
+enum USBRecipient {
+  "device",
+  "interface",
+  "endpoint",
+  "other"
+};
+
+enum USBTransferStatus {
+  "ok",
+  "stall",
+  "babble"
+};
+
+dictionary USBControlTransferParameters {
+  required USBRequestType requestType;
+  required USBRecipient recipient;
+  required octet request;
+  required unsigned short value;
+  required unsigned short index;
+};
+
+[Constructor(USBTransferStatus status, optional DataView? data)]
+interface USBInTransferResult {
+  readonly attribute DataView? data;
+  readonly attribute USBTransferStatus status;
+};
+
+[Constructor(USBTransferStatus status, optional unsigned long bytesWritten = 0)]
+interface USBOutTransferResult {
+  readonly attribute unsigned long bytesWritten;
+  readonly attribute USBTransferStatus status;
+};
+
+[Constructor(USBTransferStatus status, optional DataView? data)]
+interface USBIsochronousInTransferPacket {
+  readonly attribute DataView? data;
+  readonly attribute USBTransferStatus status;
+};
+
+[Constructor(sequence<USBIsochronousInTransferPacket> packets, optional DataView? data)]
+interface USBIsochronousInTransferResult {
+  readonly attribute DataView? data;
+  readonly attribute FrozenArray<USBIsochronousInTransferPacket> packets;
+};
+
+[Constructor(USBTransferStatus status, optional unsigned long bytesWritten = 0)]
+interface USBIsochronousOutTransferPacket {
+  readonly attribute unsigned long bytesWritten;
+  readonly attribute USBTransferStatus status;
+};
+
+[Constructor(sequence<USBIsochronousOutTransferPacket> packets)]
+interface USBIsochronousOutTransferResult {
+  readonly attribute FrozenArray<USBIsochronousOutTransferPacket> packets;
+};

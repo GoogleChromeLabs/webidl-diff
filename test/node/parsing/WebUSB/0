@@ -1,0 +1,24 @@
+dictionary USBDeviceFilter {
+  unsigned short vendorId;
+  unsigned short productId;
+  octet classCode;
+  octet subclassCode;
+  octet protocolCode;
+  DOMString serialNumber;
+};
+
+dictionary USBDeviceRequestOptions {
+  required sequence<USBDeviceFilter> filters;
+};
+
+interface USB : EventTarget {
+  attribute EventHandler onconnect;
+  attribute EventHandler ondisconnect;
+  Promise<sequence<USBDevice>> getDevices();
+  Promise<USBDevice> requestDevice(USBDeviceRequestOptions options);
+};
+
+[SecureContext]
+partial interface Navigator {
+  [SameObject] readonly attribute USB usb;
+};

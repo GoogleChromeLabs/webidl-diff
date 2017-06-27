@@ -1,0 +1,5 @@
+partial interface KeyboardEvent {
+  // The following support legacy user agents
+  readonly attribute unsigned long charCode;
+  readonly attribute unsigned long keyCode;
+};
