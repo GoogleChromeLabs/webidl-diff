@@ -113,7 +113,9 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizeRunner.js`,
 
     `lib${sep}org${sep}chromium${sep}webidl${sep}HTMLFileContents.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractor.js`,
+
+    // Pipeline components
+    `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
   ];
 })();
