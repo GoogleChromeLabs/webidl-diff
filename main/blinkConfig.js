@@ -18,7 +18,7 @@ var config = {
   IDLFileContents: IDLFileContents,
   GitilesIDLFile: GitilesIDLFile,
 };
-config.idlFileContentsFactory = function(path, contents) {
+config.idlFileContentsFactory = function(path, contents, urls) {
   // Classes are injected by ...
   return config.IDLFileContents.create({
     metadata: config.GitilesIDLFile.create({
@@ -28,6 +28,7 @@ config.idlFileContentsFactory = function(path, contents) {
       path: path,
     }),
     contents: contents,
+    specUrls: urls,
   });
 };
 module.exports = { config };
