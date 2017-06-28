@@ -15,7 +15,6 @@ var HTMLFileContents = foam.lookup('org.chromium.webidl.HTMLFileContents');
 var HTTPRequest = foam.lookup('foam.net.RetryHTTPRequest');
 
 process.on('message', function(args) {
-  args = foam.json.parseString(args);
   var parser = args.parser;
   var urls = args.urls;
 
@@ -31,8 +30,8 @@ process.on('message', function(args) {
             });
 
             var obj = {file: file, parser: parser};
-            var x = foam.json.Pretty.stringify(obj);
-            process.send(x);
+            var data = foam.json.Network.objectify(obj);
+            process.send(data);
           });
         })
       .catch(function(ex) {

@@ -22,8 +22,8 @@ const geckoConfig = require('./geckoConfig.js').config;
 const webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
-var includeRegexp = /(dev[.]w3[.]org|[.]github[.]io|spec[.]whatwg[.]org|css-houdini[.]org|csswg[.]org|svgwg[.]org|drafts[.]fxtf[.]org|www[.]khronos[.]org[/](registry[/]webgl[/]specs[/]latest[/][12][.]0|registry[/]typedarray[/]specs[/]latest)|www[.]w3[.]org[/]TR[/]geolocation-API[/]|dvcs.w3.org[/]hg[/]speech-api[/]raw-file[/]tip[/]webspeechapi[.]html)/;
-var excludeRegexp = /web[.]archive[.]org/;
+var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/, /css-houdini\.org/, /csswg\.org/, /svgwg\.org/, /drafts\.fxtf\.org/, /www\.khronos\.org\/(registry\/webgl\/specs\/latest\/[12]\.0|registry\/typedarray\/specs\/latest)/, /www\.w3\.org\/TR\/geolocation-API/, /dvcs\.w3\.org\/hg\/speech-api\/raw-file\/tip\/webspeechapi\.html/];
+var exclude = [/web\.archive\.org/];
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
@@ -36,7 +36,6 @@ var CanonicalizeRunner = foam.lookup('org.chromium.webidl.CanonicalizeRunner');
 // Preparing pipelines
 var ctx = foam.box.Context.create();
 var PipelineBuilder = foam.box.pipeline.PipelineBuilder;
-var builder = PipelineBuilder.create(null, ctx);
 
 // Pipeline Description
 // Fetch from Repositories -> Extract IDL Files -> Process into IDLFileContents
@@ -45,32 +44,33 @@ var builder = PipelineBuilder.create(null, ctx);
 // ->Branch{
 //           (Other) 2-> To Datastore -> ...
 // -> Put partials together -> Diff -> Back to datastore
+var corePath = PipelineBuilder.create(null, ctx)
+                              .append(ParserRunner.create())
+                              .append(CanonicalizeRunner.create());
 
+var coreInit = PipelineBuilder.create(null, ctx)
+                              .append(LocalGitRunner.create());
 
-var pipeline = builder.then(ParserRunner.create())
-                      .then(CanonicalizeRunner.create());
+var blinkPath = PipelineBuilder.create(null, ctx)
+                               .append(FetchSpecRunner.create())
+                               .append(IDLFragmentExtractorRunner.create())
+                               .append(corePath);
 
-builder.first(LocalGitRunner.create());            // Common pipeline
-builder.first(IDLFragmentExtractorRunner.create()) // Special blink path
-       .first(FetchSpecRunner.create())
-       .first(LocalGitRunner.create());
-
-// boxes[0] -> Common
-// boxes[1] -> Special Blink Path
-var boxes = pipeline.buildAll();
+coreInit.append(corePath);
+coreInit.append(blinkPath);
+var pipeline = coreInit.build();
 
 
 var blinkMsg = foam.box.Message.create({ object: {
   config: blinkConfig,
   freshRepo: false,
-  includeRegexp: includeRegexp,
-  excludeRegexp: excludeRegexp,
+  include: include,
+  exclude: exclude,
 }});
 
 
 // Blink Pipeline
-//boxes[0].send(blinkMsg);
-boxes[1].send(blinkMsg);
+pipeline.send(blinkMsg);
 
 // Gecko Pipeline
 //boxes[1].send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
