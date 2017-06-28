@@ -57,23 +57,29 @@ var blinkPath = PipelineBuilder.create(null, ctx)
                                .append(corePath);
 
 coreInit.append(corePath);
-coreInit.append(blinkPath);
+//coreInit.append(blinkPath);
 var pipeline = coreInit.build();
 
-
-var blinkMsg = foam.box.Message.create({ object: {
-  config: blinkConfig,
-  freshRepo: false,
-  include: include,
-  exclude: exclude,
-}});
-
+// Constructing messages
+var msgGenerator = function(config, freshRepo, include, exclude) {
+  return foam.box.Message.create({
+    object: {
+      config: config,
+      freshRepo: freshRepo,
+      include: include,
+      exclude: exclude,
+    },
+  });
+};
 
 // Blink Pipeline
+var blinkMsg = msgGenerator(blinkConfig, false, include, exclude);
 pipeline.send(blinkMsg);
 
 // Gecko Pipeline
-//boxes[1].send(foam.box.Message.create({ object: { config: geckoConfig, freshRepo: false } }));
+var geckoMsg = msgGenerator(geckoConfig, false, null, null);
+pipeline.send(geckoMsg);
 
-// Webkit Pipeline
-//boxes[1].send(foam.box.Message.create({ object: { config: webKitConfig, freshRepo: false } }));
+// WebKit Pipeline
+var webKitMsg = msgGenerator(webKitConfig, false, null, null);
+pipeline.send(webKitMsg);
