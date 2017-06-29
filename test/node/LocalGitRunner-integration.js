@@ -77,6 +77,9 @@ describe('LocalGitRunner integration', function() {
       parser: 'Parser', // Default IDL Parser used for Blink
       IDLFileContents: IDLFileContents,
       GitilesIDLFile: GitilesIDLFile,
+      errorBox: defaultErrorBox,
+      outputBox: defaultOutputBox,
+      urlOutputBox: urlOutputBox,
     };
 
     config.idlFileContentsFactory = function(path, contents, urls) {
@@ -94,12 +97,7 @@ describe('LocalGitRunner integration', function() {
   });
 
   it('should stream mock included files', function(done) {
-    var localGitRunner = LocalGitRunner.create({
-      errorBox: defaultErrorBox,
-      outputBox: defaultOutputBox,
-      urlOutputBox: urlOutputBox,
-    });
-    localGitRunner.run({config: config});
+    var localGitRunner = LocalGitRunner.create(config).run();
 
     setTimeout(function() {
       var expectedPaths = global.testGitRepoData.includePaths;
