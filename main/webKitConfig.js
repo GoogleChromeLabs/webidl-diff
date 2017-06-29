@@ -8,11 +8,11 @@ var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
 
 var githubBaseURL = 'https://github.com/WebKit/webkit';
 var config = {
-  description: 'Scrape IDL Files from WebKit Repository',
+  renderer: 'WebKit',
   repositoryURL: 'https://github.com/WebKit/webkit.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/WebKit/git'),
   sparsePath: 'Source',
-  findExcludePatterns: ['*/testing/*', '*/test/*'],
+  findExcludePatterns: ['*/testing/*', '*/test/*', '*/deprecated/*'],
   extension: 'idl',
   parser: 'WebKitParser',
   IDLFileContents: IDLFileContents,

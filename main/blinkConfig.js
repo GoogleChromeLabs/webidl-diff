@@ -8,7 +8,7 @@ var GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
 
 var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
-  description: 'Scrape IDL Files from Blink Repository',
+  renderer: 'Blink',
   repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',

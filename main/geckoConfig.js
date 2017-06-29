@@ -8,7 +8,7 @@ var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
 
 var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
 var config = {
-  description: 'Scrape IDL Files from Gecko Repository',
+  renderer: 'Gecko',
   repositoryURL: 'https://github.com/mozilla/gecko-dev.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/gecko/git'),
   sparsePath: 'dom',
