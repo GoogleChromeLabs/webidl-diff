@@ -8,6 +8,7 @@
 global.testGitRepoData = {
   includePaths: [
     'third_party/WebKit/Source/include.idl',
+    'third_party/WebKit/Source/includeWithURL.idl',
     'third_party/WebKit/Source/subdir/include.idl',
   ],
 };
