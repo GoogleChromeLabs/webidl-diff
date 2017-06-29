@@ -10,22 +10,9 @@ describe('LocalGitRunner test', function() {
     LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
   });
 
-  it('should throw an error if run() is called with no arugments', function() {
+  it('should throw an error if run() is called without proper initialization', function() {
     var runner = LocalGitRunner.create();
     expect(function() { runner.run(); })
-      .toThrow(new Error("LocalGitRunner: Missing configuration file!"));
-  });
-
-  it('should throw an error if run() is called with invalid arguments', function() {
-    var runner = LocalGitRunner.create();
-    expect(function() { runner.run("Hello world!"); })
-      .toThrow(new Error("LocalGitRunner: Missing configuration file!"));
-  });
-
-  it('should throw an error if run() is called with improper config file', function() {
-    var args = { config: {}};
-    var runner = LocalGitRunner.create();
-    expect(function() { runner.run(args); })
-      .toThrow(new Error("LocalGitRunner: Invalid configuration file"));
+      .toThrow(new Error("LocalGitRunner: Missing required properties!"));
   });
 });

@@ -53,11 +53,11 @@ var blinkPath = PipelineBuilder.create(null, ctx)
                                .append(IDLFragmentExtractorRunner.create())
                                .append(corePath);
 
-var blinkPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create())
+var blinkPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(blinkConfig))
                                                .append(corePath);
-var geckoPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create())
+var geckoPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(geckoConfig))
                                                .append(corePath);
-var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create())
+var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(webKitConfig))
                                                 .append(corePath);
 
 //var pipeline = coreInit.build();
@@ -66,7 +66,6 @@ var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create())
 var msgGenerator = function(config, freshRepo, include, exclude) {
   return foam.box.Message.create({
     object: {
-      config: config,
       freshRepo: freshRepo,
       include: include,
       exclude: exclude,
