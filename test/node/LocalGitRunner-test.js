@@ -5,37 +5,27 @@
 
 describe('LocalGitRunner test', function() {
   var LocalGitRunner;
-  var AccumulatorBox;
-  var defaultErrorBox;
-  var defaultOutputBox;
 
   beforeEach(function() {
-    foam.CLASS({
-      package: 'foam.box.pipeline.test',
-      name: 'AccumulatorBox',
-      implements: [ 'foam.box.Box' ],
-
-      properties: [
-        {
-          class: 'Array',
-          name: 'outputs',
-        },
-      ],
-
-      methods: [
-        function send(message) {
-          this.outputs.push(message.object);
-        },
-        function clear() { this.outputs = []; }
-      ]
-    });
-    AccumulatorBox = foam.lookup('foam.box.pipeline.test.AccumulatorBox');
     LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
-    defaultOutputBox = AccumulatorBox.create();
-    defaultErrorBox = AccumulatorBox.create();
   });
 
-  it('should set properties correctly on run', function() {
-    
+  it('should throw an error if run() is called with no arugments', function() {
+    var runner = LocalGitRunner.create();
+    expect(function() { runner.run(); })
+      .toThrow(new Error("LocalGitRunner: Missing configuration file!"));
+  });
+
+  it('should throw an error if run() is called with invalid arguments', function() {
+    var runner = LocalGitRunner.create();
+    expect(function() { runner.run("Hello world!"); })
+      .toThrow(new Error("LocalGitRunner: Missing configuration file!"));
+  });
+
+  it('should throw an error if run() is called with improper config file', function() {
+    var args = { config: {}};
+    var runner = LocalGitRunner.create();
+    expect(function() { runner.run(args); })
+      .toThrow(new Error("LocalGitRunner: Invalid configuration file"));
   });
 });
