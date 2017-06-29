@@ -15,13 +15,11 @@ var config = {
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',
   parser: 'Parser', // Default IDL Parser used for Blink
-  IDLFileContents: IDLFileContents,
-  GitilesIDLFile: GitilesIDLFile,
 };
 config.idlFileContentsFactory = function(path, contents, urls) {
   // Classes are injected by ...
-  return config.IDLFileContents.create({
-    metadata: config.GitilesIDLFile.create({
+  return IDLFileContents.create({
+    metadata: GitilesIDLFile.create({
       repository: this.repositoryURL,
       gitilesBaseURL: gitilesBaseURL,
       revision: this.commit,

@@ -51,7 +51,8 @@ var corePath = PipelineBuilder.create(null, ctx)
 var blinkPath = PipelineBuilder.create(null, ctx)
                                .append(FetchSpecRunner.create())
                                .append(IDLFragmentExtractorRunner.create())
-                               .append(corePath);
+                               .append(corePath)
+                               .build();
 
 var blinkPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(blinkConfig))
                                                .append(corePath);
@@ -63,25 +64,25 @@ var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(we
 //var pipeline = coreInit.build();
 
 // Constructing messages
-var msgGenerator = function(config, freshRepo, include, exclude) {
+var msgGenerator = function(freshRepo, include, exclude, urlOutputBox) {
   return foam.box.Message.create({
     object: {
       freshRepo: freshRepo,
       include: include,
       exclude: exclude,
+      urlOutputBox: urlOutputBox,
     },
   });
 };
 
 // Blink Pipeline
-blinkConfig.urlOutputBox = blinkPath.build();
-var blinkMsg = msgGenerator(blinkConfig, false, include, exclude);
+var blinkMsg = msgGenerator(false, include, exclude, blinkPath);
 blinkPL.build().send(blinkMsg);
 
 // Gecko Pipeline
-var geckoMsg = msgGenerator(geckoConfig, false, null, null);
+var geckoMsg = msgGenerator(false, null, null);
 geckoPL.build().send(geckoMsg);
 
 // WebKit Pipeline
-var webKitMsg = msgGenerator(webKitConfig, false, null, null);
+var webKitMsg = msgGenerator(false, null, null);
 webKitPL.build().send(webKitMsg);

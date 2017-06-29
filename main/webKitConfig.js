@@ -15,13 +15,11 @@ var config = {
   findExcludePatterns: ['*/testing/*', '*/test/*', '*/deprecated/*'],
   extension: 'idl',
   parser: 'WebKitParser',
-  IDLFileContents: IDLFileContents,
-  GithubIDLFile: GithubIDLFile,
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by ...
-  return config.IDLFileContents.create({
-    metadata: config.GithubIDLFile.create({
+  return IDLFileContents.create({
+    metadata: GithubIDLFile.create({
       repository: this.repositoryURL,
       githubBaseURL: githubBaseURL,
       revision: this.commit,
