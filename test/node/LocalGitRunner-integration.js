@@ -112,14 +112,18 @@ describe('LocalGitRunner integration', function() {
       // list may differ though.
       expect(urlOutputBox.outputs.length).toBe(1);
 
-      var len = outputs.length;
       for (var i = 0; i < outputs.length; i++) {
-        var actualPath = outputs[i].file.metadata.path;
+        var file = outputs[i].file;
+        var actualPath = file.metadata.path;
         var expectedPath = expectedPaths[i];
 
+        // Verify that properties were populated correctly
         expect(expectedPath.includes(actualPath)).toBe(true);
+        expect(file.id[0]).toBe(repositoryURL);
+        expect(file.id[1]).toBe(gitHash);
+        expect(file.id[2]).toBe(actualPath);
       }
       done();
-    }, 500);
+    }, 1000);
   });
 });
