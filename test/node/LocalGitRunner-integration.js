@@ -74,10 +74,9 @@ describe('LocalGitRunner integration', function() {
       sparsePath: 'third_party/WebKit/Source',
       findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
       extension: 'idl',
-      parser: 'Parser', // Default IDL Parser used for Blink
-      errorBox: defaultErrorBox,
-      outputBox: defaultOutputBox,
-      urlOutputBox: urlOutputBox,
+      parser: 'Parser', // Default IDL Parser used for Blink.
+      errorBox: defaultErrorBox,   // Not normally provided during pipelining.
+      outputBox: defaultOutputBox, // Not normally provided during pipelining.
     };
 
     config.idlFileContentsFactory = function(path, contents, urls) {
@@ -95,7 +94,9 @@ describe('LocalGitRunner integration', function() {
   });
 
   it('should stream mock included files', function(done) {
-    var localGitRunner = LocalGitRunner.create(config).run();
+    var localGitRunner = LocalGitRunner.create(config).run({
+      urlOutputBox: urlOutputBox,
+    });
 
     setTimeout(function() {
       var expectedPaths = global.testGitRepoData.includePaths;
