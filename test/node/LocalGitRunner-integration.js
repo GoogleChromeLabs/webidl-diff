@@ -120,6 +120,6 @@ describe('LocalGitRunner integration', function() {
         expect(file.id[2]).toBe(actualPath);
       }
       done();
-    }, 1000);
+    }, 3000);
   });
 });
