@@ -110,6 +110,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitIDLFileDAO.js`,
 
     // Pipeline components
+    `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
   ];
 })();
