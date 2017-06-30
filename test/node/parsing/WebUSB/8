@@ -1,0 +1,9 @@
+dictionary AllowedUSBDevice {
+  required octet vendorId;
+  required octet productId;
+  DOMString serialNumber;
+};
+
+dictionary USBPermissionStorage {
+  required sequence<AllowedUSBDevice> allowedDevices = [];
+};
