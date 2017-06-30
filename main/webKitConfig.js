@@ -11,10 +11,11 @@ var config = {
   renderer: 'WebKit',
   repositoryURL: 'https://github.com/WebKit/webkit.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/WebKit/git'),
-  sparsePath: 'Source',
+  sparsePath: 'Source/WebCore',
   findExcludePatterns: ['*/testing/*', '*/test/*', '*/deprecated/*'],
   extension: 'idl',
   parser: 'WebKitParser',
+  freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by ...

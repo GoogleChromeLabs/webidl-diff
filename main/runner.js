@@ -23,7 +23,7 @@ const webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
 var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/, /css-houdini\.org/, /csswg\.org/, /svgwg\.org/, /drafts\.fxtf\.org/, /www\.khronos\.org\/(registry\/webgl\/specs\/latest\/[12]\.0|registry\/typedarray\/specs\/latest)/, /www\.w3\.org\/TR\/geolocation-API/, /dvcs\.w3\.org\/hg\/speech-api\/raw-file\/tip\/webspeechapi\.html/];
-var exclude = [/web\.archive\.org/];
+var exclude = [/web\.archive\.org/, /archives/ ];
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
@@ -54,6 +54,9 @@ var blinkPath = PipelineBuilder.create(null, ctx)
                                .append(corePath)
                                .build();
 
+blinkConfig.urlOutputBox = blinkPath;
+blinkConfig.include = include;
+blinkConfig.exclude = exclude;
 var blinkPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(blinkConfig))
                                                .append(corePath);
 var geckoPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(geckoConfig))
@@ -63,7 +66,6 @@ var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(we
 
 //var pipeline = coreInit.build();
 
-// Constructing messages
 var msgGenerator = function(freshRepo, include, exclude, urlOutputBox) {
   return foam.box.Message.create({
     object: {

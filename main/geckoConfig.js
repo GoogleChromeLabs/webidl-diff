@@ -15,6 +15,7 @@ var config = {
   findExcludePatterns: ['*/test/*'],
   extension: 'webidl',
   parser: 'GeckoParser',
+  freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by ...

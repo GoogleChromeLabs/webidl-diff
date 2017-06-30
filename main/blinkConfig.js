@@ -15,6 +15,7 @@ var config = {
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',
   parser: 'Parser', // Default IDL Parser used for Blink
+  freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents, urls) {
   // Classes are injected by ...
