@@ -125,7 +125,7 @@ describe('IDLFragmentExtractor', function() {
 
   it('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
-    var expectedFragments = 18;
+    var expectedFragments = 17;
     cmpTest('UI Events', testDirectory, expectedFragments);
   });
 
@@ -137,13 +137,13 @@ describe('IDLFragmentExtractor', function() {
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
     var testDirectory = `${__dirname}/WebUSB`;
-    var expectedFragments = 11;
+    var expectedFragments = 10;
     cmpTest('WebUSB', testDirectory, expectedFragments);
   });
 
   it('should parse the XMLHttpRequest spec HTML file (whatwg)', function() {
     var testDirectory = `${__dirname}/XMLHttpRequest`;
-    var expectedFragments = 4;
+    var expectedFragments = 3;
     cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
