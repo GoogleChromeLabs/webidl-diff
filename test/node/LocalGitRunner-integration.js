@@ -78,6 +78,7 @@ describe('LocalGitRunner integration', function() {
       urlOutputBox: urlOutputBox,
       errorBox: defaultErrorBox,   // Not normally provided during pipelining.
       outputBox: defaultOutputBox, // Not normally provided during pipelining.
+      freshRepo: false,            // Do not clear mock files and attempt fetch
     };
 
     config.idlFileContentsFactory = function(path, contents, urls) {
@@ -109,7 +110,7 @@ describe('LocalGitRunner integration', function() {
       expect(urlOutputBox.outputs.length).toBe(1);
 
       for (var i = 0; i < outputs.length; i++) {
-        var file = outputs[i].file;
+        var file = outputs[i].idlFile;
         var actualPath = file.metadata.path;
         var expectedPath = expectedPaths[i];
 
