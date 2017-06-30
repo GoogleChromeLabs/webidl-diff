@@ -109,6 +109,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
 
     // Pipeline components
+    `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
   ];
