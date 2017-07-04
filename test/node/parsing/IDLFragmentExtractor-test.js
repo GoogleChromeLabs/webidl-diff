@@ -8,9 +8,9 @@ describe('IDLFragmentExtractor', function() {
   var IDLFragmentExtractor;
   var Parser;
 
-  function cmpTest(testName, testDirectory, numExpectedIDLFragments) {
+  function cmpTest(testName, testDirectory, numExpectedIDLFragments, raw) {
     var fs = require('fs');
-    var dir = `${testDirectory}/spec.html`;
+    var dir = `${testDirectory}/${raw ? 'spec-raw' : 'spec'}.html`;
     var spec = fs.readFileSync(dir).toString();
     var htmlFile = HTMLFileContents.create({
       url: dir, // Setting URL to dir for testing purposes only.
@@ -33,7 +33,7 @@ describe('IDLFragmentExtractor', function() {
           var path = `${testDirectory}/${filename}`;
           var expectedContent = fs.readFileSync(path).toString();
           expect(idlFragments[testNum].trim()).toBe(expectedContent.trim());
-        } else if (filename !== 'spec.html') {
+        } else if (filename !== 'spec.html' && filename !== 'spec-raw.html') {
           fail(`File ${filename} was not used in ${testName} spec test`);
         }
       });
@@ -125,7 +125,7 @@ describe('IDLFragmentExtractor', function() {
 
   it('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
-    var expectedFragments = 18;
+    var expectedFragments = 17;
     cmpTest('UI Events', testDirectory, expectedFragments);
   });
 
@@ -137,19 +137,31 @@ describe('IDLFragmentExtractor', function() {
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
     var testDirectory = `${__dirname}/WebUSB`;
-    var expectedFragments = 11;
+    var expectedFragments = 10;
     cmpTest('WebUSB', testDirectory, expectedFragments);
   });
 
   it('should parse the XMLHttpRequest spec HTML file (whatwg)', function() {
     var testDirectory = `${__dirname}/XMLHttpRequest`;
-    var expectedFragments = 4;
+    var expectedFragments = 3;
     cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
-  it('should parse the whatwg HTML standard', function() {
+  it('should parse the whatwg HTML standard (properly formatted)', function() {
     var testDirectory = `${__dirname}/whatwg`;
     var expectedFragments = 45;
     cmpTest('whatwg HTML', testDirectory, expectedFragments);
+  });
+
+  describe('should parse the Embedded Content spec HTML file', function() {
+    var testDirectory = `${__dirname}/EmbeddedContent`;
+    var expectedFragments = 21;
+    it('Properly Formatted', function() {
+      cmpTest('Embedded Content (properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('Embedded Content (raw)', testDirectory, expectedFragments, true);
+    });
   });
 });

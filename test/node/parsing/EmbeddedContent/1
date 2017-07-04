@@ -1,0 +1,8 @@
+[HTMLConstructor]
+interface HTMLSourceElement : HTMLElement {
+  [CEReactions] attribute USVString src;
+  [CEReactions] attribute DOMString type;
+  [CEReactions] attribute USVString srcset;
+  [CEReactions] attribute DOMString sizes;
+  [CEReactions] attribute DOMString media;
+};
