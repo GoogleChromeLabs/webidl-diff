@@ -123,45 +123,76 @@ describe('IDLFragmentExtractor', function() {
     expect(extractor.idlFragments[0]).toBe(secondIDL);
   });
 
-  it('should parse the UI Events spec HTML file (w3c)', function() {
+  describe('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
-    var expectedFragments = 17;
-    cmpTest('UI Events', testDirectory, expectedFragments);
+    var expectedFragments = 18;
+    it('Properly Formatted', function() {
+      cmpTest('UI Events (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('UI Events (Raw)', testDirectory, expectedFragments, true);
+    });
   });
 
-  it('should parse the WebGL spec HTML file (khronos)', function() {
+  describe('should parse the WebGL spec HTML file (khronos)', function() {
     var testDirectory = `${__dirname}/WebGL`;
     var expectedFragments = 7;
-    cmpTest('WebGL', testDirectory, expectedFragments);
+
+    it('Properly Formatted', function() {
+      cmpTest('WebGL (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('WebGL (Raw)', testDirectory, expectedFragments, true);
+    });
+  });
+
+  describe('should parse the Embedded Content spec (wicg)', function() {
+    var testDirectory = `${__dirname}/EmbeddedContent`;
+    var expectedFragments = 21;
+    it('Properly Formatted', function() {
+      cmpTest('Embedded Content (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('Embedded Content (Raw)', testDirectory, expectedFragments, true);
+    });
   });
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
     var testDirectory = `${__dirname}/WebUSB`;
-    var expectedFragments = 10;
+    var expectedFragments = 11;
     cmpTest('WebUSB', testDirectory, expectedFragments);
   });
 
   it('should parse the XMLHttpRequest spec HTML file (whatwg)', function() {
     var testDirectory = `${__dirname}/XMLHttpRequest`;
-    var expectedFragments = 3;
+    var expectedFragments = 4;
     cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
-  it('should parse the whatwg HTML standard (properly formatted)', function() {
-    var testDirectory = `${__dirname}/whatwg`;
-    var expectedFragments = 45;
-    cmpTest('whatwg HTML', testDirectory, expectedFragments);
-  });
-
-  describe('should parse the Embedded Content spec HTML file', function() {
-    var testDirectory = `${__dirname}/EmbeddedContent`;
-    var expectedFragments = 21;
+  describe('should parse the Console standard HTML (whatwg)', function() {
+    var testDirectory = `${__dirname}/Console`;
+    var expectedFragments = 2;
     it('Properly Formatted', function() {
-      cmpTest('Embedded Content (properly formatted)', testDirectory, expectedFragments);
+      cmpTest('Console (Properly formatted)', testDirectory, expectedFragments);
     });
 
     it('Raw', function() {
-      cmpTest('Embedded Content (raw)', testDirectory, expectedFragments, true);
+      cmpTest('Console (Raw)', testDirectory, expectedFragments, true);
+    });
+  });
+
+  describe('should parse the whatwg HTML standard', function() {
+    var testDirectory = `${__dirname}/whatwg`;
+    var expectedFragments = 178;
+    it('Properly formatted', function() {
+      cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('whatwg HTML Standard (Raw)', testDirectory, expectedFragments, true);
     });
   });
 });
