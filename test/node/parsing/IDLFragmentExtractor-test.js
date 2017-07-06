@@ -6,7 +6,6 @@
 describe('IDLFragmentExtractor', function() {
   var HTMLFileContents;
   var IDLFragmentExtractor;
-  var Parser;
 
   function cmpTest(testName, testDirectory, numExpectedIDLFragments, raw) {
     var fs = require('fs');
@@ -190,9 +189,9 @@ describe('IDLFragmentExtractor', function() {
 
     // To be used for debugging purposes. Too much memory will be used
     // if this and raw is run together.
-    //it('Properly formatted', function() {
-    //  cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
-    //});
+    // it('Properly formatted', function() {
+    //   cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
+    // });
 
     it('Raw', function() {
       cmpTest('whatwg HTML Standard (Raw)', testDirectory, expectedFragments, true);
