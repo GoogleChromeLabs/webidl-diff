@@ -125,7 +125,7 @@ describe('IDLFragmentExtractor', function() {
 
   describe('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
-    var expectedFragments = 18;
+    var expectedFragments = 17;
     it('Properly Formatted', function() {
       cmpTest('UI Events (Properly formatted)', testDirectory, expectedFragments);
     });
@@ -162,19 +162,19 @@ describe('IDLFragmentExtractor', function() {
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
     var testDirectory = `${__dirname}/WebUSB`;
-    var expectedFragments = 11;
+    var expectedFragments = 10;
     cmpTest('WebUSB', testDirectory, expectedFragments);
   });
 
   it('should parse the XMLHttpRequest spec HTML file (whatwg)', function() {
     var testDirectory = `${__dirname}/XMLHttpRequest`;
-    var expectedFragments = 4;
+    var expectedFragments = 3;
     cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
   describe('should parse the Console standard HTML (whatwg)', function() {
     var testDirectory = `${__dirname}/Console`;
-    var expectedFragments = 2;
+    var expectedFragments = 1;
     it('Properly Formatted', function() {
       cmpTest('Console (Properly formatted)', testDirectory, expectedFragments);
     });
@@ -187,9 +187,12 @@ describe('IDLFragmentExtractor', function() {
   describe('should parse the whatwg HTML standard', function() {
     var testDirectory = `${__dirname}/whatwg`;
     var expectedFragments = 178;
-    it('Properly formatted', function() {
-      cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
-    });
+
+    // To be used for debugging purposes. Too much memory will be used
+    // if this and raw is run together.
+    //it('Properly formatted', function() {
+    //  cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
+    //});
 
     it('Raw', function() {
       cmpTest('whatwg HTML Standard (Raw)', testDirectory, expectedFragments, true);
