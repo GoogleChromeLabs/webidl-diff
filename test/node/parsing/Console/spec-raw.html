@@ -1,0 +1,582 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <meta content="#3c790a" name="theme-color">
+  <title>Console Standard</title>
+  <link href="https://resources.whatwg.org/standard.css" rel="stylesheet">
+  <link href="https://resources.whatwg.org/bikeshed.css" rel="stylesheet">
+  <link href="https://resources.whatwg.org/logo-console.svg" rel="icon">
+  <meta content="Bikeshed version 39e591568007a470c8705dd14db3d9d86db98356" name="generator">
+<style>
+  .note + .example, .note + .note { margin-top: 1em; }
+
+  emu-val { font-weight: bold; }
+  emu-alg > ol, emu-alg > ol ol ol ol { list-style-type: decimal; }
+  emu-alg > ol ol, emu-alg > ol ol ol ol ol { list-style-type: lower-alpha; }
+  emu-alg > ol ol ol, emu-alg > ol ol ol ol ol ol { list-style-type: lower-roman; }
+  emu-alg li { margin: 0; }
+
+  .heading[aoid] .annotation {
+    background-color: beige;
+    border: 1px solid black;
+    border-radius: 3px;
+    cursor: help;
+    display: inline-block;
+    font-size: 70%;
+    font-weight: normal;
+    padding: 1px 2px;
+  }
+</style>
+<style>/* style-syntax-highlighting */
+pre.idl.highlight { color: #708090; }
+        .highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+        code.highlight { padding: .1em; border-radius: .3em; }
+        pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+        .highlight .c { color: #708090 } /* Comment */
+        .highlight .k { color: #990055 } /* Keyword */
+        .highlight .l { color: #000000 } /* Literal */
+        .highlight .n { color: #0077aa } /* Name */
+        .highlight .o { color: #999999 } /* Operator */
+        .highlight .p { color: #999999 } /* Punctuation */
+        .highlight .cm { color: #708090 } /* Comment.Multiline */
+        .highlight .cp { color: #708090 } /* Comment.Preproc */
+        .highlight .c1 { color: #708090 } /* Comment.Single */
+        .highlight .cs { color: #708090 } /* Comment.Special */
+        .highlight .kc { color: #990055 } /* Keyword.Constant */
+        .highlight .kd { color: #990055 } /* Keyword.Declaration */
+        .highlight .kn { color: #990055 } /* Keyword.Namespace */
+        .highlight .kp { color: #990055 } /* Keyword.Pseudo */
+        .highlight .kr { color: #990055 } /* Keyword.Reserved */
+        .highlight .kt { color: #990055 } /* Keyword.Type */
+        .highlight .ld { color: #000000 } /* Literal.Date */
+        .highlight .m { color: #000000 } /* Literal.Number */
+        .highlight .s { color: #a67f59 } /* Literal.String */
+        .highlight .na { color: #0077aa } /* Name.Attribute */
+        .highlight .nc { color: #0077aa } /* Name.Class */
+        .highlight .no { color: #0077aa } /* Name.Constant */
+        .highlight .nd { color: #0077aa } /* Name.Decorator */
+        .highlight .ni { color: #0077aa } /* Name.Entity */
+        .highlight .ne { color: #0077aa } /* Name.Exception */
+        .highlight .nf { color: #0077aa } /* Name.Function */
+        .highlight .nl { color: #0077aa } /* Name.Label */
+        .highlight .nn { color: #0077aa } /* Name.Namespace */
+        .highlight .py { color: #0077aa } /* Name.Property */
+        .highlight .nt { color: #669900 } /* Name.Tag */
+        .highlight .nv { color: #222222 } /* Name.Variable */
+        .highlight .ow { color: #999999 } /* Operator.Word */
+        .highlight .mb { color: #000000 } /* Literal.Number.Bin */
+        .highlight .mf { color: #000000 } /* Literal.Number.Float */
+        .highlight .mh { color: #000000 } /* Literal.Number.Hex */
+        .highlight .mi { color: #000000 } /* Literal.Number.Integer */
+        .highlight .mo { color: #000000 } /* Literal.Number.Oct */
+        .highlight .sb { color: #a67f59 } /* Literal.String.Backtick */
+        .highlight .sc { color: #a67f59 } /* Literal.String.Char */
+        .highlight .sd { color: #a67f59 } /* Literal.String.Doc */
+        .highlight .s2 { color: #a67f59 } /* Literal.String.Double */
+        .highlight .se { color: #a67f59 } /* Literal.String.Escape */
+        .highlight .sh { color: #a67f59 } /* Literal.String.Heredoc */
+        .highlight .si { color: #a67f59 } /* Literal.String.Interpol */
+        .highlight .sx { color: #a67f59 } /* Literal.String.Other */
+        .highlight .sr { color: #a67f59 } /* Literal.String.Regex */
+        .highlight .s1 { color: #a67f59 } /* Literal.String.Single */
+        .highlight .ss { color: #a67f59 } /* Literal.String.Symbol */
+        .highlight .vc { color: #0077aa } /* Name.Variable.Class */
+        .highlight .vg { color: #0077aa } /* Name.Variable.Global */
+        .highlight .vi { color: #0077aa } /* Name.Variable.Instance */
+        .highlight .il { color: #000000 } /* Literal.Number.Integer.Long */
+        </style>
+ </head><body class="h-entry status-LS">
+  <div class="head">
+   <p data-fill-with="logo"><a class="logo" href="https://whatwg.org/"> <img alt="WHATWG" height="100" src="https://resources.whatwg.org/logo-console.svg"> </a> </p>
+   <hgroup>
+    <h1 class="p-name no-ref" id="title">Console</h1>
+    <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Living Standard — Last Updated <time class="dt-updated" datetime="2017-06-20">20 June 2017</time></span></h2>
+   </hgroup>
+   <div data-fill-with="spec-metadata">
+    <dl>
+     <dt class="editor">Editors:
+     </dt><dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="https://terinstock.com">Terin Stock</a> <a class="u-email email" href="mailto:terin@terinstock.com">terin@terinstock.com</a>
+     </dd><dd class="editor p-author h-card vcard"><a class="p-name fn u-url url" href="http://kowalski.gd">Robert Kowalski</a> <a class="u-email email" href="mailto:rok@kowalski.gd">rok@kowalski.gd</a>
+     </dd><dt>Participate:
+     </dt><dd><span><a href="https://github.com/whatwg/console">GitHub whatwg/console</a> (<a href="https://github.com/whatwg/console/issues/new">new issue</a>, <a href="https://github.com/whatwg/console/issues">open issues</a>)</span>
+     </dd><dd><span><a href="https://wiki.whatwg.org/wiki/IRC">IRC: #whatwg on Freenode</a></span>
+     </dd><dt>Commits:
+     </dt><dd><span><a href="https://github.com/whatwg/console/commits">GitHub whatwg/console/commits</a></span>
+     </dd><dd><span><a href="/commit-snapshots/85f43d6715f46664a72eec189f0baf2c2faa448b/" id="commit-snapshot-link">Snapshot as of this commit</a></span>
+     </dd><dd><span><a href="https://twitter.com/consolelog">@consolelog</a></span>
+     </dd><dt>Tests:
+     </dt><dd><span><a href="https://github.com/w3c/web-platform-tests/tree/master/console">web-platform-tests console/</a> (<a href="https://github.com/w3c/web-platform-tests/labels/console">ongoing work</a>)</span>
+     </dd><dd><span></span>
+    </dd></dl>
+   </div>
+   <div data-fill-with="warning"></div>
+  </div>
+  <div class="p-summary" data-fill-with="abstract">
+   <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
+   <p>This specification defines APIs for console debugging facilities.</p>
+  </div>
+  <nav data-fill-with="table-of-contents" id="toc">
+   <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
+   <ol class="toc" role="directory">
+    <li>
+     <a href="#supporting-ops"><span class="secno">1</span> <span class="content">Supporting abstract operations</span></a>
+     <ol class="toc">
+      <li><a href="#logger"><span class="secno">1.1</span> <span class="content">Logger(<var>logLevel</var>, <var>args</var>)</span></a>
+      </li><li>
+       <a href="#formatter"><span class="secno">1.2</span> <span class="content">Formatter(<var>args</var>)</span></a>
+       <ol class="toc">
+        <li><a href="#formatting-specifiers"><span class="secno">1.2.1</span> <span class="content">Summary of formatting specifiers</span></a>
+       </li></ol>
+      </li><li>
+       <a href="#printer"><span class="secno">1.3</span> <span class="content">Printer(<var>logLevel</var>, <var>args</var> [, <var>options</var>])</span></a>
+       <ol class="toc">
+        <li><a href="#loglevel-severity"><span class="secno">1.3.1</span> <span class="content">Indicating <var>logLevel</var> severity</span></a>
+        </li><li><a href="#printer-ux-innovation"><span class="secno">1.3.2</span> <span class="content">Printer user experience innovation</span></a>
+        </li><li><a href="#object-formats"><span class="secno">1.3.3</span> <span class="content">Common object formats</span></a>
+        </li><li><a href="#nodejs-printer"><span class="secno">1.3.4</span> <span class="content">Example printer in Node.js</span></a>
+       </li></ol>
+     </li></ol>
+    </li><li>
+     <a href="#console-namespace"><span class="secno">2</span> <span class="content">Namespace <code>console</code></span></a>
+     <ol class="toc">
+      <li>
+       <a href="#logging"><span class="secno">2.1</span> <span class="content">Logging methods</span></a>
+       <ol class="toc">
+        <li><a href="#assert"><span class="secno">2.1.1</span> <span class="content">assert(<var>condition</var>, ...<var>data</var>)</span></a>
+        </li><li><a href="#clear"><span class="secno">2.1.2</span> <span class="content">clear()</span></a>
+        </li><li><a href="#count"><span class="secno">2.1.3</span> <span class="content">count(<var>label</var>)</span></a>
+        </li><li><a href="#debug"><span class="secno">2.1.4</span> <span class="content">debug(...<var>data</var>)</span></a>
+        </li><li><a href="#error"><span class="secno">2.1.5</span> <span class="content">error(...<var>data</var>)</span></a>
+        </li><li><a href="#info"><span class="secno">2.1.6</span> <span class="content">info(...<var>data</var>)</span></a>
+        </li><li><a href="#log"><span class="secno">2.1.7</span> <span class="content">log(...<var>data</var>)</span></a>
+        </li><li><a href="#table"><span class="secno">2.1.8</span> <span class="content">table(<var>tabularData</var>, <var>properties</var>)</span></a>
+        </li><li><a href="#trace"><span class="secno">2.1.9</span> <span class="content">trace(...<var>data</var>)</span></a>
+        </li><li><a href="#warn"><span class="secno">2.1.10</span> <span class="content">warn(...<var>data</var>)</span></a>
+        </li><li><a href="#dir"><span class="secno">2.1.11</span> <span class="content">dir(<var>item</var>, <var>options</var>)</span></a>
+        </li><li><a href="#dirxml"><span class="secno">2.1.12</span> <span class="content">dirxml(...<var>data</var>)</span></a>
+       </li></ol>
+      </li><li>
+       <a href="#grouping"><span class="secno">2.2</span> <span class="content">Grouping methods</span></a>
+       <ol class="toc">
+        <li><a href="#group"><span class="secno">2.2.1</span> <span class="content">group(...<var>data</var>)</span></a>
+        </li><li><a href="#groupcollapsed"><span class="secno">2.2.2</span> <span class="content">groupCollapsed(...<var>data</var>)</span></a>
+        </li><li><a href="#groupend"><span class="secno">2.2.3</span> <span class="content">groupEnd()</span></a>
+       </li></ol>
+      </li><li>
+       <a href="#timing"><span class="secno">2.3</span> <span class="content">Timing methods</span></a>
+       <ol class="toc">
+        <li><a href="#time"><span class="secno">2.3.1</span> <span class="content">time(<var>label</var>)</span></a>
+        </li><li><a href="#timeend"><span class="secno">2.3.2</span> <span class="content">timeEnd(<var>label</var>)</span></a>
+       </li></ol>
+     </li></ol>
+    </li><li><a href="#inspection"><span class="secno">3</span> <span class="content">JavaScript object inspection</span></a>
+    </li><li><a href="#acks"><span class="secno"></span> <span class="content">Acknowledgments</span></a>
+    </li><li>
+     <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+      </li><li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
+     </li></ol>
+    </li><li>
+     <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
+     <ol class="toc">
+      <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
+     </li></ol>
+    </li><li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
+   </li></ol>
+  </nav>
+  <main>
+<script async="" src="https://resources.whatwg.org/file-issue.js"></script>
+<script async="" src="https://resources.whatwg.org/commit-snapshot-shortcut-key.js"></script>
+<script defer="" src="https://resources.whatwg.org/dfn.js"></script>
+   <h2 class="no-num no-toc heading settled" id="status"><span class="content">Status</span></h2>
+   <p>This specification is an early work in progress that welcomes feedback to refine toward more
+precise and compatible definitions. It is also the editors' first specification, so please be kind
+and constructive.</p>
+   <p>Please join us in the <a href="https://github.com/whatwg/console/issues">issue tracker</a> for more
+discussion.</p>
+   <h2 class="heading settled" data-level="1" id="supporting-ops"><span class="secno">1. </span><span class="content">Supporting abstract operations</span><a class="self-link" href="#supporting-ops"></a></h2>
+   <h3 class="heading settled" data-level="1.1" id="logger" nothrow="" data-dfn-type="abstract-op" data-lt="Logger"><span class="secno">1.1. </span><span class="content">Logger(<var>logLevel</var>, <var>args</var>)</span><a class="self-link" href="#logger"></a></h3>
+   <p>The logger operation accepts a log level and a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> of other arguments. Its main output is the
+implementation-defined side effect of printing the result to the console. This specification
+describes how it processes format specifiers while doing so.</p>
+    <emu-alg><ol><li>If <var>args</var> is empty, abort these steps.</li><li>Let <var>first</var> be the first element of <var>args</var>.</li><li>Let <var>rest</var> be all elements following <var>first</var> in <var>args</var>.</li><li>If <var>rest</var> is empty, perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>(<var>logLevel</var>, «<var>first</var>»). Abort these steps.</li><li>If <var>first</var> does not contain any format specifiers, perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>(<var>logLevel</var>, <var>args</var>).</li><li>Otherwise, perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>(<var>logLevel</var>, <emu-xref aoid="Formatter"><a href="#formatter">Formatter</a></emu-xref>(<var>args</var>)).</li><li>Return <emu-val>undefined</emu-val>.</li></ol></emu-alg> 
+   <div class="note" role="note">
+     It’s important that the printing occurs before returning from the algorithm. Many developer
+  consoles print the result of the last operation entered into them. In such consoles, when a
+  developer enters <code>console.log("hello!")</code>, this should first print "hello!", then the
+  undefined return value from the console.log call. 
+    <p><img alt="Indicating that printing is done before return" src="images/print-before-returning.png"></p>
+   </div>
+   <h3 class="heading settled" data-level="1.2" id="formatter" nothrow="" data-dfn-type="abstract-op" data-lt="Formatter"><span class="secno">1.2. </span><span class="content">Formatter(<var>args</var>)</span><a class="self-link" href="#formatter"></a></h3>
+   <p>The formatter operation tries to format the first argument provided, using the other arguments. It
+will try to format the input until no formatting specifiers are left in the first argument, or no
+more arguments are left. It returns a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> of objects suitable for printing.</p>
+    <emu-alg><ol><li>Let <var>target</var> be the first element of <var>args</var>.</li><li>Let <var>current</var> be the second element of <var>args</var>.</li><li>Find the first possible format specifier <var>specifier</var>, from the left to the right in <var>target</var>.<ol><li>If <var>specifier</var> is <code>%s</code>, let <var>converted</var> be the result of <emu-xref aoid="ToString"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>current</var>).</li><li>If <var>specifier</var> is <code>%d</code> or <code>%i</code>, let <var>converted</var> be the result of <emu-xref href="#sec-parseint-string-radix"><a href="https://tc39.github.io/ecma262/#sec-parseint-string-radix">%parseInt%</a></emu-xref>(<var>current</var>, 10).</li><li>If <var>specifier</var> is <code>%f</code>, let <var>converted</var> be the result of  <emu-xref href="#sec-parsefloat-string"><a href="https://tc39.github.io/ecma262/#sec-parsefloat-string">%parseFloat%</a></emu-xref>(<var>current</var>, 10).</li><li>If <var>specifier</var> is <code>%o</code>, optionally let <var>converted</var> be <var>current</var> with
+    <a data-link-type="dfn" href="#optimally-useful-formatting">optimally useful formatting</a> applied.</li><li>If <var>specifier</var> is <code>%O</code>, optionally let <var>converted</var> be <var>current</var> with
+    <a data-link-type="dfn" href="#generic-javascript-object-formatting">generic JavaScript object formatting</a> applied.</li><li><p class="XXX">TODO: process %c</p></li><li>If any of the previous steps set <var>converted</var>, replace <var>specifier</var> in <var>target</var> with
+    <var>converted</var>.</li><li>Let <var>result</var> be a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> containing <var>target</var> together with the elements of <var>args</var> starting
+    from the third onward.</li></ol></li><li>If <var>target</var> does not have any format specifiers left, return <var>result</var>.</li><li>If <var>result</var> contains just one element, return <var>result</var>.</li><li>Return <emu-xref aoid="Formatter"><a href="#formatter">Formatter</a></emu-xref>(<var>result</var>).</li></ol></emu-alg> 
+   <h4 class="heading settled" data-level="1.2.1" id="formatting-specifiers"><span class="secno">1.2.1. </span><span class="content">Summary of formatting specifiers</span><a class="self-link" href="#formatting-specifiers"></a></h4>
+   <p>The following is an informative summary of the format specifiers processed by the above algorithm.</p>
+   <table>
+    <thead>
+     <tr>
+      <th>Specifier
+      </th><th>Purpose
+      </th><th>Type Conversion
+    </th></tr></thead><tbody>
+     <tr>
+      <td><code>%s</code>
+      </td><td>Element which substitutes is converted to a string
+      </td><td><emu-xref aoid="ToString"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>element</var>)
+     </td></tr><tr>
+      <td><code>%d</code> or <code>%i</code>
+      </td><td>Element which substitutes is converted to an integer
+      </td><td><emu-xref href="#sec-parseint-string-radix"><a href="https://tc39.github.io/ecma262/#sec-parseint-string-radix">%parseInt%</a></emu-xref>(<var>element</var>, 10)
+     </td></tr><tr>
+      <td><code>%f</code>
+      </td><td>Element which substitutes is converted to a float
+      </td><td><emu-xref href="#sec-parsefloat-string"><a href="https://tc39.github.io/ecma262/#sec-parsefloat-string">%parseFloat%</a></emu-xref>(<var>element</var>, 10)
+     </td></tr><tr>
+      <td><code>%o</code>
+      </td><td>Element is displayed with <a data-link-type="dfn" href="#optimally-useful-formatting">optimally useful formatting</a>
+      </td><td>n/a
+     </td></tr><tr>
+      <td><code>%O</code>
+      </td><td>Element is displayed with <a data-link-type="dfn" href="#generic-javascript-object-formatting">generic JavaScript object formatting</a>
+      </td><td>n/a
+     </td></tr><tr>
+      <td><code>%c</code>
+      </td><td>Applies provided CSS
+      </td><td>n/a
+   </td></tr></tbody></table>
+   <h3 class="heading settled" data-level="1.3" id="printer" nothrow="" data-dfn-type="abstract-op" data-lt="Printer"><span class="secno">1.3. </span><span class="content">Printer(<var>logLevel</var>, <var>args</var> [, <var>options</var>])</span><a class="self-link" href="#printer"></a></h3>
+   <p>The printer operation is implementation-defined. It accepts a log level indicating severity, a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>
+of arguments to print, and an optional object of implementation-specific formatting options.
+Elements appearing in <var>args</var> will be one of the following:</p>
+   <ul>
+    <li data-md="">
+     <p>JavaScript objects of any type.</p>
+    </li><li data-md="">
+     <p>Implementation-specific representations of printable things such as a stack trace or <a data-link-type="dfn" href="#concept-group">group</a>.</p>
+    </li><li data-md="">
+     <p>Objects with either <a data-link-type="dfn" href="#generic-javascript-object-formatting">generic JavaScript object formatting</a> or <a data-link-type="dfn" href="#optimally-useful-formatting">optimally useful formatting</a> applied.</p>
+   </li></ul>
+   <p>If the <var>options</var> object is passed, and is not undefined or null, implementations may use <var>options</var> to apply implementation-specific formatting to the elements in <var>args</var>.</p>
+   <p>How the implementation prints <var>args</var> is up to the implementation, but implementations
+should separate the objects by a space or something similar, as that has become a developer
+expectation.</p>
+   <p>By the time the printer operation is called, all format specifiers will have been taken into
+account, and any arguments that are meant to be consumed by format specifiers will not be present
+in <var>args</var>. The implementation’s job is simply to print the <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>. The output produced by
+calls to <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref> should appear only within the last <a data-link-type="dfn" href="#concept-group">group</a> on the appropriate <a data-link-type="dfn" href="#group-stack">group stack</a> if the <a data-link-type="dfn" href="#group-stack">group stack</a> is not empty, or elsewhere in the console otherwise.</p>
+   <p>If the console is not open when the printer operation is called,
+implementations should buffer messages to show them in the future up to an
+implementation-chosen limit (typically on the order of at least 100).</p>
+   <h4 class="heading settled" data-level="1.3.1" id="loglevel-severity"><span class="secno">1.3.1. </span><span class="content">Indicating <var>logLevel</var> severity</span><a class="self-link" href="#loglevel-severity"></a></h4>
+   <p>Each <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> method uses a unique value for the <var>logLevel</var> parameter when calling
+<emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>, allowing implementations to customize each printed message depending on the method from
+which it originated. However, it is common practice to group together certain methods and treat
+their output similarly, in four broad categories. This table summarizes these common groupings:</p>
+   <table>
+    <thead>
+     <tr>
+      <th>Grouping
+      </th><th><code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> methods
+      </th><th>Description
+    </th></tr></thead><tbody>
+     <tr>
+      <td>log
+      </td><td> <code> <code class="idl"><a data-link-type="idl" href="#log">log()</a></code>, <code class="idl"><a data-link-type="idl" href="#trace">trace()</a></code>, <code class="idl"><a data-link-type="idl" href="#dir">dir()</a></code>, <code class="idl"><a data-link-type="idl" href="#dirxml">dirxml()</a></code>, <code class="idl"><a data-link-type="idl" href="#group">group()</a></code>, <code class="idl"><a data-link-type="idl" href="#groupcollapsed">groupCollapsed()</a></code>, <code class="idl"><a data-link-type="idl" href="#debug">debug()</a></code> </code> 
+      </td><td> A generic log 
+     </td></tr><tr>
+      <td>info
+      </td><td><code><code class="idl"><a data-link-type="idl" href="#count">count()</a></code>, <code class="idl"><a data-link-type="idl" href="#info">info()</a></code>, <code class="idl"><a data-link-type="idl" href="#timeend">timeEnd()</a></code></code>
+      </td><td> An informative log 
+     </td></tr><tr>
+      <td>warn
+      </td><td><code><code class="idl"><a data-link-type="idl" href="#warn">warn()</a></code></code>
+      </td><td> A log warning the user of something indicated by the message 
+     </td></tr><tr>
+      <td>error
+      </td><td><code><code class="idl"><a data-link-type="idl" href="#error">error()</a></code>, <code class="idl"><a data-link-type="idl" href="#assert">assert()</a></code></code>
+      </td><td> A log indicating an error to the user 
+   </td></tr></tbody></table>
+   <p>These groupings are meant to document common practices, and do not constrain implementations from
+providing special behavior for each method, as in the following examples:</p>
+   <div class="example" id="timeEnd-formatting">
+    <a class="self-link" href="#timeEnd-formatting"></a> Here you can see one implementation chose to make output produced by calls to <code class="idl"><a data-link-type="idl" href="#timeend">timeEnd()</a></code> blue, while leaving <code class="idl"><a data-link-type="idl" href="#info">info()</a></code> a more neutral color. 
+    <p><img alt="A demonstration of timeEnd and info formatting differences" src="images/timeEnd-formatting.png"></p>
+   </div>
+   <div class="example" id="count-output">
+    <a class="self-link" href="#count-output"></a> Calls to <code class="idl"><a data-link-type="idl" href="#count">count()</a></code> might not always print new output, but instead could update previously-output counts. 
+    <p><img alt="A demonstration of count behavior" src="images/edge-Count.png"></p>
+   </div>
+   <h4 class="heading settled" data-level="1.3.2" id="printer-ux-innovation"><span class="secno">1.3.2. </span><span class="content">Printer user experience innovation</span><a class="self-link" href="#printer-ux-innovation"></a></h4>
+   <p>Since <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref> is implementation-defined, it is common to see UX innovations in its implementations.
+The following is a non-exhaustive list of potential UX enhancements:</p>
+   <ul>
+    <li>
+     <p>De-duplication of identical output to prevent spam.</p>
+     <div class="example" id="dedupe-example">
+      <a class="self-link" href="#dedupe-example"></a> In this example, the implementation not only batches multiple identical messages, but also
+      provides the number of messages that have been batched together. 
+      <p><img alt="A demonstration of console message de-duplication" src="images/dedupe.png"></p>
+     </div>
+    </li><li>
+     <p>Extra UI off to the side allowing the user to filter messages by log level severity.</p>
+     <div class="example" id="severity-filter-example"><a class="self-link" href="#severity-filter-example"></a> <img alt="" src="images/severity-filter.png"> </div>
+    </li><li> Extra UI off to the side indicating the current state of the <a data-link-type="dfn" href="#timer-table">timer table</a>, <a data-link-type="dfn" href="#group-stack">group stack</a>, or other internally maintained data. 
+    </li><li>Flashing portions of the console to alert the user of something important.
+   </li></ul>
+   <h4 class="heading settled" data-level="1.3.3" id="object-formats"><span class="secno">1.3.3. </span><span class="content">Common object formats</span><a class="self-link" href="#object-formats"></a></h4>
+   <p>Typically objects will be printed in a format that is suitable for their context. This section
+describes common ways in which objects are formatted to be most useful in their context. It should
+be noted that the formatting described in this section is applied to implementation-specific object
+representations that will eventually be passed into <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>, where the actual side effect of
+formatting will be seen.</p>
+   <p>An object with <dfn data-dfn-type="dfn" data-noexport="" id="generic-javascript-object-formatting">generic JavaScript object formatting<a class="self-link" href="#generic-javascript-object-formatting"></a></dfn> is a potentially expandable
+representation of a generic JavaScript object. An object with <dfn data-dfn-type="dfn" data-noexport="" id="optimally-useful-formatting">optimally useful formatting<a class="self-link" href="#optimally-useful-formatting"></a></dfn> is an implementation-specific, potentially-interactive
+representation of an object judged to be maximally useful and informative.</p>
+   <h4 class="heading settled" data-level="1.3.4" id="nodejs-printer"><span class="secno">1.3.4. </span><span class="content">Example printer in Node.js</span><a class="self-link" href="#nodejs-printer"></a></h4>
+   <div class="example" id="nodejs-printer-example">
+    <a class="self-link" href="#nodejs-printer-example"></a> The simplest way to implement the printer operation on the Node.js platform is to join the
+  previously formatted arguments separated by a space and write the output to <code>stdout</code> or <code>stderr</code>. 
+    <p>Example implementation in Node.js using <a data-link-type="biblio" href="#biblio-ecmascript">[ECMASCRIPT]</a>:</p>
+<pre><code class="lang-javascript highlight"><span class="kr">const</span> util <span class="o">=</span> require<span class="p">(</span><span class="s1">'util'</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">function</span> print<span class="p">(</span>logLevel<span class="p">,</span> <span class="p">...</span>args<span class="p">)</span> <span class="p">{</span>
+  <span class="kr">const</span> message <span class="o">=</span> util<span class="p">.</span>format<span class="p">(</span><span class="p">...</span>args<span class="p">)</span><span class="p">;</span>
+
+  <span class="k">if</span> <span class="p">(</span>logLevel <span class="o">===</span> <span class="s1">'error'</span><span class="p">)</span> <span class="p">{</span>
+    process<span class="p">.</span>stderr<span class="p">.</span>write<span class="p">(</span>message <span class="o">+</span> <span class="s1">'\n'</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span>logLevel <span class="o">===</span> <span class="s1">'log'</span> <span class="o">||</span> logLevel <span class="o">===</span> <span class="s1">'info'</span> <span class="o">||</span> logLevel <span class="o">===</span> <span class="s1">'warn'</span><span class="p">)</span> <span class="p">{</span>
+    process<span class="p">.</span>stdout<span class="p">.</span>write<span class="p">(</span>message <span class="o">+</span> <span class="s1">'\n'</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+    <p>Here a lot of the work is done by the <code>util.format</code> function. It stringifies nested
+  objects, and converts non-string arguments into a readable string version, e.g. undefined becomes
+  the string <code>"undefined"</code> and false becomes <code>"false"</code>:</p>
+<pre><code class="lang-javascript highlight">print<span class="p">(</span><span class="s1">'log'</span><span class="p">,</span> <span class="s1">'duck'</span><span class="p">,</span> <span class="p">[</span><span class="p">{</span>foo<span class="o">:</span> <span class="s1">'bar'</span><span class="p">}</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>     <span class="c1">// prints: `duck [ { foo: 'bar' } ]\n` on stdout
+</span>print<span class="p">(</span><span class="s1">'log'</span><span class="p">,</span> <span class="s1">'duck'</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span><span class="p">;</span>              <span class="c1">// prints: `duck false\n` on stdout
+</span>print<span class="p">(</span><span class="s1">'log'</span><span class="p">,</span> <span class="s1">'duck'</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span><span class="p">;</span>          <span class="c1">// prints: `duck undefined\n` on stdout
+</span></code></pre>
+   </div>
+   <h2 class="heading settled" data-level="2" id="console-namespace"><span class="secno">2. </span><span class="content">Namespace <code>console</code></span><span id="console-interface"></span><a class="self-link" href="#console-namespace"></a></h2>
+<pre class="idl highlight def">[<a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=(<span class="n">Window</span>,<span class="n">Worker</span>,<span class="n">Worklet</span>)]
+<span class="kt">namespace</span> <dfn class="nv idl-code" data-dfn-type="namespace" data-export="" id="namespacedef-console"><code>console</code><a class="self-link" href="#namespacedef-console"></a></dfn> { // but see namespace object requirements below
+  // Logging
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#assert">assert</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><span class="kt">boolean</span></a> <dfn class="nv idl-code" data-dfn-for="console/assert(condition, ...data)" data-dfn-type="argument" data-export="" id="dom-console-assert-condition-data-condition"><code>condition</code><a class="self-link" href="#dom-console-assert-condition-data-condition"></a></dfn> = <span class="kt">false</span>, <span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/assert(condition, ...data)" data-dfn-type="argument" data-export="" id="dom-console-assert-condition-data-data"><code>data</code><a class="self-link" href="#dom-console-assert-condition-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#clear">clear</a>();
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#count">count</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <dfn class="nv idl-code" data-dfn-for="console/count(label), console/count()" data-dfn-type="argument" data-export="" id="dom-console-count-label-label"><code>label</code><a class="self-link" href="#dom-console-count-label-label"></a></dfn> = "default");
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#debug">debug</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/debug(...data)" data-dfn-type="argument" data-export="" id="dom-console-debug-data-data"><code>data</code><a class="self-link" href="#dom-console-debug-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#error">error</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/error(...data)" data-dfn-type="argument" data-export="" id="dom-console-error-data-data"><code>data</code><a class="self-link" href="#dom-console-error-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#info">info</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/info(...data)" data-dfn-type="argument" data-export="" id="dom-console-info-data-data"><code>data</code><a class="self-link" href="#dom-console-info-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#log">log</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/log(...data)" data-dfn-type="argument" data-export="" id="dom-console-log-data-data"><code>data</code><a class="self-link" href="#dom-console-log-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#table">table</a>(<span class="kt">any</span> <dfn class="nv idl-code" data-dfn-for="console/table(tabularData, properties), console/table(tabularData)" data-dfn-type="argument" data-export="" id="dom-console-table-tabulardata-properties-tabulardata"><code>tabularData</code><a class="self-link" href="#dom-console-table-tabulardata-properties-tabulardata"></a></dfn>, <span class="kt">optional</span> <span class="kt">sequence</span>&lt;<a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a>&gt; <dfn class="nv idl-code" data-dfn-for="console/table(tabularData, properties), console/table(tabularData)" data-dfn-type="argument" data-export="" id="dom-console-table-tabulardata-properties-properties"><code>properties</code><a class="self-link" href="#dom-console-table-tabulardata-properties-properties"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#trace">trace</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/trace(...data)" data-dfn-type="argument" data-export="" id="dom-console-trace-data-data"><code>data</code><a class="self-link" href="#dom-console-trace-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#warn">warn</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/warn(...data)" data-dfn-type="argument" data-export="" id="dom-console-warn-data-data"><code>data</code><a class="self-link" href="#dom-console-warn-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#dir">dir</a>(<span class="kt">any</span> <dfn class="nv idl-code" data-dfn-for="console/dir(item, options), console/dir(item)" data-dfn-type="argument" data-export="" id="dom-console-dir-item-options-item"><code>item</code><a class="self-link" href="#dom-console-dir-item-options-item"></a></dfn>, <span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-object"><span class="kt">object</span></a>? <dfn class="nv idl-code" data-dfn-for="console/dir(item, options), console/dir(item)" data-dfn-type="argument" data-export="" id="dom-console-dir-item-options-options"><code>options</code><a class="self-link" href="#dom-console-dir-item-options-options"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#dirxml">dirxml</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/dirxml(...data)" data-dfn-type="argument" data-export="" id="dom-console-dirxml-data-data"><code>data</code><a class="self-link" href="#dom-console-dirxml-data-data"></a></dfn>);
+
+  // Grouping
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#group">group</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/group(...data)" data-dfn-type="argument" data-export="" id="dom-console-group-data-data"><code>data</code><a class="self-link" href="#dom-console-group-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#groupcollapsed">groupCollapsed</a>(<span class="kt">any</span>... <dfn class="nv idl-code" data-dfn-for="console/groupCollapsed(...data)" data-dfn-type="argument" data-export="" id="dom-console-groupcollapsed-data-data"><code>data</code><a class="self-link" href="#dom-console-groupcollapsed-data-data"></a></dfn>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#groupend">groupEnd</a>();
+
+  // Timing
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#time">time</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <dfn class="nv idl-code" data-dfn-for="console/time(label), console/time()" data-dfn-type="argument" data-export="" id="dom-console-time-label-label"><code>label</code><a class="self-link" href="#dom-console-time-label-label"></a></dfn> = "default");
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#timeend">timeEnd</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <dfn class="nv idl-code" data-dfn-for="console/timeEnd(label), console/timeEnd()" data-dfn-type="argument" data-export="" id="dom-console-timeend-label-label"><code>label</code><a class="self-link" href="#dom-console-timeend-label-label"></a></dfn> = "default");
+};
+</pre>
+   <p class="note" role="note"> For historical reasons, <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> is lowercased. </p>
+   <p class="note" role="note"> It is important that <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> is always visible and usable to scripts, even if the developer
+  console has not been opened or
+  does not exist. </p>
+   <p>For historical web-compatibility reasons, the <a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-namespace-object">namespace object</a> for <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> must have as
+its [[Prototype]] an empty object, created as if by <emu-xref aoid="ObjectCreate"><a href="https://tc39.github.io/ecma262/#sec-objectcreate">ObjectCreate</a></emu-xref>(<emu-xref href="#sec-properties-of-the-object-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-object-prototype-object">%ObjectPrototype%</a></emu-xref>), instead of
+<emu-xref href="#sec-properties-of-the-object-prototype-object"><a href="https://tc39.github.io/ecma262/#sec-properties-of-the-object-prototype-object">%ObjectPrototype%</a></emu-xref>.</p>
+   <h3 class="heading settled" data-level="2.1" id="logging"><span class="secno">2.1. </span><span class="content">Logging methods</span><a class="self-link" href="#logging"></a></h3>
+   <p>Each <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> namespace object has an associated <dfn data-dfn-type="dfn" data-noexport="" id="count-map">count map<a class="self-link" href="#count-map"></a></dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map">map</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string">strings</a> to labels, initially empty.</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.1" data-lt="assert(condition, ...data)" id="assert"><code><span class="secno">2.1.1. </span><span class="content">assert(<var>condition</var>, ...<var>data</var>)</span><span id="assert-condition-data"></span><span id="dom-console-assert"></span></code><a class="self-link" href="#assert"></a></h4>
+    <emu-alg><ol><li>If <var>condition</var> is true, abort these steps.</li><li>Let <var>message</var> be a string without any formatting specifiers indicating generically an
+  assertion failure (such as "Assertion failed").</li><li>If <var>data</var> is empty, append <var>message</var> to <var>data</var>.</li><li>Otherwise, implementations should perform these substeps:<ol><li>Let <var>first</var> be the first element of <var>data</var>.</li><li>If <emu-xref aoid="Type"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-data-types-and-values">Type</a></emu-xref>(<var>first</var>) is not String, prepend <var>message</var> to <var>data</var>. Abort these substeps.</li><li>Let <var>concat</var> be the concatenation of <var>message</var>, U+003A COLON (:), U+0020 SPACE, and <var>first</var>.</li><li>Set <var>data[0]</var> to <var>concat</var>.</li></ol></li><li>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("assert", <var>data</var>).</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.2" data-lt="clear()" id="clear"><code><span class="secno">2.1.2. </span><span class="content">clear()</span><span id="dom-console-clear"></span></code><a class="self-link" href="#clear"></a></h4>
+   <p>Empty the appropriate <a data-link-type="dfn" href="#group-stack">group stack</a>, and if possible for the environment, clear the console.
+Otherwise, do nothing.</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.3" data-lt="count(label)|count()" id="count"><code><span class="secno">2.1.3. </span><span class="content">count(<var>label</var>)</span><span id="count-label"></span><span id="dom-console-count"></span></code><a class="self-link" href="#count"></a></h4>
+    <emu-alg><ol><li>Let <var>map</var> be the associated <a data-link-type="dfn" href="#count-map">count map</a>.</li><li>If <var>map</var>[<var>label</var>] <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exists">exists</a>, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set">set</a> <var>map</var>[<var>label</var>] to <var>map</var>[<var>label</var>] + 1.</li><li>Otherwise, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set">set</a> <var>map</var>[<var>label</var>] to 1.</li><li>Let <var>concat</var> be the concatenation of <var>label</var>, U+003A COLON (:), U+0020 SPACE, and
+  <emu-xref aoid="ToString"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>called</var>).</li><li>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("count", «<var>concat</var>»).</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.4" data-lt="debug(...data)" id="debug"><code><span class="secno">2.1.4. </span><span class="content">debug(...<var>data</var>)</span><span id="debug-data"></span><span id="dom-console-debug"></span></code><a class="self-link" href="#debug"></a></h4>
+   <p>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("debug", <var>data</var>).</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.5" data-lt="error(...data)" id="error"><code><span class="secno">2.1.5. </span><span class="content">error(...<var>data</var>)</span><span id="error-data"></span><span id="dom-console-error"></span></code><a class="self-link" href="#error"></a></h4>
+   <p>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("error", <var>data</var>).</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.6" data-lt="info(...data)" id="info"><code><span class="secno">2.1.6. </span><span class="content">info(...<var>data</var>)</span><span id="info-data"></span><span id="dom-console-info"></span></code><a class="self-link" href="#info"></a></h4>
+   <p>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("info", <var>data</var>).</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.7" data-lt="log(...data)" id="log"><code><span class="secno">2.1.7. </span><span class="content">log(...<var>data</var>)</span><span id="log-data"></span><span id="dom-console-log"></span></code><a class="self-link" href="#log"></a></h4>
+   <p>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("log", <var>data</var>).</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.8" data-lt="table(tabularData, properties)|table(tabularData)" id="table"><code><span class="secno">2.1.8. </span><span class="content">table(<var>tabularData</var>, <var>properties</var>)</span><span id="table-tabulardata-properties"></span><span id="dom-console-table"></span></code><a class="self-link" href="#table"></a></h4>
+   <p>Try to construct a table with the columns of the properties of <var>tabularData</var> (or use <var>properties</var>) and rows of <var>tabularData</var> and log it with a logLevel of log. Fall
+back to just logging the argument if it can’t be parsed as tabular.</p>
+   <p class="XXX">TODO: This will need a good algorithm.</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.9" data-lt="trace(...data)" id="trace"><code><span class="secno">2.1.9. </span><span class="content">trace(...<var>data</var>)</span><span id="trace-data"></span><span id="dom-console-trace"></span></code><a class="self-link" href="#trace"></a></h4>
+    <emu-alg><ol><li>Let <var>trace</var> be some implementation-specific, potentially-interactive representation of the
+  callstack from where this method was called.</li><li>Optionally let <var>formattedData</var> be the result of <emu-xref aoid="Formatter"><a href="#formatter">Formatter</a></emu-xref>(<var>data</var>), and incorporate
+  <var>formattedData</var> as a label for <var>trace</var>.</li><li>Perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>("trace", «<var>trace</var>»).</li></ol></emu-alg> 
+   <p class="note" role="note"> The identifier of a function printed in a stack trace is implementation-dependant. It is also not
+  guaranteed to be the same identifier that would be seen in <code>new Error().stack</code> </p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.10" data-lt="warn(...data)" id="warn"><code><span class="secno">2.1.10. </span><span class="content">warn(...<var>data</var>)</span><span id="warn-data"></span><span id="dom-console-warn"></span></code><a class="self-link" href="#warn"></a></h4>
+   <p>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("warn", <var>data</var>).</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.11" data-lt="dir(item, options)|dir(item)" id="dir"><code><span class="secno">2.1.11. </span><span class="content">dir(<var>item</var>, <var>options</var>)</span></code><a class="self-link" href="#dir"></a></h4>
+    <emu-alg><ol><li>Let <var>object</var> be <var>item</var> with <a data-link-type="dfn" href="#generic-javascript-object-formatting">generic JavaScript object formatting</a> applied.</li><li>Perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>("dir", «<var>object</var>», <var>options</var>).</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.1.12" data-lt="dirxml(...data)" id="dirxml"><code><span class="secno">2.1.12. </span><span class="content">dirxml(...<var>data</var>)</span></code><a class="self-link" href="#dirxml"></a></h4>
+    <emu-alg><ol><li>Let <var>finalList</var> be a new <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list">list</a>, initially empty.</li><li>For each <var>item</var> of <var>data</var>:<ol><li>Let <var>converted</var> be a DOM tree representation of <var>item</var> if possible, otherwise let
+    <var>converted</var> be <var>item</var> with <a data-link-type="dfn" href="#optimally-useful-formatting">optimally useful formatting</a> applied.</li><li>Append <var>converted</var> to <var>finalList</var>.</li></ol></li><li>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("dirxml", <var>finalList</var>).</li></ol></emu-alg> 
+   <h3 class="heading settled" data-level="2.2" id="grouping"><span class="secno">2.2. </span><span class="content">Grouping methods</span><a class="self-link" href="#grouping"></a></h3>
+   <p>A <dfn data-dfn-type="dfn" data-noexport="" id="concept-group">group<a class="self-link" href="#concept-group"></a></dfn> is an implementation-specific, potentially-interactive view
+for output produced by calls to <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>, with one further level of indentation than its parent. Each <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> namespace object has an associated <dfn data-dfn-type="dfn" data-noexport="" id="group-stack">group stack<a class="self-link" href="#group-stack"></a></dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#stack">stack</a>,
+initially empty. Only the last <a data-link-type="dfn" href="#concept-group">group</a> in a <a data-link-type="dfn" href="#group-stack">group stack</a> will host output produced by
+calls to <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>.</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.2.1" data-lt="group(...data)" id="group"><code><span class="secno">2.2.1. </span><span class="content">group(...<var>data</var>)</span><span id="group-data"></span><span id="dom-console-group"></span></code><a class="self-link" href="#group"></a></h4>
+    <emu-alg><ol><li>Let <var>group</var> be a new <a data-link-type="dfn" href="#concept-group">group</a>.</li><li>If <var>data</var> is not empty, let <var>groupLabel</var> be the result of <emu-xref aoid="Formatter"><a href="#formatter">Formatter</a></emu-xref>(data). Otherwise, let
+  <var>groupLabel</var> be an implementation-chosen label representing a <a data-link-type="dfn" href="#concept-group">group</a>.</li><li>Incorporate <var>groupLabel</var> as a label for <var>group</var>.</li><li>Optionally, if the environment supports interactive groups, <var>group</var> should be expanded by
+  default.</li><li>Perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>("group", «<var>group</var>»).</li><li><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#stack-push">Push</a> <var>group</var> onto the appropriate <a data-link-type="dfn" href="#group-stack">group stack</a>.</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.2.2" data-lt="groupCollapsed(...data)" id="groupcollapsed"><code><span class="secno">2.2.2. </span><span class="content">groupCollapsed(...<var>data</var>)</span><span id="groupcollapsed-data"></span><span id="dom-console-groupcollapsed"></span></code><a class="self-link" href="#groupcollapsed"></a></h4>
+    <emu-alg><ol><li>Let <var>group</var> be a new <a data-link-type="dfn" href="#concept-group">group</a>.</li><li>If <var>data</var> is not empty, let <var>groupLabel</var> be the result of <emu-xref aoid="Formatter"><a href="#formatter">Formatter</a></emu-xref>(data). Otherwise, let
+  <var>groupLabel</var> be an implementation-chosen label representing a <a data-link-type="dfn" href="#concept-group">group</a>.</li><li>Incorporate <var>groupLabel</var> as a label for <var>group</var>.</li><li>Optionally, if the environment supports interactive groups, <var>group</var> should be collapsed by
+  default.</li><li>Perform <emu-xref aoid="Printer"><a href="#printer">Printer</a></emu-xref>("groupCollapsed", «<var>group</var>»).</li><li><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#stack-push">Push</a> <var>group</var> onto the appropriate <a data-link-type="dfn" href="#group-stack">group stack</a>.</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.2.3" data-lt="groupEnd()" id="groupend"><code><span class="secno">2.2.3. </span><span class="content">groupEnd()</span><span id="dom-console-groupend"></span></code><a class="self-link" href="#groupend"></a></h4>
+   <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#stack-pop">Pop</a> the last <a data-link-type="dfn" href="#concept-group">group</a> from the <a data-link-type="dfn" href="#group-stack">group stack</a>.</p>
+   <h3 class="heading settled" data-level="2.3" id="timing"><span class="secno">2.3. </span><span class="content">Timing methods</span><a class="self-link" href="#timing"></a></h3>
+   <p>Each <code class="idl"><a data-link-type="idl" href="#namespacedef-console">console</a></code> namespace object has an associated <dfn data-dfn-type="dfn" data-noexport="" id="timer-table">timer table<a class="self-link" href="#timer-table"></a></dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map">map</a> of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#string">strings</a> to times, initially empty.</p>
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.3.1" data-lt="time(label)|time()" id="time"><code><span class="secno">2.3.1. </span><span class="content">time(<var>label</var>)</span><span id="time-label"></span><span id="dom-console-time"></span></code><a class="self-link" href="#time"></a></h4>
+    <emu-alg><ol><li>If the associated <a data-link-type="dfn" href="#timer-table">timer table</a> contains an entry with key <var>label</var>, abort, optionally
+     reporting a warning to the console indicating that a timer with label <var>label</var> has already been
+     started.</li><li>Otherwise, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set">set</a> the value of the entry with key <var>label</var> in the associated
+     <a data-link-type="dfn" href="#timer-table">timer table</a> to the current time.</li></ol></emu-alg> 
+   <h4 class="heading settled idl-code" data-dfn-for="console" data-dfn-type="method" data-export="" data-level="2.3.2" data-lt="timeEnd(label)|timeEnd()" id="timeend"><code><span class="secno">2.3.2. </span><span class="content">timeEnd(<var>label</var>)</span><span id="timeend-label"></span><span id="dom-console-timeend"></span></code><a class="self-link" href="#timeend"></a></h4>
+    <emu-alg><ol><li>Let <var>startTime</var> be the result of <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-get">getting</a> the value of the entry with key
+     <var>label</var> in the associated <a data-link-type="dfn" href="#timer-table">timer table</a>.</li><li>Let <var>duration</var> be a string representing the difference between the current time and
+     <var>startTime</var>, in an implementation-defined format.
+     <p class="example" id="duration-string-example"><a class="self-link" href="#duration-string-example"></a>"4650", "4650.69 ms", "5 seconds", and "00:05"
+     are all reasonable ways of displaying a 4650.69 ms duration.</p></li><li>Let <var>concat</var> be the concatenation of <var>label</var>, U+003A COLON (:), U+0020 SPACE, and <var>duration</var>.</li><li>Perform <emu-xref aoid="Logger"><a href="#logger">Logger</a></emu-xref>("timeEnd", «<var>concat</var>»).</li></ol></emu-alg> 
+   <h2 class="heading settled" data-level="3" id="inspection"><span class="secno">3. </span><span class="content">JavaScript object inspection</span><a class="self-link" href="#inspection"></a></h2>
+   <p>TODO: Define an interface that allows JavaScript objects to format themselves for inspection.</p>
+   <h2 class="no-num heading settled" id="acks"><span class="content">Acknowledgments</span><a class="self-link" href="#acks"></a></h2>
+   <p>The editors would like to thank
+Boris Zbarsky,
+Brent S.A. Cowgill,
+Brian Grinstead,
+Corey Farwell,
+Ian Kilpatrick,
+Jeff Carpenter,
+Joseph Pecoraro,
+Justin Woo,
+Noah Bass,
+Paul Irish,
+Raphaël, and
+Victor Costan
+for their contributions to this specification. You are awesome!</p>
+   <p>This standard is written by <a href="https://terinstock.com">Terin Stock</a> (<a href="mailto:terin@terinstock.com">terin@terinstock.com</a>), <a href="http://kowalski.gd">Robert Kowalski</a> (<a href="mailto:rok@kowalski.gd">rok@kowalski.gd</a>), and <a href="https://domfarolino.com">Dominic Farolino</a> (<a href="mailto:domfarolino@gmail.com">domfarolino@gmail.com</a>)
+with major help from <a href="https://domenic.me/">Domenic Denicola</a> (<a href="https://google.com">Google</a>, <a href="mailto:d@domenic.me">d@domenic.me</a>).</p>
+   <p>Per <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>, to the extent possible
+under law, the editors have waived all copyright and related or neighboring rights to this work.</p>
+  </main>
+  <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#assert">assert(condition, ...data)</a><span>, in §2.1</span>
+   </li><li><a href="#clear">clear()</a><span>, in §2.1.1</span>
+   </li><li><a href="#namespacedef-console">console</a><span>, in §2</span>
+   </li><li><a href="#count">count()</a><span>, in §2.1.2</span>
+   </li><li><a href="#count">count(label)</a><span>, in §2.1.2</span>
+   </li><li><a href="#count-map">count map</a><span>, in §2.1</span>
+   </li><li><a href="#debug">debug(...data)</a><span>, in §2.1.3</span>
+   </li><li><a href="#dir">dir(item)</a><span>, in §2.1.10</span>
+   </li><li><a href="#dir">dir(item, options)</a><span>, in §2.1.10</span>
+   </li><li><a href="#dirxml">dirxml(...data)</a><span>, in §2.1.11</span>
+   </li><li><a href="#error">error(...data)</a><span>, in §2.1.4</span>
+   </li><li><a href="#generic-javascript-object-formatting">generic JavaScript object formatting</a><span>, in §1.3.3</span>
+   </li><li><a href="#concept-group">group</a><span>, in §2.2</span>
+   </li><li><a href="#groupcollapsed">groupCollapsed(...data)</a><span>, in §2.2.1</span>
+   </li><li><a href="#group">group(...data)</a><span>, in §2.2</span>
+   </li><li><a href="#groupend">groupEnd()</a><span>, in §2.2.2</span>
+   </li><li><a href="#group-stack">group stack</a><span>, in §2.2</span>
+   </li><li><a href="#info">info(...data)</a><span>, in §2.1.5</span>
+   </li><li><a href="#log">log(...data)</a><span>, in §2.1.6</span>
+   </li><li><a href="#optimally-useful-formatting">optimally useful formatting</a><span>, in §1.3.3</span>
+   </li><li><a href="#table">table(tabularData)</a><span>, in §2.1.7</span>
+   </li><li><a href="#table">table(tabularData, properties)</a><span>, in §2.1.7</span>
+   </li><li><a href="#time">time()</a><span>, in §2.3</span>
+   </li><li><a href="#timeend">timeEnd()</a><span>, in §2.3.1</span>
+   </li><li><a href="#timeend">timeEnd(label)</a><span>, in §2.3.1</span>
+   </li><li><a href="#time">time(label)</a><span>, in §2.3</span>
+   </li><li><a href="#timer-table">timer table</a><span>, in §2.3</span>
+   </li><li><a href="#trace">trace(...data)</a><span>, in §2.1.8</span>
+   </li><li><a href="#warn">warn(...data)</a><span>, in §2.1.9</span>
+  </li></ul>
+  <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
+  <ul class="index">
+   <li>
+    <a data-link-type="biblio">[INFRA]</a> defines the following terms:
+    <ul>
+     <li><a href="https://infra.spec.whatwg.org/#map-exists">exist</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#map-get">get</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#list">list</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#ordered-map">map</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#stack-pop">pop</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#stack-push">push</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#map-set">set</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#stack">stack</a>
+     </li><li><a href="https://infra.spec.whatwg.org/#string">string</a>
+    </li></ul>
+   </li><li>
+    <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
+    <ul>
+     <li><a href="https://heycam.github.io/webidl/#idl-DOMString">DOMString</a>
+     </li><li><a href="https://heycam.github.io/webidl/#Exposed">Exposed</a>
+     </li><li><a href="https://heycam.github.io/webidl/#idl-boolean">boolean</a>
+     </li><li><a href="https://heycam.github.io/webidl/#dfn-namespace-object">namespace object</a>
+     </li><li><a href="https://heycam.github.io/webidl/#idl-object">object</a>
+    </li></ul>
+  </li></ul>
+  <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
+  <dl>
+   <dt id="biblio-ecmascript">[ECMASCRIPT]
+   </dt><dd><a href="https://tc39.github.io/ecma262/">ECMAScript Language Specification</a>. URL: <a href="https://tc39.github.io/ecma262/">https://tc39.github.io/ecma262/</a>
+   </dd><dt id="biblio-infra">[INFRA]
+   </dt><dd>Anne van Kesteren; Domenic Denicola. <a href="https://infra.spec.whatwg.org/">Infra Standard</a>. Living Standard. URL: <a href="https://infra.spec.whatwg.org/">https://infra.spec.whatwg.org/</a>
+   </dd><dt id="biblio-webidl">[WebIDL]
+   </dt><dd>Cameron McCormack; Boris Zbarsky; Tobie Langel. <a href="https://heycam.github.io/webidl/">Web IDL</a>. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
+  </dd></dl>
+  <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
+<pre class="idl highlight def">[<a class="nv idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed">Exposed</a>=(<span class="n">Window</span>,<span class="n">Worker</span>,<span class="n">Worklet</span>)]
+<span class="kt">namespace</span> <a class="nv" href="#namespacedef-console"><code>console</code></a> { // but see namespace object requirements below
+  // Logging
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#assert">assert</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><span class="kt">boolean</span></a> <a class="nv" href="#dom-console-assert-condition-data-condition"><code>condition</code></a> = <span class="kt">false</span>, <span class="kt">any</span>... <a class="nv" href="#dom-console-assert-condition-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#clear">clear</a>();
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#count">count</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <a class="nv" href="#dom-console-count-label-label"><code>label</code></a> = "default");
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#debug">debug</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-debug-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#error">error</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-error-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#info">info</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-info-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#log">log</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-log-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#table">table</a>(<span class="kt">any</span> <a class="nv" href="#dom-console-table-tabulardata-properties-tabulardata"><code>tabularData</code></a>, <span class="kt">optional</span> <span class="kt">sequence</span>&lt;<a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a>&gt; <a class="nv" href="#dom-console-table-tabulardata-properties-properties"><code>properties</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#trace">trace</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-trace-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#warn">warn</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-warn-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#dir">dir</a>(<span class="kt">any</span> <a class="nv" href="#dom-console-dir-item-options-item"><code>item</code></a>, <span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-object"><span class="kt">object</span></a>? <a class="nv" href="#dom-console-dir-item-options-options"><code>options</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#dirxml">dirxml</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-dirxml-data-data"><code>data</code></a>);
+
+  // Grouping
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#group">group</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-group-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#groupcollapsed">groupCollapsed</a>(<span class="kt">any</span>... <a class="nv" href="#dom-console-groupcollapsed-data-data"><code>data</code></a>);
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#groupend">groupEnd</a>();
+
+  // Timing
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#time">time</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <a class="nv" href="#dom-console-time-label-label"><code>label</code></a> = "default");
+  <span class="kt">void</span> <a class="nv idl-code" data-link-type="method" href="#timeend">timeEnd</a>(<span class="kt">optional</span> <a class="n idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><span class="kt">DOMString</span></a> <a class="nv" href="#dom-console-timeend-label-label"><code>label</code></a> = "default");
+};
+
+</pre></body></html>
