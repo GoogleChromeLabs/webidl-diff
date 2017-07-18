@@ -107,6 +107,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}GithubIDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
 
     // Runners
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,

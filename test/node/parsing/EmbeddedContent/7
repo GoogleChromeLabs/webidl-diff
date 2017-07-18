@@ -1,0 +1,9 @@
+[HTMLConstructor]
+interface HTMLVideoElement : HTMLMediaElement {
+  [CEReactions] attribute unsigned long width;
+  [CEReactions] attribute unsigned long height;
+  readonly attribute unsigned long videoWidth;
+  readonly attribute unsigned long videoHeight;
+  [CEReactions] attribute USVString poster;
+  [CEReactions] attribute boolean playsInline;
+};

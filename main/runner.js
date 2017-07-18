@@ -48,43 +48,29 @@ var corePath = PipelineBuilder.create(null, ctx)
                               .append(ParserRunner.create())
                               .append(CanonicalizeRunner.create());
 
-var blinkPath = PipelineBuilder.create(null, ctx)
-                               .append(FetchSpecRunner.create())
-                               .append(IDLFragmentExtractorRunner.create())
-                               .append(corePath)
-                               .build();
+var blinkPL = PipelineBuilder.create(null, ctx)
+                             .append(FetchSpecRunner.create())
+                             .append(IDLFragmentExtractorRunner.create())
+                             .append(corePath)
+                             .build();
+var corePL = corePath.build();
 
-blinkConfig.urlOutputBox = blinkPath;
-blinkConfig.include = include;
-blinkConfig.exclude = exclude;
-var blinkPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(blinkConfig))
-                                               .append(corePath);
-var geckoPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(geckoConfig))
-                                               .append(corePath);
-var webKitPL = PipelineBuilder.create(null, ctx).append(LocalGitRunner.create(webKitConfig))
-                                                .append(corePath);
 
-//var pipeline = coreInit.build();
+// Inject properties into all of the configs.
+[ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
+  if (config.renderer === 'Blink') config.urlOutputBox = blinkPL;
+  config.fileOutputBox = corePL;
+  config.include = include;
+  config.exclude = exclude;
+  config.freshRepo = false; // For this purpose...
+});
 
-var msgGenerator = function(freshRepo, include, exclude, urlOutputBox) {
-  return foam.box.Message.create({
-    object: {
-      freshRepo: freshRepo,
-      include: include,
-      exclude: exclude,
-      urlOutputBox: urlOutputBox,
-    },
-  });
-};
 
 // Blink Pipeline
-var blinkMsg = msgGenerator(false, include, exclude, blinkPath);
-blinkPL.build().send(blinkMsg);
+LocalGitRunner.create(blinkConfig).run();
 
 // Gecko Pipeline
-var geckoMsg = msgGenerator(false, null, null);
-geckoPL.build().send(geckoMsg);
+LocalGitRunner.create(geckoConfig).run();
 
 // WebKit Pipeline
-var webKitMsg = msgGenerator(false, null, null);
-webKitPL.build().send(webKitMsg);
+LocalGitRunner.create(webKitConfig).run();

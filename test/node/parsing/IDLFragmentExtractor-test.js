@@ -6,11 +6,10 @@
 describe('IDLFragmentExtractor', function() {
   var HTMLFileContents;
   var IDLFragmentExtractor;
-  var Parser;
 
-  function cmpTest(testName, testDirectory, numExpectedIDLFragments) {
+  function cmpTest(testName, testDirectory, numExpectedIDLFragments, raw) {
     var fs = require('fs');
-    var dir = `${testDirectory}/spec.html`;
+    var dir = `${testDirectory}/${raw ? 'spec-raw' : 'spec'}.html`;
     var spec = fs.readFileSync(dir).toString();
     var htmlFile = HTMLFileContents.create({
       url: dir, // Setting URL to dir for testing purposes only.
@@ -33,7 +32,7 @@ describe('IDLFragmentExtractor', function() {
           var path = `${testDirectory}/${filename}`;
           var expectedContent = fs.readFileSync(path).toString();
           expect(idlFragments[testNum].trim()).toBe(expectedContent.trim());
-        } else if (filename !== 'spec.html') {
+        } else if (filename !== 'spec.html' && filename !== 'spec-raw.html') {
           fail(`File ${filename} was not used in ${testName} spec test`);
         }
       });
@@ -123,16 +122,41 @@ describe('IDLFragmentExtractor', function() {
     expect(extractor.idlFragments[0]).toBe(secondIDL);
   });
 
-  it('should parse the UI Events spec HTML file (w3c)', function() {
+  describe('should parse the UI Events spec HTML file (w3c)', function() {
     var testDirectory = `${__dirname}/UIEvent`;
     var expectedFragments = 17;
-    cmpTest('UI Events', testDirectory, expectedFragments);
+    it('Properly Formatted', function() {
+      cmpTest('UI Events (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('UI Events (Raw)', testDirectory, expectedFragments, true);
+    });
   });
 
-  it('should parse the WebGL spec HTML file (khronos)', function() {
+  describe('should parse the WebGL spec HTML file (khronos)', function() {
     var testDirectory = `${__dirname}/WebGL`;
     var expectedFragments = 7;
-    cmpTest('WebGL', testDirectory, expectedFragments);
+
+    it('Properly Formatted', function() {
+      cmpTest('WebGL (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('WebGL (Raw)', testDirectory, expectedFragments, true);
+    });
+  });
+
+  describe('should parse the Embedded Content spec (wicg)', function() {
+    var testDirectory = `${__dirname}/EmbeddedContent`;
+    var expectedFragments = 21;
+    it('Properly Formatted', function() {
+      cmpTest('Embedded Content (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('Embedded Content (Raw)', testDirectory, expectedFragments, true);
+    });
   });
 
   it('should parse the WebUSB spec HTML file (wicg)', function() {
@@ -147,9 +171,30 @@ describe('IDLFragmentExtractor', function() {
     cmpTest('XMLHttpRequest', testDirectory, expectedFragments);
   });
 
-  it('should parse the whatwg HTML standard', function() {
+  describe('should parse the Console standard HTML (whatwg)', function() {
+    var testDirectory = `${__dirname}/Console`;
+    var expectedFragments = 1;
+    it('Properly Formatted', function() {
+      cmpTest('Console (Properly formatted)', testDirectory, expectedFragments);
+    });
+
+    it('Raw', function() {
+      cmpTest('Console (Raw)', testDirectory, expectedFragments, true);
+    });
+  });
+
+  describe('should parse the whatwg HTML standard', function() {
     var testDirectory = `${__dirname}/whatwg`;
-    var expectedFragments = 45;
-    cmpTest('whatwg HTML', testDirectory, expectedFragments);
+    var expectedFragments = 178;
+
+    // To be used for debugging purposes. Too much memory will be used
+    // if this and raw is run together.
+    // it('Properly formatted', function() {
+    //   cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
+    // });
+
+    it('Raw', function() {
+      cmpTest('whatwg HTML Standard (Raw)', testDirectory, expectedFragments, true);
+    });
   });
 });
