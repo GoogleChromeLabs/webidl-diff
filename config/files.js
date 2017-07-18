@@ -112,5 +112,6 @@
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
   ];
 })();
