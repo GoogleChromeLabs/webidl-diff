@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- saved from url=(0060)https://www.khronos.org/registry/webgl/specs/latest/2.0/#3.7 -->
+<!-- saved from url=(0056)https://www.khronos.org/registry/webgl/specs/latest/2.0/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
-    <title>WebGL 2 Specification</title>
+    <title>WebGL 2.0 Specification</title>
     <link rel="stylesheet" type="text/css" href="./spec_files/Khronos-WD.css">
     <script src="./spec_files/jquery-1.3.2.min.js" type="application/javascript"></script>
     <script src="./spec_files/generateTOC.js" type="application/javascript"></script>
@@ -28,8 +28,8 @@
     <div style="clear: both;"></div>
     <!--end-logo-->
 
-    <h1>WebGL 2 Specification</h1>
-    <h2 class="no-toc">Editor's Draft <span id="LastEditDate">Wed May 10 17:39:30 2017 -0400</span></h2>
+    <h1>WebGL 2.0 Specification</h1>
+    <h2 class="no-toc">Editor's Draft <span id="LastEditDate">Wed May 31 18:49:27 2017 -0700</span></h2>
     <dl>
         <dt>This version:
             </dt><dd>
@@ -156,7 +156,8 @@
 <li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.1.6"><span class="secno">4.1.6</span>Texture Type in TexSubImage2D Calls</a></li>
 <li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.1.7"><span class="secno">4.1.7</span>Out-of-bounds Behaviors in copyTexSubImage2D and readPixels calls</a></li>
 <li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.1.8"><span class="secno">4.1.8</span>Color conversion in copyTex{Sub}Image2D</a></li>
-<li class="toc-h3"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.2"><span class="secno">4.2</span>New Features Supported in the WebGL 2 API</a></li>
+<li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.1.9"><span class="secno">4.1.9</span>getFramebufferAttachmentParameter with FRAMEBUFFER_ATTACHMENT_OBJECT_NAME</a></li>
+<li class="toc-h3"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.2"><span class="secno">4.2</span>New Features Supported in the WebGL 2.0 API</a></li>
 <li class="toc-h3"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.3"><span class="secno">4.3</span>GLSL ES 3.00 support</a></li>
 <li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.3.1"><span class="secno">4.3.1</span>Maximum GLSL Token Size</a></li>
 <li class="toc-h4"><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#4.3.2"><span class="secno">4.3.2</span>Maximum Uniform and Attribute Location Lengths</a></li>
@@ -211,8 +212,8 @@
     </p>
 
     <p>
-      WebGL 2 is not entirely backwards compatible with WebGL 1. Existing error-free content written
-      against the core WebGL 1 specification without extensions will often run in WebGL 2 without
+      WebGL 2.0 is not entirely backwards compatible with WebGL 1.0. Existing error-free content written
+      against the core WebGL 1.0 specification without extensions will often run in WebGL 2.0 without
       modification, but this is not always the case. All exceptions to backwards compatibility are
       recorded in the <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#BACKWARDS_INCOMPATIBILITY">Backwards Incompatibility</a> section.
       To access the new behavior provided in this specification, the content explicitly requests
@@ -1228,7 +1229,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         </dd><dt class="idl-code">void pixelStorei(GLenum pname, GLint param)
             <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.7.1">OpenGL ES 3.0.4 §3.7.1</a>, <a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glPixelStorei.xhtml">OpenGL ES 3.0 man page</a>)</span>
         </dt><dd>
-            In addition to the parameters from WebGL 1.0, the WebGL 2 specification accepts the following extra parameters:
+            In addition to the parameters from WebGL 1.0, the WebGL 2.0 specification accepts the following extra parameters:
             <table class="foo">
                 <tbody><tr><th>pname</th></tr>
                 <tr><td>PACK_ROW_LENGTH</td></tr>
@@ -1343,7 +1344,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
       </dt>
       <dd>
         Copy part of the data of the buffer bound to <em>readTarget</em> to the buffer bound to <em>writeTarget</em>.
-        See <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#COPYING_BUFFERS">Copying Buffers</a> for restrictions imposed by the WebGL 2 API.
+        See <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#COPYING_BUFFERS">Copying Buffers</a> for restrictions imposed by the WebGL 2.0 API.
       </dd>
       <dt>
         <p class="idl-code">
@@ -1409,7 +1410,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
       <dt class="idl-code">[WebGLHandlesContextLoss] GLenum checkFramebufferStatus(GLenum target)
           <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-4.4.5">OpenGL ES 3.0.4 §4.4.4</a>, <a class="nonnormative" href="http://www.khronos.org/opengles/sdk/docs/man3/html/glCheckFramebufferStatus.xhtml">man page</a>)</span>
       </dt><dd>
-        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#CHECK_FRAMEBUFFER_STATUS">checkFramebufferStatus</a> in WebGL 1 are described here.</p>
+        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#CHECK_FRAMEBUFFER_STATUS">checkFramebufferStatus</a> in WebGL 1.0 are described here.</p>
         <p><em>target</em> must be <code>DRAW_FRAMEBUFFER</code>, <code>READ_FRAMEBUFFER</code> or <code>FRAMEBUFFER</code>. <code>FRAMEBUFFER</code> is equivalent to <code>DRAW_FRAMEBUFFER</code>.</p>
         <p>Returns <code>FRAMEBUFFER_UNSUPPORTED</code> if depth and stencil attachments, if present, are not the same image. See <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#FBO_ATTACHMENTS">Framebuffer Object Attachments</a> for detailed discussion.</p>
         <p>Returns <code>FRAMEBUFFER_INCOMPLETE_MULTISAMPLE</code> if the values of <code>RENDERBUFFER_SAMPLES</code> are different among attached renderbuffers, or are non-zero if the attached images are a mix of renderbuffers and textures.</p>
@@ -1700,9 +1701,9 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.8.3">OpenGL ES 3.0.4 §3.8.4</a>, <a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml">man page</a>)</span>
       </dt>
       <dd>
-        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXIMAGE2D">texImage2D</a> in WebGL 1 are described here. </p>
+        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXIMAGE2D">texImage2D</a> in WebGL 1.0 are described here. </p>
         <p>If a WebGLBuffer is bound to the <code>PIXEL_UNPACK_BUFFER</code> target, generates an <code>INVALID_OPERATION</code> error.</p>
-        <p>Sized internal formats are supported in WebGL 2 and <em>internalformat</em> is no longer required to be the same as <em>format</em>. Instead, the combination of <em>internalformat</em>, <em>format</em>, and <em>type</em> must be listed in Table 1 or 2 from <span class="gl-spec"><a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml">man page</a></span>.</p>
+        <p>Sized internal formats are supported in WebGL 2.0 and <em>internalformat</em> is no longer required to be the same as <em>format</em>. Instead, the combination of <em>internalformat</em>, <em>format</em>, and <em>type</em> must be listed in Table 1 or 2 from <span class="gl-spec"><a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml">man page</a></span>.</p>
         <p>If <em>type</em> is specified as <code>FLOAT_32_UNSIGNED_INT_24_8_REV</code>,
            <em>srcData</em> must be null; otherwise, generates an <code>INVALID_OPERATION</code>
            error.
@@ -1744,11 +1745,11 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.8.3">OpenGL ES 3.0.4 §3.8.4</a>, <a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml">man page</a>)</span>
       </dt>
       <dd>
-        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXIMAGE2D_HTML">texImage2D</a> in WebGL 1 are described here. </p>
+        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXIMAGE2D_HTML">texImage2D</a> in WebGL 1.0 are described here. </p>
         <p>Uploading subregions of elements is detailed in <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#DOM_UPLOAD_UNPACK_PARAMS">Pixel
            store parameters for uploads from <code>TexImageSource</code></a>.
         </p><p>If a WebGLBuffer is bound to the <code>PIXEL_UNPACK_BUFFER</code> target, generates an <code>INVALID_OPERATION</code> error.</p>
-        <p>Sized internal formats are supported in WebGL 2 and <em>internalformat</em> is no longer required to be the same as <em>format</em>. Instead, the combination of <em>internalformat</em>, <em>format</em>, and <em>type</em> must be listed in the following table:</p>
+        <p>Sized internal formats are supported in WebGL 2.0 and <em>internalformat</em> is no longer required to be the same as <em>format</em>. Instead, the combination of <em>internalformat</em>, <em>format</em>, and <em>type</em> must be listed in the following table:</p>
         <table id="TEXTURE_TYPES_FORMATS_FROM_DOM_ELEMENTS_TABLE">
         <tbody><tr><th>Internal Format</th><th>Format</th><th>Type</th></tr>
         <tr><td>RGB</td><td>RGB</td><td>UNSIGNED_BYTE<br>UNSIGNED_SHORT_5_6_5</td></tr>
@@ -1805,7 +1806,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.8.5">OpenGL ES 3.0.4 §3.8.5</a>, <a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexSubImage2D.xhtml">man page</a>)</span>
       </dt>
       <dd>
-        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXSUBIMAGE2D">texSubImage2D</a> in WebGL 1 are described here. </p>
+        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXSUBIMAGE2D">texSubImage2D</a> in WebGL 1.0 are described here. </p>
         <p>If a WebGLBuffer is bound to the <code>PIXEL_UNPACK_BUFFER</code> target, generates an <code>INVALID_OPERATION</code> error.</p>
         <p>The combination of <em>format</em>, <em>type</em>, and WebGLTexture's internal format must be listed in Table 1 or 2 from <span class="gl-spec"><a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexImage2D.xhtml">man page</a></span>.</p>
         <p>The type of <em>srcData</em> must match the <em>type</em> according to the <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#TEXTURE_PIXELS_TYPE_TABLE"> above table</a>; otherwise, generates an
@@ -1829,7 +1830,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.8.5">OpenGL ES 3.0.4 §3.8.5</a>, <a class="nonnormative" href="https://www.khronos.org/opengles/sdk/docs/man3/html/glTexSubImage2D.xhtml">man page</a>)</span>
       </p></dt>
       <dd>
-        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXSUBIMAGE2D_HTML">texSubImage2D</a> in WebGL 1 are described here. </p>
+        <p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#TEXSUBIMAGE2D_HTML">texSubImage2D</a> in WebGL 1.0 are described here. </p>
         <p>Uploading subregions of elements is detailed in <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#DOM_UPLOAD_UNPACK_PARAMS">Pixel
            store parameters for uploads from <code>TexImageSource</code></a>.
         </p><p>If a WebGLBuffer is bound to the <code>PIXEL_UNPACK_BUFFER</code> target, generates an <code>INVALID_OPERATION</code> error.</p>
@@ -2211,7 +2212,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
       </dt>
       <dd>
         Return the uniform value at the passed location in the passed program. The type returned is dependent
-        on the uniform type. The types returned for the new uniform types in WebGL 2 are given in the
+        on the uniform type. The types returned for the new uniform types in WebGL 2.0 are given in the
         following table:
         <table>
           <tbody><tr><th>uniform type</th><th>returned type</th></tr>
@@ -2227,7 +2228,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
           <tr><td>mat4x3</td><td>Float32Array (with 12 elements)</td></tr>
           <tr><td>any sampler type</td><td>GLint</td></tr>
         </tbody></table><br>
-        <p>The types returned for the uniform types shared with WebGL 1 are the same as in WebGL 1.</p>
+        <p>The types returned for the uniform types shared with WebGL 1.0 are the same as in WebGL 1.0.</p>
       </dd>
       <dt>
         <p class="idl-code">void uniform[1234]ui(WebGLUniformLocation? location, ...)</p>
@@ -2410,7 +2411,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>
         During calls to <code>drawElements</code>, <code>drawArrays</code>, <code>drawRangeElements</code> and their
-        instanced variants, WebGL 2 performs additional error checking beyond that specified in OpenGL ES 3.0:
+        instanced variants, WebGL 2.0 performs additional error checking beyond that specified in OpenGL ES 3.0:
         </p><ul>
           <li>If the <code>CURRENT_PROGRAM</code> is null, an <code>INVALID_OPERATION</code> error will be generated;</li>
           <li><a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#RANGE_CHECKING">Range Checking</a>;</li>
@@ -2426,7 +2427,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>Pixels in the current framebuffer can be read back into an ArrayBufferView object or a
        WebGLBuffer bound to the <code>PIXEL_PACK_BUFFER</code> target.
-    </p><p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#readpixels">Reading back pixels</a> in WebGL 1 are described here.</p>
+    </p><p>Only differences from <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#readpixels">Reading back pixels</a> in WebGL 1.0 are described here.</p>
     <dl class="methods">
         <dt class="idl-code">
           void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
@@ -3145,25 +3146,25 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h4 id="4.1.1"><span class="secno">4.1.1</span> Errors</h4>
 
     <p>
-        The WebGL 2 API may behave differently in cases where the WebGL 1 API generates an error.
-        Code written against the WebGL 1 API that generates errors is not guaranteed to be
-        forward-compatible with WebGL 2.
+        The WebGL 2.0 API may behave differently in cases where the WebGL 1.0 API generates an error.
+        Code written against the WebGL 1.0 API that generates errors is not guaranteed to be
+        forward-compatible with WebGL 2.0.
     </p>
 
     <h4 id="4.1.2"><span class="secno">4.1.2</span> Extensions</h4>
 
     <p>
-        Some extensions that may have been supported in the WebGL 1 API are removed from the WebGL
-        2 API. For more details, see the
+        Some extensions that may have been supported in the WebGL 1.0 API are removed from the WebGL
+        2.0 API. For more details, see the
         <a href="http://www.khronos.org/registry/webgl/extensions/">WebGL Extension Registry</a>.
     </p>
 
     <div class="note">
         Extensions are typically removed only if equivalent functionality is available in the WebGL
-        2 API either in the core specification or in an improved extension. When an application
-        using WebGL 1 extensions is modified to run on the WebGL 2 API, it is often possible to
+        2.0 API either in the core specification or in an improved extension. When an application
+        using WebGL 1.0 extensions is modified to run on the WebGL 2.0 API, it is often possible to
         create a dummy extension object for each of the promoted extensions which simply
-        redirects calls to the appropriate WebGL 2 API functions. If the application is using shader
+        redirects calls to the appropriate WebGL 2.0 API functions. If the application is using shader
         language extensions, porting shaders to GLSL ES 3.00 is typically required.
     </div>
 
@@ -3183,15 +3184,15 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <h4 id="4.1.5"><span class="secno">4.1.5</span> <a name="FBO_ATTACHMENTS">Framebuffer Object Attachments</a></h4>
 
-    <p>In WebGL 1, <code>DEPTH_STENCIL_ATTACHMENT</code> is an alternative attachment point other than <code>DEPTH_ATTACHMENT</code> and <code>STENCIL_ATTACHMENT</code>. In WebGL 2, however, <code>DEPTH_STENCIL_ATTACHMENT</code> is considered an alias for <code>DEPTH_ATTACHMENT</code> + <code>STENCIL_ATTACHMENT</code>, i.e., the same image is attached to both <code>DEPTH_ATTACHMENT</code> and <code>STENCIL_ATTACHMENT</code>, overwriting the original images attached to the two attachment points.</p><p>
+    <p>In WebGL 1.0, <code>DEPTH_STENCIL_ATTACHMENT</code> is an alternative attachment point other than <code>DEPTH_ATTACHMENT</code> and <code>STENCIL_ATTACHMENT</code>. In WebGL 2.0, however, <code>DEPTH_STENCIL_ATTACHMENT</code> is considered an alias for <code>DEPTH_ATTACHMENT</code> + <code>STENCIL_ATTACHMENT</code>, i.e., the same image is attached to both <code>DEPTH_ATTACHMENT</code> and <code>STENCIL_ATTACHMENT</code>, overwriting the original images attached to the two attachment points.</p><p>
     </p><p>Consider the following sequence of actions:
       </p><ol>
        <li>attach renderbuffer 1 to <code>DEPTH_ATTACHMENT</code>;</li>
        <li>attach renderbuffer 2 to <code>DEPTH_STENCIL_ATTACHMENT</code>;</li>
        <li>attach <em>null</em> to <code>DEPTH_STENCIL_ATTACHMENT</code>.</li>
       </ol>
-      In WebGL 1, the framebuffer ends up with renderbuffer 1 attached to <code>DEPTH_ATTACHMENT</code> and no image attached to <code>STENCIL_ATTACHMENT</code>; in WebGL 2, however, neither <code>DEPTH_ATTACHMENT</code> nor <code>STENCIL_ATTACHMENT</code> has an image attached.<p></p>
-    <p>The constraints defined in <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#FBO_ATTACHMENTS">Framebuffer Object Attachments</a> no longer apply in WebGL 2.</p>
+      In WebGL 1.0, the framebuffer ends up with renderbuffer 1 attached to <code>DEPTH_ATTACHMENT</code> and no image attached to <code>STENCIL_ATTACHMENT</code>; in WebGL 2.0, however, neither <code>DEPTH_ATTACHMENT</code> nor <code>STENCIL_ATTACHMENT</code> has an image attached.<p></p>
+    <p>The constraints defined in <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#FBO_ATTACHMENTS">Framebuffer Object Attachments</a> no longer apply in WebGL 2.0.</p>
     <p>If different images are bound to the depth and stencil attachment points, <code>checkFramebufferStatus</code> returns <code>FRAMEBUFFER_UNSUPPORTED</code>, and <code>getFramebufferAttachmentParameter</code> with <em>attachment</em> of <code>DEPTH_STENCIL_ATTACHMENT</code> generates an <code>INVALID_OPERATION</code> error.</p>
 
     <h4 id="4.1.6"><span class="secno">4.1.6</span> Texture Type in TexSubImage2D Calls</h4>
@@ -3224,20 +3225,29 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h4 id="4.1.8"><span class="secno">4.1.8</span> Color conversion in copyTex{Sub}Image2D</h4>
 
     <p>
-        In WebGL 1 (OpenGL ES 2.0), it is allowed for the component sizes of
+        In WebGL 1.0 (OpenGL ES 2.0), it is allowed for the component sizes of
         <em>internalformat</em> to be less than the corresponding component sizes
-        of the source buffer's internal format. However, in WebGL 2 (OpenGL ES 3.0),
+        of the source buffer's internal format. However, in WebGL 2.0 (OpenGL ES 3.0),
         if <em>internalformat</em> is sized, its component sizes must exactly
         match the corresponding component sizes of the source buffer's effective
         internal format.
     </p>
 
     <p>
-        In both WebGL 1 and 2, source buffer components can be dropped during the
+        In both WebGL 1.0 and 2.0, source buffer components can be dropped during the
         conversion to <em>internalformat</em>, but new components cannot be added.
     </p>
 
-    <h3 id="4.2"><span class="secno">4.2</span> New Features Supported in the WebGL 2 API</h3>
+    <h4 id="4.1.9"><span class="secno">4.1.9</span> getFramebufferAttachmentParameter with FRAMEBUFFER_ATTACHMENT_OBJECT_NAME</h4>
+
+    <p>
+        If <code>getFramebufferAttachmentParameter</code> is called with <em>pname</em>
+        <code>FRAMEBUFFER_ATTACHMENT_OBJECT_NAME</code> and <em>attachment</em> has no
+        image attached, in WebGL 1.0 / ES 2.0, it generates an <code>INVALID_OPERATION</code>;
+        in WebGL 2.0 / ES 3.0, it generates no error and <code>null</code> is returned.
+    </p>
+
+    <h3 id="4.2"><span class="secno">4.2</span> New Features Supported in the WebGL 2.0 API</h3>
 
     <ul>
       <li>Pixel buffer objects <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-3.7.1">OpenGL ES 3.0.4 §3.7.1</a> and <a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-4.3">OpenGL ES 3.0.4 §4.3</a>)</span></li>
@@ -3248,7 +3258,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="4.3"><span class="secno">4.3</span> GLSL ES 3.00 support</h3>
 
     <p>
-        In addition to supporting The OpenGL ES Shading Language, Version 1.00, the WebGL 2 API also accepts
+        In addition to supporting The OpenGL ES Shading Language, Version 1.00, the WebGL 2.0 API also accepts
         shaders written in The OpenGL ES Shading Language, Version 3.00
         <a href="https://www.khronos.org/registry/webgl/specs/latest/2.0/#refsGLES30GLSL">[GLES30GLSL]</a>, with some restrictions.
     </p>
@@ -3283,7 +3293,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="4.4"><span class="secno">4.4</span> Vertex Attribute Divisor</h3>
 
     <p>
-        In the WebGL 2 API, vertex attributes which have a non-zero divisor do not advance during calls to
+        In the WebGL 2.0 API, vertex attributes which have a non-zero divisor do not advance during calls to
         <code>drawArrays</code> and <code>drawElements</code>.
         <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-2.9.3">OpenGL ES 3.0.4 §2.9.3</a>)</span>
     </p>
@@ -3320,7 +3330,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     </tbody></table><br>
 
     <p>
-        In the WebGL 2 API, buffers have their WebGL buffer type initially set to <em>undefined</em>. Calling
+        In the WebGL 2.0 API, buffers have their WebGL buffer type initially set to <em>undefined</em>. Calling
         <code>bindBuffer</code>, <code>bindBufferRange</code> or <code>bindBufferBase</code> with the
         <code>target</code> argument set to any buffer binding point except <code>COPY_READ_BUFFER</code> or
         <code>COPY_WRITE_BUFFER</code> will then set the WebGL buffer type of the buffer being bound
@@ -3349,7 +3359,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>
         These restrictions are similar to <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#BUFFER_OBJECT_BINDING">buffer object binding
-        restrictions in the WebGL 1 specification</a>.
+        restrictions in the WebGL 1.0 specification</a>.
     </p>
 
     <div class="note rationale">
@@ -3360,7 +3370,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>
         In addition, a buffer can not be simultaneously bound to a transform feedback buffer binding point
-        and another buffer binding point in the WebGL 2 API. Attempting to violate this rule generates an
+        and another buffer binding point in the WebGL 2.0 API. Attempting to violate this rule generates an
         <code>INVALID_OPERATION</code> error, and the state of the binding point will remain untouched.
     </p>
 
@@ -3415,11 +3425,11 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="5.4"><span class="secno">5.4</span> No Program Binaries</h3>
 
     <p>
-        Accessing binary representations of compiled shader programs is not supported in the WebGL 2 API.
+        Accessing binary representations of compiled shader programs is not supported in the WebGL 2.0 API.
         This includes OpenGL ES 3.0 <code>GetProgramBinary</code>, <code>ProgramBinary</code>, and
         <code>ProgramParameteri</code> entry points. In addition, querying the program binary length with
         <code>getProgramParameter</code>, and querying program binary formats with <code>getParameter</code>
-        are not supported in the WebGL 2 API.
+        are not supported in the WebGL 2.0 API.
     </p>
 
     <h3 id="5.5"><span class="secno">5.5</span> <a name="RANGE_CHECKING">Range Checking</a></h3>
@@ -3443,7 +3453,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="5.6"><span class="secno">5.6</span> <a name="ENABLED_ATTRIBUTE">Enabled Attribute</a></h3>
 
     <p>
-        In the WebGL 2 API, attempting to draw with <code>drawArrays</code>, <code>drawElements</code>,
+        In the WebGL 2.0 API, attempting to draw with <code>drawArrays</code>, <code>drawElements</code>,
         <code>drawRangeElements</code> or their instanced variants generates an <code>INVALID_OPERATION</code>
         error if there is not at least one enabled vertex attribute array that has a divisor of zero and is
         bound to an active generic attribute value in the program used for the draw command.
@@ -3456,7 +3466,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="5.7"><span class="secno">5.7</span> <a name="ACTIVE_UNIFORM_BLOCK_BACKING">Active Uniform Block Backing</a></h3>
 
     <p>
-        In the WebGL 2 API, attempting to draw with <code>drawArrays</code>, <code>drawElements</code>,
+        In the WebGL 2.0 API, attempting to draw with <code>drawArrays</code>, <code>drawElements</code>,
         <code>drawRangeElements</code> or their instanced variants generates an <code>INVALID_OPERATION</code>
         error if any active uniform block in the program used for the draw command is not backed by a
         sufficiently large buffer object.
@@ -3474,13 +3484,13 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>
         WebGL always has a default framebuffer. The <code>FRAMEBUFFER_UNDEFINED</code> enumerant is removed
-        from the WebGL 2 API.
+        from the WebGL 2.0 API.
     </p>
 
     <h3 id="5.9"><span class="secno">5.9</span> <a name="STRING_LENGTH_QUERIES">String Length Queries</a></h3>
 
     <p>
-        In the WebGL 2 API, the enumerants <code>ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH</code>,
+        In the WebGL 2.0 API, the enumerants <code>ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH</code>,
         <code>TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH</code>, <code>UNIFORM_BLOCK_NAME_LENGTH</code>, and
         <code>UNIFORM_NAME_LENGTH</code> are removed in addition to similar
         <a href="https://www.khronos.org/registry/webgl/specs/latest/1.0/index.html#STRING_LENGTH_QUERIES">enumerants removed in the WebGL 1.0 API</a>.
@@ -3489,7 +3499,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <h3 id="5.10"><span class="secno">5.10</span> Invalid Clears</h3>
 
     <p>
-        In the WebGL 2 API, trying to perform a clear when there is a mismatch between the type of the
+        In the WebGL 2.0 API, trying to perform a clear when there is a mismatch between the type of the
         specified clear value and the type of a buffer that is being cleared generates an
         <code>INVALID_OPERATION</code> error instead of producing undefined results.
     </p>
@@ -3500,7 +3510,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
         A GLSL shader which attempts to use a texture offset value outside the range specified by
         implementation-defined parameters <code>MIN_PROGRAM_TEXEL_OFFSET</code> and
         <code>MAX_PROGRAM_TEXEL_OFFSET</code> in texture lookup function arguments must fail
-        compilation in the WebGL 2 API.
+        compilation in the WebGL 2.0 API.
     </p>
 
     <div class="note rationale">
@@ -3513,7 +3523,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>
         Texel fetches that have undefined results in the OpenGL ES 3.0 API must return zero, or a texture
-        source color of (0, 0, 0, 1) in the case of a texel fetch from an incomplete texture in the WebGL 2
+        source color of (0, 0, 0, 1) in the case of a texel fetch from an incomplete texture in the WebGL 2.0
         API.
     </p>
     <div class="note rationale">
@@ -3525,11 +3535,11 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <p>
         A fragment shader written in The OpenGL ES Shading Language, Version 1.00, that statically assigns a
         value to <code>gl_FragData[n]</code> where <code>n</code> does not equal constant value 0 must fail
-        to compile in the WebGL 2 API. This is to achieve consistency with The OpenGL ES 3.0 specification
+        to compile in the WebGL 2.0 API. This is to achieve consistency with The OpenGL ES 3.0 specification
         section 4.2.1 <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf#nameddest=section-4.2.1">OpenGL ES 3.0.4 §4.2.1</a>)</span>
         and The OpenGL ES Shading Language 3.00.6 specification section 1.5 <span class="gl-spec">(<a href="http://www.khronos.org/registry/gles/specs/3.0/GLSL_ES_Specification_3.00.pdf#nameddest=section-1.5">GLSL ES 3.00.6 §1.5</a>)</span>.
         As in the OpenGL ES 3.0 API, multiple fragment shader outputs are only supported for GLSL ES 3.00
-        shaders in the WebGL 2 API.
+        shaders in the WebGL 2.0 API.
     </p>
 
     <h3 id="5.14"><span class="secno">5.14</span> No MapBufferRange</h3>
@@ -3742,7 +3752,7 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
 
     <p>All attached images much have the same width and height; otherwise, <code>checkFramebufferStatus</code> returns <code>FRAMEBUFFER_INCOMPLETE_DIMENSIONS</code>.</p>
 
-    <div class="note rationale">In OpenGL ES 3, attached images for a framebuffer need not to have the same width and height to be framebuffer complete, and <code>FRAMEBUFFER_INCOMPLETE_DIMENSIONS</code> is not one of the valid return values for <code>checkFramebufferStatus</code>. However, in Direct3D 11, on top of which OpenGL ES 3 behavior is emulated in Windows, all render targets must have the same size in all dimensions (see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff476464(v=vs.85).aspx">msdn manual page</a>). Emulation of the ES3 semantic on top of DirectX 11 will be inefficient. In order to have consistent WebGL 2 behaviors across platforms, it is reasonable to keep the OpenGL ES 2 / WebGL 1 restriction for WebGL 2 that all attached images must have the same width and height.</div>
+    <div class="note rationale">In OpenGL ES 3, attached images for a framebuffer need not to have the same width and height to be framebuffer complete, and <code>FRAMEBUFFER_INCOMPLETE_DIMENSIONS</code> is not one of the valid return values for <code>checkFramebufferStatus</code>. However, in Direct3D 11, on top of which OpenGL ES 3 behavior is emulated in Windows, all render targets must have the same size in all dimensions (see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff476464(v=vs.85).aspx">msdn manual page</a>). Emulation of the ES3 semantic on top of DirectX 11 will be inefficient. In order to have consistent WebGL 2.0 behaviors across platforms, it is reasonable to keep the OpenGL ES 2 / WebGL 1.0 restriction for WebGL 2.0 that all attached images must have the same width and height.</div>
 
     <h3 id="5.28"><span class="secno">5.28</span> Uniform block matching</h3>
 
@@ -3854,8 +3864,8 @@ WebGL2RenderingContext implements WebGL2RenderingContextBase;
     <div class="note rationale">
         This is a limitation of Direct3D 11, on top of which OpenGL ES 3 behavior is emulated on Windows.
         (see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff476464.aspx">msdn manual
-        page</a>). In order to have consistent WebGL 2 behavior across platforms, it is reasonable to add
-        this limitation in WebGL 2 for all platforms.
+        page</a>). In order to have consistent WebGL 2.0 behavior across platforms, it is reasonable to add
+        this limitation in WebGL 2.0 for all platforms.
     </div>
 
     <h3 id="5.35"><span class="secno">5.35</span> <a name="DOM_UPLOAD_UNPACK_PARAMS">Pixel store parameters for uploads from TexImageSource</a></h3>

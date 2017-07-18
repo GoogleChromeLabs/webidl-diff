@@ -1,0 +1,2 @@
+test/node/parsing/* linguist-generated
+test/node/parsing/IDLFragmentExtractor-test.js linguist-generated=false
