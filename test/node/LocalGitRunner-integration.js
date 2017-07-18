@@ -75,9 +75,9 @@ describe('LocalGitRunner integration', function() {
       findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
       extension: 'idl',
       parser: 'Parser', // Default IDL Parser used for Blink.
+      fileOutputBox: defaultOutputBox,
       urlOutputBox: urlOutputBox,
       errorBox: defaultErrorBox,   // Not normally provided during pipelining.
-      outputBox: defaultOutputBox, // Not normally provided during pipelining.
       freshRepo: false,            // Do not clear mock files and attempt fetch
     };
 
