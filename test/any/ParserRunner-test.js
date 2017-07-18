@@ -71,6 +71,7 @@ describe('Parser Runner', function() {
 
     var idlFile = IDLFileContents.create({
       metadata: null, // For the purpose of this test, this is irrelelvant.
+      // Note: contents should not be parseable by Blink parser
       contents: `
         #define FOO 42
         interface Location {
