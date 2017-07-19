@@ -182,19 +182,4 @@ describe('IDLFragmentExtractor', function() {
       cmpTest('Console (Raw)', testDirectory, expectedFragments, true);
     });
   });
-
-  describe('should parse the whatwg HTML standard', function() {
-    var testDirectory = `${__dirname}/whatwg`;
-    var expectedFragments = 178;
-
-    // To be used for debugging purposes. Too much memory will be used
-    // if this and raw is run together.
-    // it('Properly formatted', function() {
-    //   cmpTest('whatwg HTML Standard (Properly formatted)', testDirectory, expectedFragments);
-    // });
-
-    it('Raw', function() {
-      cmpTest('whatwg HTML Standard (Raw)', testDirectory, expectedFragments, true);
-    });
-  });
 });
