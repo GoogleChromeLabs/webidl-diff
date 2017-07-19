@@ -71,14 +71,22 @@ describe('IDLFragmentExtractorRunner', function() {
       contents: `
           <html>
             <body>
-              <pre class="idl"></pre>
-              <pre class="idl"></pre>
+              <pre class="idl">Test Content 1</pre>
+              <pre class="idl">Test Content 2</pre>
             </body>
           </html>`
     });
 
     var msg = PipelineMessage.create({ htmlFile: htmlFile });
     runner.run(msg);
-    //expect
+    // One result for each pre div
+    expect(outputBox.results.length).toBe(2);
+    expect(errorBox.results.length).toBe(0);
+
+    var results = outputBox.results.map(function(o) {
+      return o.object;
+    });
+    // The messages should be different objects (different fragments).
+    expect(results[0]).not.toEqual(results[1]);
   });
 });
