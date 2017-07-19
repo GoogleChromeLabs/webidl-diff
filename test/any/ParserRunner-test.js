@@ -69,9 +69,12 @@ describe('Parser Runner', function() {
     var defaultOutputBox = ResultBox.create();
     var defaultErrorBox = ResultBox.create();
 
+    // Test details: An IDL file with preprocessor directives will be used. The
+    // Blink parser is not capable of parsing preprocessor directives and the
+    // test is expected to fail if the correct parser is injected.
+
     var idlFile = IDLFileContents.create({
-      metadata: null, // For the purpose of this test, this is irrelelvant.
-      // Note: contents should not be parseable by Blink parser
+      metadata: null, // For the purpose of this test, this field is irrelevant.
       contents: `
         #define FOO 42
         interface Location {
@@ -80,14 +83,14 @@ describe('Parser Runner', function() {
     });
 
     var runner = ParserRunner.create({
-      outputBox: defaultOutputBox, // Does not need to be specified during pipelining.
-      errorBox: defaultErrorBox,   // Does not need to be specified during pipelining.
+      outputBox: defaultOutputBox,
+      errorBox: defaultErrorBox,
     });
 
     // Expect parsing with the wrong parser to fail.
     var incorrectParser = PipelineMessage.create({
       idlFile: idlFile,
-      parser: 'Parser', // Default Blink Parser.
+      parser: 'Parser', // Specifying Blink Parser.
     });
 
     runner.run(incorrectParser);
@@ -98,6 +101,10 @@ describe('Parser Runner', function() {
   it('should parse file with the correct parser and return message with results', function() {
     var defaultOutputBox = ResultBox.create();
     var defaultErrorBox = ResultBox.create();
+
+    // Test details: An IDL file with preprocessor directives will be used. The
+    // WebKit parser is capable of parsing preprocessor directives and the test
+    // is expected to succeed if the correct parser is injected.
 
     var idlFile = IDLFileContents.create({
       metadata: null,
