@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 'use strict';
-
-// Load FOAM
 require('foam2');
-require('../node_modules/foam2/src/foam/nanos/nanos.js');
 
 var path = require('path');
 var rootDir = path.resolve(__dirname, '..');
@@ -70,7 +67,7 @@ var corePL = corePath.build();
 LocalGitRunner.create(blinkConfig).run();
 
 // Gecko Pipeline
-LocalGitRunner.create(geckoConfig).run();
+//LocalGitRunner.create(geckoConfig).run();
 
 // WebKit Pipeline
-LocalGitRunner.create(webKitConfig).run();
+//LocalGitRunner.create(webKitConfig).run();
