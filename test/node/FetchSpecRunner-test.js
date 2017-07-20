@@ -7,6 +7,7 @@ describe('FetchSpecRunner', function() {
   var FetchSpecRunner;
   var PipelineMessage;
   var ResultBox;
+  var runner;
 
   beforeEach(function() {
     foam.CLASS({
@@ -84,6 +85,27 @@ describe('FetchSpecRunner', function() {
       // Verify that correct pages were fetched.
       expect(htmlFiles[0].id[0]).not.toBe(htmlFiles[1].id[0]);
       expect(htmlFiles[0].contents).not.toBe(htmlFiles[1].contents);
+      done();
+    }, 3000);
+  });
+
+  it('should send an error to errorBox if given a non-existent URL', function(done) {
+    var outputBox = ResultBox.create();
+    var errorBox = ResultBox.create();
+    var runner = FetchSpecRunner.create({
+      outputBox: outputBox,
+      errorBox: errorBox,
+    });
+
+    var urls = [
+      'https://w3c.github.io/mediacapture-imge', // URL has a typo, expecting 404.
+    ];
+    var msg = PipelineMessage.create({ urls: urls });
+    runner.run(msg);
+
+    setTimeout(function() {
+      expect(outputBox.results.length).toBe(0);
+      expect(errorBox.results.length).toBe(1);
       done();
     }, 3000);
   });
