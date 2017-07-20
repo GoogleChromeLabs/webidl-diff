@@ -108,6 +108,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}Canonicalizer.js`,
 
     // Runners
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizeRunner.js`,

@@ -67,7 +67,7 @@ var corePL = corePath.build();
 LocalGitRunner.create(blinkConfig).run();
 
 // Gecko Pipeline
-//LocalGitRunner.create(geckoConfig).run();
+LocalGitRunner.create(geckoConfig).run();
 
 // WebKit Pipeline
-//LocalGitRunner.create(webKitConfig).run();
+LocalGitRunner.create(webKitConfig).run();
