@@ -46,7 +46,7 @@ var corePath = PipelineBuilder.create(null, ctx)
                               .append(CanonicalizeRunner.create());
 
 var blinkPL = PipelineBuilder.create(null, ctx)
-                             .append(FetchSpecRunner.create())
+                             .append(FetchSpecRunner.create({ parser: 'Parser', renderer: 'Blink-WebSpec' }))
                              .append(IDLFragmentExtractorRunner.create())
                              .append(corePath)
                              .build();
