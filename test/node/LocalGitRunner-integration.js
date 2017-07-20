@@ -115,9 +115,8 @@ describe('LocalGitRunner integration', function() {
         expect(outputs.length).toBe(expectedPaths.length);
         expect(defaultErrorBox.outputs.length).toBe(0);
 
-        // Expecting urlOutputBox to always have 1 output as it
-        // is only called once all files processed. Length of URL
-        // list may differ though.
+        // Expecting urlOutputBox to have 1 output.
+        // Only files with URLs will send an output.
         expect(urlOutputBox.outputs.length).toBe(1);
 
         for (var i = 0; i < outputs.length; i++) {
