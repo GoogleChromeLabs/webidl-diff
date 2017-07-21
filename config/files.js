@@ -116,5 +116,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRegistrySelector.js`,
   ];
 })();
