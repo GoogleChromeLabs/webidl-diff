@@ -140,6 +140,29 @@ describe('FetchSpecRunner', function() {
     }, 1000);
   });
 
+  it('should only fetch URLs once', function(done) {
+    var outputBox = ResultBox.create();
+    var errorBox = ResultBox.create();
+    var runner = FetchSpecRunner.create({
+      outputBox: outputBox,
+      errorBox: errorBox,
+    });
+
+    var urls = [
+      'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
+      'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
+    ];
+    var msg = PipelineMessage.create({ urls: urls });
+    runner.run(msg);
+
+    // Check back in a second to allow for fetching.
+    setTimeout(function() {
+      expect(outputBox.results.length).toBe(1);
+      expect(errorBox.results.length).toBe(0);
+      done();
+    }, 1000);
+  });
+
   it('should send an error to errorBox if given a non-existent URL', function(done) {
     var outputBox = ResultBox.create();
     var errorBox = ResultBox.create();
