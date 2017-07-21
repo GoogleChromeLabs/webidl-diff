@@ -11,6 +11,55 @@ describe('FetchSpecRunner', function() {
 
   beforeEach(function() {
     foam.CLASS({
+      package: 'org.chromium.webidl.test',
+      name: 'MockHTTPRequest',
+      extends: 'foam.net.HTTPRequest',
+
+      constants: {
+        MICROSYNTAXES_URL: 'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
+        MICROSYNTAXES_CONTENT: 'This is the Microsyntaxes Spec Page',
+        FETCHING_URL: 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html',
+        FETCHING_CONTENT: 'This is the URLs and Fetching Spec Page',
+      },
+
+      properties: [
+        {
+          name: 'urlMap',
+          factory: function() {
+            var map = {};
+
+            map[this.MICROSYNTAXES_URL] = this.HTTPResponse.create({
+              status: 200,
+              payload: Promise.resolve(this.MICROSYNTAXES_CONTENT)
+            });
+
+            map[this.FETCHING_URL] = this.HTTPResponse.create({
+              status: 200,
+              payload: Promise.resolve(this.FETCHING_CONTENT)
+            });
+
+            return map;
+          }
+        }
+      ],
+
+      methods: [
+        function send() {
+          var response = this.urlMap[this.url];
+          if (response !== undefined) {
+            return Promise.resolve(response);
+          } else {
+            // Mock a failure HTTP Request.
+            return Promise.resolve(this.HTTPResponse.create({
+              status: 404,
+              payload: Promise.resolve('The request resource was not found')
+            }));
+          }
+        }
+      ]
+    });
+
+    foam.CLASS({
       package: 'org.chromium.webidl.Test',
       name: 'ResultBox',
       implements: ['foam.box.Box'],
@@ -35,6 +84,8 @@ describe('FetchSpecRunner', function() {
     FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
     ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
+    var MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
+    foam.register(MockHTTPRequest, 'foam.net.RetryHTTPRequest');
   });
 
   it('should send an error if invalid arguments are received as a message', function() {
@@ -73,7 +124,7 @@ describe('FetchSpecRunner', function() {
     var msg = PipelineMessage.create({ urls: urls });
     runner.run(msg);
 
-    // Check back in a few seconds to allow for fetching.
+    // Check back in a second to allow for fetching.
     setTimeout(function() {
       expect(outputBox.results.length).toBe(2);
       expect(errorBox.results.length).toBe(0);
@@ -86,7 +137,7 @@ describe('FetchSpecRunner', function() {
       expect(htmlFiles[0].id[0]).not.toBe(htmlFiles[1].id[0]);
       expect(htmlFiles[0].contents).not.toBe(htmlFiles[1].contents);
       done();
-    }, 3000);
+    }, 1000);
   });
 
   it('should send an error to errorBox if given a non-existent URL', function(done) {
@@ -107,6 +158,6 @@ describe('FetchSpecRunner', function() {
       expect(outputBox.results.length).toBe(0);
       expect(errorBox.results.length).toBe(1);
       done();
-    }, 3000);
+    }, 1000);
   });
 });
