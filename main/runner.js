@@ -25,13 +25,16 @@ var exclude = [/web\.archive\.org/, /archives/ ];
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
 var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
+var FetchSpecRegistrySelector = foam.lookup('org.chromium.webidl.FetchSpecRegistrySelector');
 var IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
-var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner')
-var CanonicalizeRunner = foam.lookup('org.chromium.webidl.CanonicalizeRunner');
-
+var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner');
+var CanonicalizerRunner = foam.lookup('org.chromium.webidl.CanonicalizerRunner');
 
 // Preparing pipelines
 var ctx = foam.box.Context.create();
+ctx.registry = foam.box.SelectorRegistry.create({
+  selector: FetchSpecRegistrySelector.create(null, ctx),
+}, ctx);
 var PipelineBuilder = foam.box.pipeline.PipelineBuilder;
 
 // Pipeline Description
@@ -43,7 +46,7 @@ var PipelineBuilder = foam.box.pipeline.PipelineBuilder;
 // -> Put partials together -> Diff -> Back to datastore
 var corePath = PipelineBuilder.create(null, ctx)
                               .append(ParserRunner.create())
-                              .append(CanonicalizeRunner.create());
+                              .append(CanonicalizerRunner.create());
 
 var blinkPL = PipelineBuilder.create(null, ctx)
                              .append(FetchSpecRunner.create({ parser: 'Parser', renderer: 'Blink-WebSpec' }))
