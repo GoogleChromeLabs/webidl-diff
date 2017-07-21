@@ -12,7 +12,6 @@ describe('CanonicalizerRunner', function() {
   var ResultBox;
 
   beforeEach(function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 2147483647;
     foam.CLASS({
       package: 'org.chromium.webidl.Test',
       name: 'ResultBox',
