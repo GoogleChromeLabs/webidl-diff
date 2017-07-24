@@ -110,6 +110,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}Canonicalizer.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}WebPlatformEngine.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
