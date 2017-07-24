@@ -108,14 +108,14 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}GithubIDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitIDLFileDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
   ];
 })();
