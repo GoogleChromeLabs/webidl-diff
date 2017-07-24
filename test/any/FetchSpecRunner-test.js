@@ -5,6 +5,7 @@
 
 describe('FetchSpecRunner', function() {
   var FetchSpecRunner;
+  var MockHTTPRequest;
   var PipelineMessage;
   var ResultBox;
   var runner;
@@ -20,6 +21,7 @@ describe('FetchSpecRunner', function() {
         MICROSYNTAXES_CONTENT: 'This is the Microsyntaxes Spec Page',
         FETCHING_URL: 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html',
         FETCHING_CONTENT: 'This is the URLs and Fetching Spec Page',
+        NON_EXISTENT_URL: 'https://w3c.github.io/mediacapture-imge',
       },
 
       properties: [
@@ -84,7 +86,7 @@ describe('FetchSpecRunner', function() {
     FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
     ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
-    var MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
+    MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
     foam.register(MockHTTPRequest, 'foam.net.RetryHTTPRequest');
   });
 
@@ -109,7 +111,7 @@ describe('FetchSpecRunner', function() {
     expect(errorBox.results.length).toBe(2);
   });
 
-  it('should spawn a worker and fetch the given URLs', function(done) {
+  it('should fetch all of the given URLs', function(done) {
     var outputBox = ResultBox.create();
     var errorBox = ResultBox.create();
     var runner = FetchSpecRunner.create({
@@ -118,13 +120,15 @@ describe('FetchSpecRunner', function() {
     });
 
     var urls = [
-      'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
-      'https://html.spec.whatwg.org/multipage/urls-and-fetching.html',
+      MockHTTPRequest.MICROSYNTAXES_URL,
+      MockHTTPRequest.FETCHING_URL,
     ];
     var msg = PipelineMessage.create({ urls: urls });
     runner.run(msg);
 
     // Check back in a second to allow for fetching.
+    // TODO: Add a component that is used to known when it is safe
+    // to run expect().
     setTimeout(function() {
       expect(outputBox.results.length).toBe(2);
       expect(errorBox.results.length).toBe(0);
@@ -134,8 +138,10 @@ describe('FetchSpecRunner', function() {
       });
 
       // Verify that correct pages were fetched.
-      expect(htmlFiles[0].id[0]).not.toBe(htmlFiles[1].id[0]);
-      expect(htmlFiles[0].contents).not.toBe(htmlFiles[1].contents);
+      expect(htmlFiles[0].id[0]).toBe(MockHTTPRequest.MICROSYNTAXES_URL);
+      expect(htmlFiles[1].id[0]).toBe(MockHTTPRequest.FETCHING_URL);
+      expect(htmlFiles[0].contents).toBe(MockHTTPRequest.MICROSYNTAXES_CONTENT);
+      expect(htmlFiles[1].contents).toBe(MockHTTPRequest.FETCHING_CONTENT);
       done();
     }, 1000);
   });
@@ -149,8 +155,8 @@ describe('FetchSpecRunner', function() {
     });
 
     var urls = [
-      'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
-      'https://html.spec.whatwg.org/multipage/common-microsyntaxes.html',
+      MockHTTPRequest.MICROSYNTAXES_URL,
+      MockHTTPRequest.MICROSYNTAXES_URL,
     ];
     var msg = PipelineMessage.create({ urls: urls });
     runner.run(msg);
@@ -171,9 +177,7 @@ describe('FetchSpecRunner', function() {
       errorBox: errorBox,
     });
 
-    var urls = [
-      'https://w3c.github.io/mediacapture-imge', // URL has a typo, expecting 404.
-    ];
+    var urls = [this.NON_EXISTANT_URL];
     var msg = PipelineMessage.create({ urls: urls });
     runner.run(msg);
 

@@ -38,6 +38,6 @@ describe('FetchSpecRegistrySelector', function() {
     // Expect FetchSpecRunner to get a different registry.
     var box = SkeletonBox.create({ data: FetchSpecRunner.create() });
     var registry = ctx.registry.selector.select(null, null, box);
-    expect(registry).not.toBe(ctx.registry.selector.defaultRegistry);
+    expect(registry).toBe(ctx.registry.selector.fetchRegistry);
   });
 });
