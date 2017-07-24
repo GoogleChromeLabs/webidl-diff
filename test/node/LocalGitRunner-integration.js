@@ -109,30 +109,31 @@ describe('LocalGitRunner integration', function() {
       // we conclude the test has failed.
       if (urlOutputBox.outputs.length === 0 && counter < 10) {
         ++counter;
-      } else {
-        var expectedPaths = global.testGitRepoData.includePaths;
-        var outputs = defaultOutputBox.outputs;
-        expect(outputs.length).toBe(expectedPaths.length);
-        expect(defaultErrorBox.outputs.length).toBe(0);
-
-        // Expecting urlOutputBox to have 1 output.
-        // Only files with URLs will send an output.
-        expect(urlOutputBox.outputs.length).toBe(1);
-
-        for (var i = 0; i < outputs.length; i++) {
-          var file = outputs[i].idlFile;
-          var actualPath = file.metadata.path;
-
-          // Verify that properties were populated correctly
-          expect(expectedPaths.includes(actualPath)).toBe(true);
-          expect(file.id[0]).toBe(repositoryURL);
-          expect(file.id[1]).toBe(gitHash);
-          expect(file.id[2]).toBe(actualPath);
-        }
-        clearInterval(interval);
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = origTimeout;
-        done();
+        return;
       }
+
+      var expectedPaths = global.testGitRepoData.includePaths;
+      var outputs = defaultOutputBox.outputs;
+      expect(outputs.length).toBe(expectedPaths.length);
+      expect(defaultErrorBox.outputs.length).toBe(0);
+
+      // Expecting urlOutputBox to have 1 output.
+      // Only files with URLs will send an output.
+      expect(urlOutputBox.outputs.length).toBe(1);
+
+      for (var i = 0; i < outputs.length; i++) {
+        var file = outputs[i].idlFile;
+        var actualPath = file.metadata.path;
+
+        // Verify that properties were populated correctly
+        expect(expectedPaths.includes(actualPath)).toBe(true);
+        expect(file.id[0]).toBe(repositoryURL);
+        expect(file.id[1]).toBe(gitHash);
+        expect(file.id[2]).toBe(actualPath);
+      }
+      clearInterval(interval);
+      jasmine.DEFAULT_TIMEOUT_INTERVAL = origTimeout;
+      done();
     }, 1000);
   });
 });
