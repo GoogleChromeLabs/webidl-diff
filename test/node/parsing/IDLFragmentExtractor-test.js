@@ -22,9 +22,9 @@ describe('IDLFragmentExtractor', function() {
       timestamp: new Date(),
       contents: contents,
     });
-    var extractor = IDLFragmentExtractor.create({file: htmlFile});
-    expect(extractor).toBeDefined();
-    expect(extractor.idlFragments.length).toBe(1);
+    var results = IDLFragmentExtractor.create().extract(htmlFile);
+    expect(results).toBeDefined();
+    expect(results.length).toBe(1);
   });
 
   it('should parse a pre tag with multiple attributes', function() {
@@ -34,9 +34,9 @@ describe('IDLFragmentExtractor', function() {
       timestamp: new Date(),
       contents: contents,
     });
-    var extractor = IDLFragmentExtractor.create({file: htmlFile});
-    expect(extractor).toBeDefined();
-    expect(extractor.idlFragments.length).toBe(1);
+    var results = IDLFragmentExtractor.create().extract(htmlFile);
+    expect(results).toBeDefined();
+    expect(results.length).toBe(1);
   });
 
   it('should parse a HTML file with one Web IDL Block', function() {
@@ -57,10 +57,10 @@ describe('IDLFragmentExtractor', function() {
       timestamp: new Date(),
       contents: contents,
     });
-    var extractor = IDLFragmentExtractor.create({file: htmlFile});
-    expect(extractor).toBeDefined();
-    expect(extractor.idlFragments.length).toBe(1);
-    expect(extractor.idlFragments[0]).toBe(idl);
+    var results = IDLFragmentExtractor.create().extract(htmlFile);
+    expect(results).toBeDefined();
+    expect(results.length).toBe(1);
+    expect(results[0]).toBe(idl);
   });
 
   it('should parse a HTML file with nested excludes', function() {
@@ -87,10 +87,10 @@ describe('IDLFragmentExtractor', function() {
       timestamp: new Date(),
       contents: contents,
     });
-    var extractor = IDLFragmentExtractor.create({file: htmlFile});
-    expect(extractor).toBeDefined();
-    expect(extractor.idlFragments.length).toBe(1);
-    expect(extractor.idlFragments[0]).toBe(secondIDL);
+    var results = IDLFragmentExtractor.create().extract(htmlFile);
+    expect(results).toBeDefined();
+    expect(results.length).toBe(1);
+    expect(results[0]).toBe(secondIDL);
   });
 
   describe('should parse the UI Events spec HTML file (w3c)', function() {
