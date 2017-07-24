@@ -4,10 +4,8 @@
 'use strict';
 
 describe('FetchSpecRunner', function() {
-  var FetchSpecRunner;
   var MockHTTPRequest;
   var PipelineMessage;
-  var ResultBox;
   var outputBox;
   var errorBox;
   var runner;
@@ -35,18 +33,22 @@ describe('FetchSpecRunner', function() {
       ]
     });
 
-    FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
     // Initialize MockHTTPRequest and have it overload RetryHTTPRequest.
     global.mockHTTPRequest('foam.net.RetryHTTPRequest');
     MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
+
+    var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
+    var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
+    var ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
 
     outputBox = ResultBox.create();
     errorBox = ResultBox.create();
     runner = FetchSpecRunner.create({
       outputBox: outputBox,
       errorBox: errorBox,
+      source: WebPlatformEngine.BLINK,
+      parserClass: foam.lookup('org.chromium.webidl.Parser'),
     });
   });
 
@@ -58,7 +60,7 @@ describe('FetchSpecRunner', function() {
     expect(errorBox.results.length).toBe(1);
   });
 
-  it('should send an error if message is missing urls field', function() {
+  it('should send an error if message is missing URLs', function() {
     var msg = PipelineMessage.create();
     runner.run(msg);
     expect(errorBox.results.length).toBe(1);
@@ -109,7 +111,7 @@ describe('FetchSpecRunner', function() {
   });
 
   it('should send an error to errorBox if given a non-existent URL', function(done) {
-    var urls = [this.NON_EXISTANT_SPEC];
+    var urls = [MockHTTPRequest.NON_EXISTANT_SPEC];
     var msg = PipelineMessage.create({ urls: urls });
     runner.run(msg);
 
