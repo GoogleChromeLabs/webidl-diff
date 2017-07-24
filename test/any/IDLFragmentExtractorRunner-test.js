@@ -7,7 +7,10 @@ describe('IDLFragmentExtractorRunner', function() {
   var IDLFragmentExtractorRunner;
   var PipelineMessage;
   var HTMLFileContents;
-  var ResultBox;
+
+  var outputBox;
+  var errorBox;
+  var runner;
 
   beforeEach(function() {
     foam.CLASS({
@@ -35,36 +38,28 @@ describe('IDLFragmentExtractorRunner', function() {
     HTMLFileContents = foam.lookup('org.chromium.webidl.HTMLFileContents');
     IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    ResultBox = foam.lookup('org.chromium.webidl.test.ResultBox');
+    var ResultBox = foam.lookup('org.chromium.webidl.test.ResultBox');
+    outputBox = ResultBox.create();
+    errorBox = ResultBox.create();
+    runner = IDLFragmentExtractorRunner.create({
+      outputBox: outputBox,
+      errorBox: errorBox,
+    });
   });
 
   it('should send an error if invalid arguments are received as a message', function() {
     var wrongObj = {};
-    var outputBox = ResultBox.create();
-    var errorBox = ResultBox.create();
-
-    var runner = IDLFragmentExtractorRunner.create({
-      outputBox: outputBox,
-      errorBox: errorBox,
-    });
-
     runner.run(wrongObj);
     expect(errorBox.results.length).toBe(1);
+  });
 
-    // Missing HTML file.
+  it('should send an error if message is missing the HTML file', function() {
     var msg = PipelineMessage.create();
     runner.run(msg);
-    expect(errorBox.results.length).toBe(2);
+    expect(errorBox.results.length).toBe(1);
   });
 
   it('should extract the IDL fragments given a valid message', function() {
-    var outputBox = ResultBox.create();
-    var errorBox = ResultBox.create();
-    var runner = IDLFragmentExtractorRunner.create({
-      outputBox: outputBox,
-      errorBox: errorBox,
-    });
-
     var url = 'http://testURL.test';
     var timestamp = new Date(0);
 
