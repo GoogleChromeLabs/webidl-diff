@@ -5,16 +5,18 @@
 
 var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
 var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
+var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
+var WebKitParser = foam.lookup('org.chromium.webidl.WebKitParser');
 
 var githubBaseURL = 'https://github.com/WebKit/webkit';
 var config = {
-  renderer: 'WebKit',
+  source: WebPlatformEngine.WEBKIT,
   repositoryURL: 'https://github.com/WebKit/webkit.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/WebKit/git'),
   sparsePath: 'Source/WebCore',
   findExcludePatterns: ['*/testing/*', '*/test/*', '*/deprecated/*'],
   extension: 'idl',
-  parser: 'WebKitParser',
+  parserClass: WebKitParser,
   freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents) {

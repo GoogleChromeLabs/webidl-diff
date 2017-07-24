@@ -5,16 +5,19 @@
 
 var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
 var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
+var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
+var GeckoParser = foam.lookup('org.chromium.webidl.GeckoParser');
+
 
 var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
 var config = {
-  renderer: 'Gecko',
+  source: WebPlatformEngine.GECKO,
   repositoryURL: 'https://github.com/mozilla/gecko-dev.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/gecko/git'),
   sparsePath: 'dom',
   findExcludePatterns: ['*/test/*'],
   extension: 'webidl',
-  parser: 'GeckoParser',
+  parserClass: GeckoParser,
   freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents) {

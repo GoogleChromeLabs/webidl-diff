@@ -5,16 +5,18 @@
 
 var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
 var GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
+var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
+var Parser = foam.lookup('org.chromium.webidl.Parser');
 
 var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
-  renderer: 'Blink',
+  source: WebPlatformEngine.BLINK,
   repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',
-  parser: 'Parser', // Default IDL Parser used for Blink
+  parserClass: Parser,
   freshRepo: false,
 };
 config.idlFileContentsFactory = function(path, contents, urls) {
