@@ -11,7 +11,7 @@ describe('IDLFragmentExtractorRunner', function() {
 
   beforeEach(function() {
     foam.CLASS({
-      package: 'org.chromium.webidl.Test',
+      package: 'org.chromium.webidl.test',
       name: 'ResultBox',
       implements: ['foam.box.Box'],
 
@@ -35,7 +35,7 @@ describe('IDLFragmentExtractorRunner', function() {
     HTMLFileContents = foam.lookup('org.chromium.webidl.HTMLFileContents');
     IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
+    ResultBox = foam.lookup('org.chromium.webidl.test.ResultBox');
   });
 
   it('should send an error if invalid arguments are received as a message', function() {
@@ -51,7 +51,7 @@ describe('IDLFragmentExtractorRunner', function() {
     runner.run(wrongObj);
     expect(errorBox.results.length).toBe(1);
 
-    // Missing HTML file
+    // Missing HTML file.
     var msg = PipelineMessage.create();
     runner.run(msg);
     expect(errorBox.results.length).toBe(2);
@@ -65,9 +65,12 @@ describe('IDLFragmentExtractorRunner', function() {
       errorBox: errorBox,
     });
 
+    var url = 'http://testURL.test';
+    var timestamp = new Date(0);
+
     var htmlFile = HTMLFileContents.create({
-      url: 'http://testURL.test',
-      timestamp: new Date(0),
+      url: url,
+      timestamp: timestamp,
       contents: `
           <html>
             <body>
@@ -79,14 +82,23 @@ describe('IDLFragmentExtractorRunner', function() {
 
     var msg = PipelineMessage.create({ htmlFile: htmlFile });
     runner.run(msg);
-    // One result for each pre div
+    // One result for each pre div.
     expect(outputBox.results.length).toBe(2);
     expect(errorBox.results.length).toBe(0);
 
     var results = outputBox.results.map(function(o) {
       return o.object;
     });
+
     // The messages should be different objects (different fragments).
     expect(results[0]).not.toEqual(results[1]);
+
+    // Expect the metadata to be correct.
+    expect(results[0].idlFile.metadata).toBe(htmlFile);
+    expect(results[1].idlFile.metadata).toBe(htmlFile);
+    expect(results[0].idlFile.id.includes(url)).toBe(true);
+    expect(results[0].idlFile.id.includes(timestamp)).toBe(true);
+    expect(results[1].idlFile.id.includes(url)).toBe(true);
+    expect(results[1].idlFile.id.includes(timestamp)).toBe(true);
   });
 });
