@@ -15,8 +15,8 @@ global.idlFragmentExtractorTest =
       contents: spec,
     });
 
-    var extractor = IDLFragmentExtractor.create({file: htmlFile});
-    var idlFragments = extractor.idlFragments;
+    var extractor = IDLFragmentExtractor.create();
+    var idlFragments = extractor.extract(htmlFile);
 
     // Determine the number of fragments that were found.
     expect(idlFragments.length).toBe(numExpectedIDLFragments);
