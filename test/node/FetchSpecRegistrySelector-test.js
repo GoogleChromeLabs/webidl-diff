@@ -8,21 +8,22 @@ describe('FetchSpecRegistrySelector', function() {
   var FetchSpecRegistrySelector;
   var LogBox;
   var SkeletonBox;
+  var ctx;
 
   beforeEach(function() {
     FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
     FetchSpecRegistrySelector =
-      foam.lookup('org.chromium.webidl.FetchSpecRegistrySelector');
+        foam.lookup('org.chromium.webidl.FetchSpecRegistrySelector');
     LogBox = foam.lookup('foam.box.LogBox');
     SkeletonBox = foam.lookup('foam.box.SkeletonBox');
-  });
 
-  it('should return the default registry for other boxes', function() {
-    var ctx = foam.box.Context.create();
+    ctx = foam.box.Context.create();
     ctx.registry = foam.box.SelectorRegistry.create({
       selector: FetchSpecRegistrySelector.create(null, ctx),
     }, ctx);
+  });
 
+  it('should return the default registry for other boxes', function() {
     // Expect boxes that are not FetchSpecRunner to get regular registry.
     var box = SkeletonBox.create({ data: LogBox.create() });
     var registry = ctx.registry.selector.select(null, null, box);
@@ -30,11 +31,6 @@ describe('FetchSpecRegistrySelector', function() {
   });
 
   it('should return a different registry for FetchSpecRunner', function() {
-    var ctx = foam.box.Context.create();
-    ctx.registry = foam.box.SelectorRegistry.create({
-      selector: FetchSpecRegistrySelector.create(null, ctx),
-    }, ctx);
-
     // Expect FetchSpecRunner to get a different registry.
     var box = SkeletonBox.create({ data: FetchSpecRunner.create() });
     var registry = ctx.registry.selector.select(null, null, box);
