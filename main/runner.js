@@ -23,6 +23,8 @@ var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/, /css-houdini\.
 var exclude = [/web\.archive\.org/, /archives/ ];
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
+var Parser = foam.lookup('org.chromium.webidl.Parser');
+var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
 var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
 var FetchSpecRegistrySelector = foam.lookup('org.chromium.webidl.FetchSpecRegistrySelector');
@@ -49,7 +51,10 @@ var corePath = PipelineBuilder.create(null, ctx)
                               .append(CanonicalizerRunner.create());
 
 var blinkPL = PipelineBuilder.create(null, ctx)
-                             .append(FetchSpecRunner.create({ parser: 'Parser', renderer: 'Blink-WebSpec' }))
+                             .append(FetchSpecRunner.create({
+                               parserClass: Parser,
+                               source: WebPlatformEngine.SPECIFICATION
+                             }))
                              .append(IDLFragmentExtractorRunner.create())
                              .append(corePath)
                              .build();
