@@ -52,7 +52,7 @@ describe('FetchSpecRunner', function() {
             // Mock a failure HTTP Request.
             return Promise.resolve(this.HTTPResponse.create({
               status: 404,
-              payload: Promise.resolve('The request resource was not found')
+              payload: Promise.resolve('The requested resource was not found')
             }));
           }
         }

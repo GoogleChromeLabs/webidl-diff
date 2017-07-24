@@ -58,7 +58,7 @@ describe('Parser Runner', function() {
     expect(errorBox.results.length).toBe(2);
 
     var missingFile = PipelineMessage.create({
-      parser: 'Parser'
+      parserName: 'org.chromium.webidl.Parser'
     });
     runner.run(missingFile);
     expect(errorBox.results.length).toBe(3);
@@ -90,7 +90,7 @@ describe('Parser Runner', function() {
     // Expect parsing with the wrong parser to fail.
     var incorrectParser = PipelineMessage.create({
       idlFile: idlFile,
-      parser: 'Parser', // Specifying Blink Parser.
+      parserName: 'org.chromium.webidl.Parser', // Specifying Blink Parser.
     });
 
     runner.run(incorrectParser);
@@ -123,7 +123,7 @@ describe('Parser Runner', function() {
     // Expect parsing with the right parser to yield results.
     var correctParser = PipelineMessage.create({
       idlFile: idlFile,
-      parser: 'WebKitParser',
+      parserName: 'org.chromium.webidl.WebKitParser',
     });
 
     runner.run(correctParser);
