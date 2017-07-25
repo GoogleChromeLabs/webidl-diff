@@ -16,24 +16,7 @@ global.parseIDLFileTest = function(data) {
     });
 
     beforeEach(function() {
-      foam.CLASS({
-        package: 'org.chromium.webidl.test',
-        name: 'AccumulatorBox',
-        implements: [ 'foam.box.Box' ],
-
-        properties: [
-          {
-            class: 'Array',
-            name: 'results',
-          },
-        ],
-
-        methods: [
-          function send(message) {
-            this.results.push(message.object);
-          },
-        ],
-      });
+      global.defineAccumulatorBox();
 
       LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
       var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
