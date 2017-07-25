@@ -3,21 +3,20 @@
 // found in the LICENSE file.
 'use strict';
 
-var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
+var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
-  description: 'Gecko IDL file DAO manual test',
-  repositoryURL: 'https://github.com/mozilla/gecko-dev.git',
-  localRepositoryPath: require('path').resolve(__dirname, '../data/gecko/git'),
-  sparsePath: 'dom',
-  findExcludePatterns: ['*/test/*'],
-  extension: 'webidl',
+  description: 'Blink IDL Fetch Runner manual test',
+  repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
+  sparsePath: 'third_party/WebKit/Source',
+  findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
+  extension: 'idl',
 };
 config.idlFileContentsFactory = function(path, contents) {
   // Classes are injected by manualLocalGitTest.
   return config.IDLFileContents.create({
-    metadata: config.GithubIDLFile.create({
+    metadata: config.GitilesIDLFile.create({
       repository: this.repositoryURL,
-      githubBaseURL: githubBaseURL,
+      gitilesBaseURL: gitilesBaseURL,
       revision: this.commit,
       path: path,
     }),

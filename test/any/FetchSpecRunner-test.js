@@ -11,39 +11,19 @@ describe('FetchSpecRunner', function() {
   var runner;
 
   beforeEach(function() {
-    foam.CLASS({
-      package: 'org.chromium.webidl.Test',
-      name: 'ResultBox',
-      implements: ['foam.box.Box'],
-
-      properties: [
-        {
-          class: 'Array',
-          name: 'results',
-        },
-      ],
-
-      methods: [
-        function send(msg) {
-          this.results.push(msg);
-        },
-        function clear() {
-          this.results = [];
-        }
-      ]
-    });
-
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
+    global.defineAccumulatorBox();
+
     // Initialize MockHTTPRequest and have it overload RetryHTTPRequest.
     global.mockHTTPRequest('foam.net.RetryHTTPRequest');
     MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
 
     var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
     var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
-    var ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
+    var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
 
-    outputBox = ResultBox.create();
-    errorBox = ResultBox.create();
+    outputBox = AccumulatorBox.create();
+    errorBox = AccumulatorBox.create();
     runner = FetchSpecRunner.create({
       outputBox: outputBox,
       errorBox: errorBox,
@@ -82,7 +62,7 @@ describe('FetchSpecRunner', function() {
       expect(errorBox.results.length).toBe(0);
 
       var htmlFiles = outputBox.results.map(function(o) {
-        return o.object.htmlFile;
+        return o.htmlFile;
       });
 
       // Verify that correct pages were fetched.
