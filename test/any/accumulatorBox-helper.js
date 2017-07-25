@@ -20,6 +20,9 @@ global.defineAccumulatorBox = function() {
       function send(message) {
         this.results.push(message.object);
       },
+      function clear() {
+        this.results = [];
+      },
     ],
   });
 };

@@ -109,6 +109,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}DAOOperation.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}StoreAndForwardDAO.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}WebPlatformEngine.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
@@ -116,6 +117,8 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRegistrySelector.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
   ];
 })();
