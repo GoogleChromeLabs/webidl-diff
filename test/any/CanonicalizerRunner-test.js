@@ -4,54 +4,39 @@
 'use strict';
 
 describe('CanonicalizerRunner', function() {
-  var CanonicalizerRunner;
   var IDLFile;
   var IDLFileContents;
   var Parser;
   var PipelineMessage;
-  var ResultBox;
+  var WebPlatformEngine;
+
+  var outputBox;
+  var errorBox;
+  var runner;
+  var waitTime = 3; // 3 seconds before callback.
 
   beforeEach(function() {
-    foam.CLASS({
-      package: 'org.chromium.webidl.Test',
-      name: 'ResultBox',
-      implements: ['foam.box.Box'],
-
-      properties: [
-        {
-          class: 'Array',
-          name: 'results',
-        },
-      ],
-
-      methods: [
-        function send(msg) {
-          this.results.push(msg);
-        },
-        function clear() {
-          this.results = [];
-        }
-      ]
-    });
-
-    CanonicalizerRunner = foam.lookup('org.chromium.webidl.CanonicalizerRunner');
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
+    WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
+
+    global.defineAccumulatorBox();
+    var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
+    var CanonicalizerRunner = foam.lookup('org.chromium.webidl.CanonicalizerRunner');
+
+    outputBox = AccumulatorBox.create();
+    errorBox = AccumulatorBox.create();
+    runner = CanonicalizerRunner.create({
+      outputBox: outputBox,
+      errorBox: errorBox,
+      waitTime: waitTime,
+    });
   });
 
   it('should send an error if invalid arguments are received as message', function() {
     var wrongObj = {};
-    var outputBox = ResultBox.create();
-    var errorBox = ResultBox.create();
-
-    var runner = CanonicalizerRunner.create({
-      outputBox: outputBox,
-      errorBox: errorBox,
-    });
-
     runner.run(wrongObj);
     expect(errorBox.results.length).toBe(1);
 
@@ -61,15 +46,6 @@ describe('CanonicalizerRunner', function() {
   });
 
   it('should put IDL files together and return the canonical IDL file', function(done) {
-    var outputBox = ResultBox.create();
-    var errorBox = ResultBox.create();
-    var waitTime = 3; // Runner will wait 3 seconds before forwarding.
-    var runner = CanonicalizerRunner.create({
-      outputBox: outputBox,
-      errorBox: errorBox,
-      waitTime: waitTime,
-    });
-
     // Setting up files for canonicalization.
     var repository = 'https://chromium.googlesource.com/chromium/src.git';
     var revision = '33c0cac5413dc579185641ffa5b8ff6ee81a05b2';
@@ -106,13 +82,13 @@ describe('CanonicalizerRunner', function() {
     var firstMessage = PipelineMessage.create({
       ast: firstAst,
       idlFile: firstIdlFile,
-      renderer: 'Blink',
+      source: WebPlatformEngine.BLINK,
     });
 
     var secondMessage = PipelineMessage.create({
       ast: secondAst,
       idlFile: secondIdlFile,
-      renderer: 'Blink',
+      source: WebPlatformEngine.BLINK,
     });
 
     runner.run(firstMessage);
@@ -123,7 +99,10 @@ describe('CanonicalizerRunner', function() {
       expect(errorBox.results.length).toBe(0);
       expect(outputBox.results.length).toBe(1);
 
-      var canonical = outputBox.results[0].object[0];
+      var canonicalInterfaces = outputBox.results[0];
+      // We only expect one interface.
+      expect(canonicalInterfaces.length).toBe(1);
+      var canonical = canonicalInterfaces[0];
 
       // Expecting interface to have 2 members.
       expect(canonical.definition.members.length).toBe(2);
