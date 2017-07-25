@@ -10,9 +10,9 @@ global.mockHTTPRequest = function(HTTPClass) {
     extends: 'foam.net.HTTPRequest',
 
     constants: {
+      SIMPLE_TEST_URL: 'http://test.url/someFile.idl',
       BASE_PAYLOAD: 'Some sort of file content',
       GITHUB_PAYLOAD: 'Some sort of other content',
-      SIMPLE_TEST_URL: 'http://test.url/someFile.idl',
       GITHUB_TEST_RAW_URL: 'https://github.com/mozilla/gecko-dev/raw/0/someFile.idl',
       GITHUB_TEST_DOCUMENT_URL: 'https://github.com/mozilla/gecko-dev/blob/0/someFile.idl',
       GITILES_TEST_RAW_URL: 'https://chromium.googlesource.com/chromium/src/+/0/someFile.idl?format=TEXT',
