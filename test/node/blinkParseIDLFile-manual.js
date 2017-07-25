@@ -5,7 +5,7 @@
 
 var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
-  description: 'Blink IDL file DAO Parser manual test',
+  description: 'Blink IDL file Fetch and Parse manual test',
   repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
   localRepositoryPath: require('path').resolve(__dirname, '../data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',
@@ -26,4 +26,4 @@ config.idlFileContentsFactory = function(path, contents) {
     contents: contents,
   });
 };
-global.parseIDLFileDAOTest(config);
+global.parseIDLFileTest(config);

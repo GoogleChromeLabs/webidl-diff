@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 'use strict';
 
-global.manualLocalGitTest = function(data) {
+global.parseIDLFileTest = function(data) {
   describe(data.description, function() {
     var execSync = require('child_process').execSync;
     var originalTimeout;
@@ -12,7 +12,6 @@ global.manualLocalGitTest = function(data) {
     var errorBox;
 
     afterAll(function() {
-      // Must not be in place after tests complete.
       execSync(`/bin/rm -rf "${data.localRepositoryPath}"`);
     });
 
@@ -20,7 +19,7 @@ global.manualLocalGitTest = function(data) {
       foam.CLASS({
         package: 'org.chromium.webidl.test',
         name: 'AccumulatorBox',
-        implements: ['foam.box.Box'],
+        implements: [ 'foam.box.Box' ],
 
         properties: [
           {
@@ -32,8 +31,8 @@ global.manualLocalGitTest = function(data) {
         methods: [
           function send(message) {
             this.results.push(message.object);
-          }
-        ]
+          },
+        ],
       });
 
       LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
@@ -43,6 +42,7 @@ global.manualLocalGitTest = function(data) {
 
       data.GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
       data.GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
+      data.Parser = foam.lookup(`org.chromium.webidl.${data.parser}`);
       data.IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
 
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
@@ -52,10 +52,22 @@ global.manualLocalGitTest = function(data) {
       execSync(`/bin/rm -rf ${data.localRepositoryPath}`);
     });
 
-    it('should fetch git repo and send files to outputBox', function(done) {
+    it('should fetch git repo and produce valid parse trees', function(done) {
       var onDone = function() {
         expect(outputBox.results.length > 0).toBe(true);
         expect(errorBox.results.length).toBe(0);
+
+        var results = outputBox.results.map(function(result) {
+          return result.idlFile;
+        });
+        var parser = data.Parser.create();
+
+        results.forEach(function(result) {
+          var idl = result.contents;
+          var parse = parser.parseString(idl);
+          expect(parse.pos).toBe(idl.length);
+          expect(parse.value).toBeDefined();
+        });
         done();
       }.bind(this);
 
