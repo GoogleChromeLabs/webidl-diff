@@ -7,7 +7,6 @@ var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
   description: 'Blink IDL Fetch Runner manual test',
   repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
-  localRepositoryPath: require('path').resolve(__dirname, '../data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',

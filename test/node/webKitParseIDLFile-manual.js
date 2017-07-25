@@ -7,7 +7,6 @@ var githubBaseURL = 'https://github.com/WebKit/webkit';
 var config = {
   description: 'WebKit IDL file Fetch and Parse manual test',
   repositoryURL: 'https://github.com/WebKit/webkit.git',
-  localRepositoryPath: require('path').resolve(__dirname, '../data/WebKit/git'),
   sparsePath: 'Source/WebCore',
   findExcludePatterns: ['*/testing/*', '*/test/*'],
   extension: 'idl',

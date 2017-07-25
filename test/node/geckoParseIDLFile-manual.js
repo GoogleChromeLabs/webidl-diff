@@ -7,7 +7,6 @@ var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
 var config = {
   description: 'Gecko IDL file Fetch and Parse manual test',
   repositoryURL: 'https://github.com/mozilla/gecko-dev.git',
-  localRepositoryPath: require('path').resolve(__dirname, '../data/gecko/git'),
   sparsePath: 'dom',
   findExcludePatterns: ['*/test/*'],
   extension: 'webidl',

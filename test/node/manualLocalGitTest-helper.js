@@ -28,11 +28,12 @@ global.manualLocalGitTest = function(data) {
       data.GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
       data.IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
 
+      // Creating temporary directory for repo files.
+      // execSync returns a Buffer with a new line character.
+      data.localRepositoryPath = execSync('mktemp -d').toString().trim(-1);
+
       originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000000;
-
-      // Must not be in place before each test (including first).
-      execSync(`/bin/rm -rf ${data.localRepositoryPath}`);
     });
 
     it('should fetch git repo and send files to outputBox', function(done) {
