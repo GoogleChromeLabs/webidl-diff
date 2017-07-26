@@ -6,6 +6,7 @@
 describe('Parser Runner', function() {
   var ParserRunner;
   var PipelineMessage;
+  var IDLFile;
   var IDLFileContents;
   var ResultBox;
 
@@ -32,6 +33,7 @@ describe('Parser Runner', function() {
       ]
     });
 
+    IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner');
     PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
@@ -74,7 +76,11 @@ describe('Parser Runner', function() {
     // test is expected to fail if the correct parser is injected.
 
     var idlFile = IDLFileContents.create({
-      metadata: null, // For the purpose of this test, this field is irrelevant.
+      metadata: IDLFile.create({
+        repository: 'Test',
+        revision: '0',
+        path: 'someFile',
+      }),
       contents: `
         #define FOO 42
         interface Location {
@@ -107,7 +113,11 @@ describe('Parser Runner', function() {
     // is expected to succeed if the correct parser is injected.
 
     var idlFile = IDLFileContents.create({
-      metadata: null,
+      metadata: IDLFile.create({
+        repository: 'Test',
+        revision: '0',
+        path: 'someFile',
+      }),
       contents: `
         #define FOO 42
         interface Location {

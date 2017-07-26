@@ -12,7 +12,7 @@ describe('GeckoParser', function() {
   });
 
   function parse(str, opt_production) {
-    var p = GeckoParser.create().parseString(str, opt_production);
+    var p = GeckoParser.create().parseString(str, null, opt_production);
     expect(p.pos).toBe(str.length);
     return p;
   }
