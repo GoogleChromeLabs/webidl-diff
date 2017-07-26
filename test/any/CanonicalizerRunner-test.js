@@ -108,7 +108,7 @@ describe('CanonicalizerRunner', function() {
       expect(canonical.definition.members.length).toBe(2);
 
       // Expecting definition to reference 2 sources.
-      expect(canonical.ref.length).toBe(2);
+      expect(canonical.sources.length).toBe(2);
 
       // Expecting defintion to retain inheritance.
       expect(canonical.definition.inheritsFrom).toBeDefined();

@@ -110,10 +110,10 @@ describe('Canonicalizer', function() {
     var onDone = function(results) {
       // Expecting one canonicalized file.
       expect(results.length).toBe(4);
-      // Expecting the file to reference two sources.
-      expect(results[0].sources.length).toBe(2);
+      // Expecting the file (index 1) to reference two sources.
+      expect(results[1].sources.length).toBe(2);
       // Expecting the definition to have 2 members.
-      expect(results[0].definition.members.length).toBe(2);
+      expect(results[1].definition.members.length).toBe(2);
       done();
     };
 
