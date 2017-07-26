@@ -63,7 +63,7 @@ describe('Canonicalizer', function() {
       // Expecting one canonicalized file.
       expect(results.length).toBe(1);
       // Expecting the file to reference two sources.
-      expect(results[0].ref.length).toBe(2);
+      expect(results[0].sources.length).toBe(2);
       // Expecting the definition to have 2 members and not be partial.
       expect(results[0].definition.members.length).toBe(3);
       expect(results[0].definition.isPartial).toBe(false);
@@ -83,7 +83,7 @@ describe('Canonicalizer', function() {
     canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
   });
 
-  it('should ignore Enum and Typedef while doing canonicalization', function(done) {
+  it('should include Enum and Typedef while doing canonicalization', function(done) {
     // Setting up files for canonicalization.
     var firstIdl = `
       typedef (sequence<sequence<ByteString>> or record<ByteString, ByteString>) UnionWithRecord;
@@ -108,10 +108,10 @@ describe('Canonicalizer', function() {
 
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
-      // Expecting one canonicalized file. (No Enum/Typedef)
-      expect(results.length).toBe(2);
+      // Expecting one canonicalized file.
+      expect(results.length).toBe(4);
       // Expecting the file to reference two sources.
-      expect(results[0].ref.length).toBe(2);
+      expect(results[0].sources.length).toBe(2);
       // Expecting the definition to have 2 members.
       expect(results[0].definition.members.length).toBe(2);
       done();
