@@ -119,8 +119,8 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizerRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRegistrySelector.js`,
   ];
 })();

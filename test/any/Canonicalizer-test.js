@@ -8,12 +8,14 @@ describe('Canonicalizer', function() {
   var IDLFile;
   var IDLFileContents;
   var Parser;
+  var WebPlatformEngine;
 
   beforeEach(function() {
     Canonicalizer = foam.lookup('org.chromium.webidl.Canonicalizer');
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
+    WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
   });
 
   it('should return same number of files since we have different interfaces', function(done) {
@@ -35,8 +37,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment('Blink', firstAst, 'First file');
-    canonicalizer.addFragment('Blink', secondAst, 'Second file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
   });
 
   it('should return canonicalized file for two fragments with same interface', function(done) {
@@ -77,8 +79,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment('Blink', firstAst, 'First file');
-    canonicalizer.addFragment('Blink', secondAst, 'Second file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
   });
 
   it('should ignore Enum and Typedef while doing canonicalization', function(done) {
@@ -121,11 +123,11 @@ describe('Canonicalizer', function() {
     });
 
     firstAst.forEach(function(ast) {
-      canonicalizer.addFragment('Blink', ast, 'First file');
+      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
     });
 
     secondAst.forEach(function(ast) {
-      canonicalizer.addFragment('Blink', ast, 'Second file');
+      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'Second file');
     });
   });
 
@@ -152,8 +154,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment('Blink', ast, 'First file');
-    canonicalizer.addFragment('Gecko', ast, 'First file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
+    canonicalizer.addFragment(WebPlatformEngine.GECKO, ast, 'First file');
   });
 
   it('should throw error if two non-partial interfaces were given for same source', function() {
@@ -172,9 +174,9 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment('Blink', ast, 'First file');
+    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
     expect(function() {
-      canonicalizer.addFragment('Blink', ast, 'New file!');
+      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'New file!');
     }).toThrow();
     expect(console.error).toHaveBeenCalled();
   });
