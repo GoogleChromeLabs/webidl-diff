@@ -63,7 +63,8 @@ var corePL = corePath.build();
 
 // Inject properties into all of the configs.
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
-  if (config.renderer === 'Blink') config.urlOutputBox = blinkPL;
+  //if (config.source === WebPlatformEngine.BLINK)
+  //  config.urlOutputBox = blinkPL;
   config.fileOutputBox = corePL;
   config.include = include;
   config.exclude = exclude;
