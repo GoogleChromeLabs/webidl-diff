@@ -12,7 +12,7 @@ describe('WebKitParser', function() {
   });
 
   function parse(str, opt_production) {
-    var p = WebKitParser.create().parseString(str, null, opt_production);
+    var p = WebKitParser.create().parseString(str, 'Test', opt_production);
     expect(p.pos).toBe(str.length);
     return p;
   }
