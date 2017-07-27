@@ -101,7 +101,7 @@ describe('CanonicalizerRunner', function() {
       expect(errorBox.results.length).toBe(0);
       expect(outputBox.results.length).toBe(1);
 
-      var canonicalInterfaces = outputBox.results[0];
+      var canonicalInterfaces = outputBox.results[0].canonicalMap;
       // We only expect one interface.
       expect(Object.keys(canonicalInterfaces).length).toBe(1);
       var canonical = canonicalInterfaces['SharedWorker'];
