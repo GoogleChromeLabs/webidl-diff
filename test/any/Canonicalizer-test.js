@@ -8,14 +8,12 @@ describe('Canonicalizer', function() {
   var IDLFile;
   var IDLFileContents;
   var Parser;
-  var WebPlatformEngine;
 
   beforeEach(function() {
     Canonicalizer = foam.lookup('org.chromium.webidl.Canonicalizer');
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
-    WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
   });
 
   var parse = function(idl) {
@@ -41,8 +39,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
   });
 
   it('should return canonicalized file for two fragments with same interface', function(done) {
@@ -83,8 +81,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
   });
 
   it('should include Enum and Typedef while doing canonicalization', function(done) {
@@ -127,39 +125,12 @@ describe('Canonicalizer', function() {
     });
 
     firstAst.forEach(function(ast) {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
+      canonicalizer.addFragment(ast);
     });
 
     secondAst.forEach(function(ast) {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'Second file');
+      canonicalizer.addFragment(ast);
     });
-  });
-
-  it('should not throw error if two non-partial interfaces were given for different source', function(done) {
-    // Setting up files for canonicalization.
-    var idl = `
-      interface SharedWorker {
-        [CallWith=ScriptState, Measure] readonly attribute DOMHighResTimeStamp workerStart;
-      };`;
-
-    var ast = parse(idl);
-    var secondCall = false; // Used for callback tracking.
-
-    // Callback function once Canonicalizer has finished processing.
-    var onDone = function(results) {
-      // Expecting one canonicalized file per source.
-      expect(results.length).toBe(1);
-      if (secondCall) done();
-      else secondCall = true;
-    };
-
-    var canonicalizer = Canonicalizer.create({
-      onDone: onDone,
-      waitTime: 3, // Three seconds.
-    });
-
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.GECKO, ast, 'First file');
   });
 
   it('should throw error if two non-partial interfaces were given for same source', function() {
@@ -178,9 +149,9 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
+    canonicalizer.addFragment(ast);
     expect(function() {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'New file!');
+      canonicalizer.addFragment(ast);
     }).toThrow();
     expect(console.error).toHaveBeenCalled();
   });
