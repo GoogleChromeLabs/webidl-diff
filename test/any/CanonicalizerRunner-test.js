@@ -93,6 +93,8 @@ describe('CanonicalizerRunner', function() {
 
     runner.run(firstMessage);
     runner.run(secondMessage);
+
+    // TODO: Observe outputBox and errorBox in the future.
     // Expect results to take ~3 seconds to arrive.
     // To be safe, check 1.5 seconds afterwards.
     setTimeout(function() {
