@@ -17,7 +17,7 @@ describe('Canonicalizer', function() {
   });
 
   var parse = function(idl) {
-    return Parser.create().parseString(idl).value[0];
+    return Parser.create().parseString(idl, 'Test').value[0];
   }
 
   it('should return same number of files since we have different interfaces', function(done) {
@@ -30,7 +30,7 @@ describe('Canonicalizer', function() {
 
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
-      expect(results.length).toBe(2);
+      expect(Object.keys(results).length).toBe(2);
       done();
     };
 
@@ -66,16 +66,18 @@ describe('Canonicalizer', function() {
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
       // Expecting one canonicalized file.
-      expect(results.length).toBe(1);
+      expect(Object.keys(results).length).toBe(1);
+
+      var sharedWorker = results['SharedWorker'];
       // Expecting the file to reference two sources.
-      expect(results[0].sources.length).toBe(2);
+      expect(sharedWorker.sources.length).toBe(2);
       // Expecting the definition to have 2 members and not be partial.
-      expect(results[0].definition.members.length).toBe(3);
-      expect(results[0].definition.isPartial).toBe(false);
+      expect(sharedWorker.definition.members.length).toBe(3);
+      expect(sharedWorker.definition.isPartial).toBe(false);
       // Expecting decorators / attributes to be present.
-      expect(results[0].attrs.length).toBe(1);
+      expect(sharedWorker.attrs.length).toBe(1);
       // Expecting inheritance to be present.
-      expect(results[0].definition.inheritsFrom).toBeDefined();
+      expect(sharedWorker.definition.inheritsFrom).toBeDefined();
 
       // After merging, the original objects should remain untouched.
       expect(firstAst.definition.members.length)
@@ -119,17 +121,17 @@ describe('Canonicalizer', function() {
       interface Test {
       };`;
 
-    var firstAst = Parser.create().parseString(firstIdl).value;
-    var secondAst = Parser.create().parseString(secondIdl).value;
+    var firstAst = Parser.create().parseString(firstIdl, 'Test').value;
+    var secondAst = Parser.create().parseString(secondIdl, 'Test').value;
 
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
       // Expecting one canonicalized file.
-      expect(results.length).toBe(4);
-      // Expecting the file (index 1) to reference two sources.
-      expect(results[1].sources.length).toBe(2);
+      expect(Object.keys(results).length).toBe(4);
+      // Expecting the file to reference two sources.
+      expect(results['SharedWorker'].sources.length).toBe(2);
       // Expecting the definition to have 2 members.
-      expect(results[1].definition.members.length).toBe(2);
+      expect(results['SharedWorker'].definition.members.length).toBe(2);
       done();
     };
 

@@ -75,8 +75,8 @@ describe('CanonicalizerRunner', function() {
     });
 
     // Perform a quick parse on the files to get AST.
-    var firstAst = Parser.create().parseString(firstIdlFile.contents).value;
-    var secondAst = Parser.create().parseString(secondIdlFile.contents).value;
+    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value;
+    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value;
 
     // Prepare message for CanonicalizerRunner.
     var firstMessage = PipelineMessage.create({
@@ -103,8 +103,8 @@ describe('CanonicalizerRunner', function() {
 
       var canonicalInterfaces = outputBox.results[0];
       // We only expect one interface.
-      expect(canonicalInterfaces.length).toBe(1);
-      var canonical = canonicalInterfaces[0];
+      expect(Object.keys(canonicalInterfaces).length).toBe(1);
+      var canonical = canonicalInterfaces['SharedWorker'];
 
       // Expecting interface to have 2 members.
       expect(canonical.definition.members.length).toBe(2);
