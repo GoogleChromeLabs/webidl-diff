@@ -60,6 +60,9 @@ describe('Canonicalizer', function() {
     var firstAst = parse(firstIdl);
     var secondAst = parse(secondIdl);
 
+    var firstClone = firstAst.clone();
+    var secondClone = secondAst.clone();
+
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
       // Expecting one canonicalized file.
@@ -73,6 +76,17 @@ describe('Canonicalizer', function() {
       expect(results[0].attrs.length).toBe(1);
       // Expecting inheritance to be present.
       expect(results[0].definition.inheritsFrom).toBeDefined();
+
+      // After merging, the original objects should remain untouched.
+      expect(firstAst.definition.members.length)
+          .toBe(firstClone.definition.members.length);
+      expect(secondAst.definition.members.length)
+          .toBe(secondClone.definition.members.length);
+      expect(firstAst.attrs.length).toEqual(firstClone.attrs.length);
+      expect(secondAst.attrs.length).toEqual(secondClone.attrs.length);
+      expect(firstAst.definition.isPartial).toBe(false);
+      expect(secondAst.definition.isPartial).toBe(true);
+
       done();
     };
 
