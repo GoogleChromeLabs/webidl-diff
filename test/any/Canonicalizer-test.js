@@ -8,14 +8,12 @@ describe('Canonicalizer', function() {
   var IDLFile;
   var IDLFileContents;
   var Parser;
-  var WebPlatformEngine;
 
   beforeEach(function() {
     Canonicalizer = foam.lookup('org.chromium.webidl.Canonicalizer');
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
-    WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
   });
 
   var parse = function(idl) {
@@ -41,8 +39,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
   });
 
   it('should return canonicalized file for two fragments with same interface', function(done) {
@@ -62,6 +60,9 @@ describe('Canonicalizer', function() {
     var firstAst = parse(firstIdl);
     var secondAst = parse(secondIdl);
 
+    var firstClone = firstAst.clone();
+    var secondClone = secondAst.clone();
+
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
       // Expecting one canonicalized file.
@@ -75,6 +76,17 @@ describe('Canonicalizer', function() {
       expect(results[0].attrs.length).toBe(1);
       // Expecting inheritance to be present.
       expect(results[0].definition.inheritsFrom).toBeDefined();
+
+      // After merging, the original objects should remain untouched.
+      expect(firstAst.definition.members.length)
+          .toBe(firstClone.definition.members.length);
+      expect(secondAst.definition.members.length)
+          .toBe(secondClone.definition.members.length);
+      expect(firstAst.attrs.length).toEqual(firstClone.attrs.length);
+      expect(secondAst.attrs.length).toEqual(secondClone.attrs.length);
+      expect(firstAst.definition.isPartial).toBe(false);
+      expect(secondAst.definition.isPartial).toBe(true);
+
       done();
     };
 
@@ -83,8 +95,8 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, firstAst, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, secondAst, 'Second file');
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
   });
 
   it('should include Enum and Typedef while doing canonicalization', function(done) {
@@ -127,39 +139,12 @@ describe('Canonicalizer', function() {
     });
 
     firstAst.forEach(function(ast) {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
+      canonicalizer.addFragment(ast);
     });
 
     secondAst.forEach(function(ast) {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'Second file');
+      canonicalizer.addFragment(ast);
     });
-  });
-
-  it('should not throw error if two non-partial interfaces were given for different source', function(done) {
-    // Setting up files for canonicalization.
-    var idl = `
-      interface SharedWorker {
-        [CallWith=ScriptState, Measure] readonly attribute DOMHighResTimeStamp workerStart;
-      };`;
-
-    var ast = parse(idl);
-    var secondCall = false; // Used for callback tracking.
-
-    // Callback function once Canonicalizer has finished processing.
-    var onDone = function(results) {
-      // Expecting one canonicalized file per source.
-      expect(results.length).toBe(1);
-      if (secondCall) done();
-      else secondCall = true;
-    };
-
-    var canonicalizer = Canonicalizer.create({
-      onDone: onDone,
-      waitTime: 3, // Three seconds.
-    });
-
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
-    canonicalizer.addFragment(WebPlatformEngine.GECKO, ast, 'First file');
   });
 
   it('should throw error if two non-partial interfaces were given for same source', function() {
@@ -178,9 +163,9 @@ describe('Canonicalizer', function() {
       waitTime: 3, // Three seconds.
     });
 
-    canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'First file');
+    canonicalizer.addFragment(ast);
     expect(function() {
-      canonicalizer.addFragment(WebPlatformEngine.BLINK, ast, 'New file!');
+      canonicalizer.addFragment(ast);
     }).toThrow();
     expect(console.error).toHaveBeenCalled();
   });
