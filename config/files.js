@@ -122,5 +122,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizerRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRegistrySelector.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffRunner.js`,
   ];
 })();

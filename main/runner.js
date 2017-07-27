@@ -31,6 +31,7 @@ var FetchSpecRegistrySelector = foam.lookup('org.chromium.webidl.FetchSpecRegist
 var IDLFragmentExtractorRunner = foam.lookup('org.chromium.webidl.IDLFragmentExtractorRunner');
 var ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner');
 var CanonicalizerRunner = foam.lookup('org.chromium.webidl.CanonicalizerRunner');
+var DiffRunner = foam.lookup('org.chromium.webidl.DiffRunner');
 
 // Preparing pipelines
 var ctx = foam.box.Context.create();
@@ -48,10 +49,14 @@ var PipelineBuilder = foam.box.pipeline.PipelineBuilder;
 // -> Put partials together -> Diff -> Back to datastore
 
 // Inject properties into all of the configs.
+var sharedPath = PipelineBuilder.create(null, ctx)
+                                .append(DiffRunner.create());
+
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
   var corePath = PipelineBuilder.create(null, ctx)
                                 .append(ParserRunner.create())
-                                .append(CanonicalizerRunner.create());
+                                .append(CanonicalizerRunner.create())
+                                .append(sharedPath);
 
   if (config.source === WebPlatformEngine.BLINK) {
     var blinkPL = PipelineBuilder.create(null, ctx)
