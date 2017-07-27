@@ -18,13 +18,17 @@ describe('Canonicalizer', function() {
     WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
   });
 
+  var parse = function(idl) {
+    return Parser.create().parseString(idl).value[0];
+  }
+
   it('should return same number of files since we have different interfaces', function(done) {
     // Setting up files for canonicalization.
     var firstIdl = `interface FirstInterface { };`;
     var secondIdl = `partial interface SecondInterface { };`;
 
-    var firstAst = Parser.create().parseString(firstIdl).value[0];
-    var secondAst = Parser.create().parseString(secondIdl).value[0];
+    var firstAst = parse(firstIdl);
+    var secondAst = parse(secondIdl);
 
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
@@ -55,8 +59,8 @@ describe('Canonicalizer', function() {
         [CallWith=ScriptState, Measure] readonly attribute DOMHighResTimeStamp workerStart;
       };`;
 
-    var firstAst = Parser.create().parseString(firstIdl).value[0];
-    var secondAst = Parser.create().parseString(secondIdl).value[0];
+    var firstAst = parse(firstIdl);
+    var secondAst = parse(secondIdl);
 
     // Callback function once Canonicalizer has finished processing.
     var onDone = function(results) {
@@ -138,7 +142,7 @@ describe('Canonicalizer', function() {
         [CallWith=ScriptState, Measure] readonly attribute DOMHighResTimeStamp workerStart;
       };`;
 
-    var ast = Parser.create().parseString(idl).value[0];
+    var ast = parse(idl);
     var secondCall = false; // Used for callback tracking.
 
     // Callback function once Canonicalizer has finished processing.
@@ -168,7 +172,7 @@ describe('Canonicalizer', function() {
         [CallWith=ScriptState, Measure] readonly attribute DOMHighResTimeStamp workerStart;
       };`;
 
-    var ast = Parser.create().parseString(idl).value[0];
+    var ast = parse(idl);
     var canonicalizer = Canonicalizer.create({
       onDone: console.log,
       waitTime: 3, // Three seconds.
