@@ -46,26 +46,26 @@ var PipelineBuilder = foam.box.pipeline.PipelineBuilder;
 // ->Branch{
 //           (Other) 2-> To Datastore -> ...
 // -> Put partials together -> Diff -> Back to datastore
-var corePath = PipelineBuilder.create(null, ctx)
-                              .append(ParserRunner.create())
-                              .append(CanonicalizerRunner.create());
-
-var blinkPL = PipelineBuilder.create(null, ctx)
-                             .append(FetchSpecRunner.create({
-                               parserClass: Parser,
-                               source: WebPlatformEngine.SPECIFICATION
-                             }))
-                             .append(IDLFragmentExtractorRunner.create())
-                             .append(corePath)
-                             .build();
-var corePL = corePath.build();
-
 
 // Inject properties into all of the configs.
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
-  //if (config.source === WebPlatformEngine.BLINK)
+  var corePath = PipelineBuilder.create(null, ctx)
+                                .append(ParserRunner.create())
+                                .append(CanonicalizerRunner.create());
+
+  if (config.source === WebPlatformEngine.BLINK) {
+    var blinkPL = PipelineBuilder.create(null, ctx)
+                                .append(FetchSpecRunner.create({
+                                  parserClass: Parser,
+                                  source: WebPlatformEngine.SPECIFICATION
+                                }))
+                                .append(IDLFragmentExtractorRunner.create())
+                                .append(ParserRunner.create())
+                                .append(CanonicalizerRunner.create())
+                                .build();
   //  config.urlOutputBox = blinkPL;
-  config.fileOutputBox = corePL;
+  }
+  config.fileOutputBox = corePath.build();
   config.include = include;
   config.exclude = exclude;
   config.freshRepo = false; // For this purpose...
