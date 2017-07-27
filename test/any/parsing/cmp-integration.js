@@ -24,7 +24,7 @@ describe('Comparing parses', function() {
   // });
 
   function cmpTest(input, name) {
-    var firstParse = Parser.create().parseString(input);
+    var firstParse = Parser.create().parseString(input, 'Test');
 
     expect(firstParse.pos).toBe(input.length);
 
@@ -34,7 +34,7 @@ describe('Comparing parses', function() {
     for (var i = 0; i < firstParseValue.length; i++) {
       var firstFragment = firstParseValue[i];
       var stringified = outputer.stringify(firstFragment);
-      var secondParseValue = Parser.create().parseString(stringified).value;
+      var secondParseValue = Parser.create().parseString(stringified, 'Test').value;
       var secondFragment = secondParseValue[0];
       expect(
         foam.util.compare(firstFragment, secondFragment),
