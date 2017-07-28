@@ -111,6 +111,8 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}Canonicalizer.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}WebPlatformEngine.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}Diff.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffChunk.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,

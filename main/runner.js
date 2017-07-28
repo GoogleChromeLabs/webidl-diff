@@ -55,7 +55,7 @@ var sharedPath = PipelineBuilder.create(null, ctx)
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
   var corePath = PipelineBuilder.create(null, ctx)
                                 .append(ParserRunner.create())
-                                .append(CanonicalizerRunner.create())
+                                .append(CanonicalizerRunner.create({ source: config.source }))
                                 .append(sharedPath);
 
   if (config.source === WebPlatformEngine.BLINK) {
