@@ -48,7 +48,7 @@ global.parseIDLFileTest = function(data) {
 
         results.forEach(function(result) {
           var idl = result.contents;
-          var parse = parser.parseString(idl);
+          var parse = parser.parseString(idl, 'Test');
           expect(parse.pos).toBe(idl.length);
           expect(parse.value).toBeDefined();
         });
