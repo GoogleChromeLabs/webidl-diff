@@ -23,8 +23,8 @@ describe('Comparing parses', function() {
   //   ]).then(function() { done(); });
   // });
 
-  function cmpTest(input, name) {
-    var firstParse = Parser.create().parseString(input);
+  function cmpTest(input, name, source) {
+    var firstParse = Parser.create().parseString(input, source);
 
     expect(firstParse.pos).toBe(input.length);
 
@@ -34,7 +34,7 @@ describe('Comparing parses', function() {
     for (var i = 0; i < firstParseValue.length; i++) {
       var firstFragment = firstParseValue[i];
       var stringified = outputer.stringify(firstFragment);
-      var secondParseValue = Parser.create().parseString(stringified).value;
+      var secondParseValue = Parser.create().parseString(stringified, source).value;
       var secondFragment = secondParseValue[0];
       expect(
         foam.util.compare(firstFragment, secondFragment),
@@ -44,18 +44,25 @@ describe('Comparing parses', function() {
     }
   }
 
+  it('should throw if source is not present while parsing', function() {
+    expect(cmpTest.bind(this, global.ADDITIONAL_SPEC_IDL_FRAGMENTS,
+        'additionalSpecFragments')).toThrow();
+  });
+
   it(
     'parse(additionalSpecFragments) == parse(stringify(parse(additionalSpecFragments)))',
-    cmpTest.bind(this, global.ADDITIONAL_SPEC_IDL_FRAGMENTS, 'additionalSpecFragments')
+    cmpTest.bind(this, global.ADDITIONAL_SPEC_IDL_FRAGMENTS,
+        'additionalSpecFragments', 'Test')
   );
 
   it(
     'parse(specialOperationsSpec) == parse(stringify(parse(specialOperationsSpec)))',
-    cmpTest.bind(this, global.SPECIAL_OPERATIONS_SPEC_IDL, 'specialOperationsSpec')
+    cmpTest.bind(this, global.SPECIAL_OPERATIONS_SPEC_IDL,
+          'specialOperationsSpec', 'Test')
   );
 
   it(
     'parse(blink) == parse(stringify(parse(blink)))',
-    cmpTest.bind(this, global.ALL_BLINK_IDL, 'blink')
+    cmpTest.bind(this, global.ALL_BLINK_IDL, 'blink', 'Test')
   );
 });
