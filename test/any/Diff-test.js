@@ -5,10 +5,12 @@
 
 describe('Diff', function() {
   var Parser;
+  var DiffStatus;
   var differ;
 
   beforeEach(function() {
     var Diff = foam.lookup('org.chromium.webidl.Diff');
+    DiffStatus = foam.lookup('org.chromium.webidl.DiffStatus');
     Parser = foam.lookup('org.chromium.webidl.Parser');
     differ = Diff.create();
   });
@@ -40,6 +42,8 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting name field to be name of interface.
     expect(chunks[0].definitionName).toBe(interfaceName);
+    // Expecting status to represent missing definition.
+    expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
     // Expecting property path to be empty string.
     expect(chunks[0].propPath).toBe('');
     // Expecting left to be undefined and right to be defined.
@@ -58,6 +62,8 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting definitionName field to be name of interface.
     expect(chunks[0].definitionName).toBe(interfaceName);
+    // Expecting status to represent no match.
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
     // Expecting difference to be in members field of definition.
     expect(chunks[0].propPath).toBe('.definition.members');
     // Expecting left to be defined, and right undefined.
@@ -78,8 +84,9 @@ describe('Diff', function() {
 
     var chunks = differ.diff(firstMap, secondMap);
     expect(chunks.length).toBe(1);
-    // Expecting difference to be in the value field of the member isPotato
+    // Expecting difference to be in the value field of the member isPotato.
     expect(chunks[0].propPath).toBe('.definition.members[isPotato].member.value.literal');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     expect(chunks[0].leftValue).toBe('true');
     expect(chunks[0].rightValue).toBe('false');
   });
@@ -92,6 +99,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting difference to be in the type field of member.
     expect(chunks[0].propPath).toBe('.definition.members[isPotato].member.type.name.literal');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     expect(chunks[0].leftValue).toBe('boolean');
     expect(chunks[0].rightValue).toBe('unsigned long');
   });
@@ -104,6 +112,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting difference to be in inheritsFrom field of definition.
     expect(chunks[0].propPath).toBe('.definition.inheritsFrom');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     // Expecting left to be null (as populated by the parser).
     expect(chunks[0].leftValue).toBe(null);
     // Expecting right to be an object (not null).
@@ -119,6 +128,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting difference to be in inheritsFrom field of definition.
     expect(chunks[0].propPath).toBe('.definition.inheritsFrom.literal');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     expect(chunks[0].leftValue).toBe('Potato');
     expect(chunks[0].rightValue).toBe('Tomato');
   });
@@ -131,22 +141,155 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting difference to be in attrs field.
     expect(chunks[0].propPath).toBe('.attrs');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
     // Expecting left value to be defined, right to be undefined.
     expect(chunks[0].leftValue).toBeDefined();
     expect(chunks[0].rightValue).toBeUndefined();
   });
 
   it('should return a diff fragment if one member has attributes, and one does not', function() {
-    var firstMap = createMap(`interface Test { [Custom] void customVoidMethod(); };`);
-    var secondMap = createMap(`interface Test { void customVoidMethod(); };`);
+    var firstMap = createMap(`interface Test { void customVoidMethod(); };`);
+    var secondMap = createMap(`interface Test { [Custom] void customVoidMethod(); };`);
 
     var chunks = differ.diff(firstMap, secondMap);
     expect(chunks.length).toBe(1);
     // Expecting difference to be in attrs field of definition member.
     expect(chunks[0].propPath).toBe('.definition.members[customVoidMethod].attrs');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
     // Expecting left value to be defined, right to be undefined.
-    expect(chunks[0].leftValue).toBeDefined();
-    expect(chunks[0].rightValue).toBeUndefined();
+    expect(chunks[0].leftValue).toBeUndefined();
+    expect(chunks[0].rightValue).toBeDefined();
+  });
+
+  it('should return no diff fragments for definitions with members rearranged', function() {
+    var firstMap = createMap(`interface Test {
+      const boolean isPotato = true;
+      [Custom] void customVoidMethod();
+      boolean someBooleanMethod();
+    };`);
+    var secondMap = createMap(`interface Test {
+      boolean someBooleanMethod();
+      const boolean isPotato = true;
+      [Custom] void customVoidMethod();
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return a diff fragment for definition rearranged if members differ', function() {
+    var firstMap = createMap(`interface Test {
+      const boolean isPotato = false;
+      [Custom] void customVoidMethod();
+      boolean someBooleanMethod();
+    };`);
+    var secondMap = createMap(`interface Test {
+      boolean someBooleanMethod();
+      const boolean isPotato = true;
+      [Custom] void customVoidMethod();
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting difference to be in values field of definition member.
+    expect(chunks[0].propPath).toBe('.definition.members[isPotato].member.value.literal');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+    expect(chunks[0].leftValue).toBe('false');
+    expect(chunks[0].rightValue).toBe('true');
+  });
+
+  it('should return a diff fragment if a member is missing in one definition', function() {
+    var firstMap = createMap(`interface Test {
+      [Custom] void customVoidMethod();
+      boolean someBooleanMethod();
+    };`);
+    var secondMap = createMap(`interface Test {
+      boolean someBooleanMethod();
+      const boolean isPotato = true;
+      [Custom] void customVoidMethod();
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting difference to be at definition level.
+    expect(chunks[0].propPath).toBe('.definition.members');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+    expect(chunks[0].rightValue.id).toBe('isPotato');
+  });
+
+  it('should return 2 diff fragments if each definition has member that is not in other', function() {
+    var firstMap = createMap(`interface Test {
+      const unsigned long rating = 0.0;
+      [Custom] void customVoidMethod();
+      boolean someBooleanMethod();
+    };`);
+    var secondMap = createMap(`interface Test {
+      boolean someBooleanMethod();
+      const boolean isPotato = true;
+      [Custom] void customVoidMethod();
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(2);
+    // Expecting difference to be at definition level.
+    expect(chunks[0].propPath).toBe('.definition.members');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
+    expect(chunks[1].propPath).toBe('.definition.members');
+    expect(chunks[1].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+    // Verify that name of definition that is reported.
+    expect(chunks[0].leftValue.id).toBe('rating');
+    expect(chunks[1].rightValue.id).toBe('isPotato');
+  });
+
+  it('should not return any fragments in rearranged extended attributes', function() {
+    var firstMap = createMap(`
+      [
+        Constructor(DOMString type, optional EventInit eventInitDict),
+        Exposed=(Windows,Worker)
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+    var secondMap = createMap(`
+      [
+        Exposed=(Windows,Worker),
+        Constructor(DOMString type, optional EventInit eventInitDict)
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  xit('should return a fragment for difference in rearranged extended attributes', function() {
+    // TEST IS NOT PASSING. WILL HAVE TO TAKE CLOSER LOOK
+    var firstMap = createMap(`
+      [
+        Constructor(DOMString type, EventInit eventInitDict),
+        Exposed=(Windows,Worker)
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+    var secondMap = createMap(`
+      [
+        Exposed=(Windows,Worker),
+        Constructor(DOMString type, optional EventInit eventInitDict)
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+  });
+
+  xit('should report differences in rearranged attributes', function() {
+  });
+
+  xit('should report differences in parameter differences', function() {
   });
 
   // Enum Tests Begin.
@@ -158,7 +301,9 @@ describe('Diff', function() {
     expect(chunks.length).toBe(2);
     // Expecting difference to be in members field of definition.
     expect(chunks[0].propPath).toBe('.definition.members');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
     expect(chunks[1].propPath).toBe('.definition.members');
+    expect(chunks[1].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
     // Expecting the difference to have Bread defined in left but not right.
     expect(chunks[0].leftValue).toBeDefined();
     expect(chunks[0].leftValue.literal).toBe('Bread');
