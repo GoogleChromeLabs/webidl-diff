@@ -171,4 +171,67 @@ describe('Canonicalizer', function() {
     }).toThrow();
     expect(console.error).toHaveBeenCalled();
   });
+
+  it('should return both Enums if they both had the same name', function(done) {
+    console.warn = jasmine.createSpy('warn');
+
+    var onDone = function(results) {
+      expect(Object.keys(results).length).toBe(1);
+      var foodEnum = results['FoodEnum'];
+      expect(foodEnum).toBeDefined();
+      expect(Array.isArray(foodEnum)).toBe(true);
+      expect(foodEnum[0].definition.members.length).toBe(2);
+      expect(foodEnum[1].definition.members.length).toBe(1);
+      expect(console.warn).toHaveBeenCalled();
+      done();
+    };
+
+    var firstIdl = `
+        enum FoodEnum {
+          "Bread",
+          "Spaghetti",
+        };`;
+    var secondIdl = `
+        enum FoodEnum {
+          "Sushi",
+        };`;
+
+    var firstAst = parse(firstIdl);
+    var secondAst = parse(secondIdl);
+
+    var canonicalizer = Canonicalizer.create({
+      onDone: onDone,
+      waitTime: 3, // Three seconds.
+    });
+
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
+  });
+
+  it('should return both Typedef if they both had the same name', function(done) {
+    console.warn = jasmine.createSpy('warn');
+
+    var onDone = function(results) {
+      expect(Object.keys(results).length).toBe(1);
+      var typeDef = results['GLuint'];
+      expect(typeDef).toBeDefined();
+      expect(Array.isArray(typeDef)).toBe(true);
+      expect(console.warn).toHaveBeenCalled();
+      done();
+    };
+
+    var firstIdl = `typedef unsigned long GLuint;`;
+    var secondIdl = `typedef unsigned long long GLuint;`;
+    var firstAst = parse(firstIdl);
+    var secondAst = parse(secondIdl);
+
+    var canonicalizer = Canonicalizer.create({
+      onDone: onDone,
+      waitTime: 3,
+    });
+
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(firstAst);
+    canonicalizer.addFragment(secondAst);
+  });
 });
