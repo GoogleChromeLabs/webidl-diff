@@ -19,6 +19,8 @@ describe('Diff', function() {
     opt_source = opt_source || 'Test';
     var map = {};
     var results = Parser.create().parseString(idl, opt_source).value;
+    // Results should be greater than 0. Otherwise, parse failed.
+    expect(results.length > 0).toBe(true);
 
     results.forEach(function(result) {
       map[result.id] = result;
@@ -496,12 +498,175 @@ describe('Diff', function() {
     var chunks = differ.diff(firstMap, secondMap);
     expect(chunks.length).toBe(1);
     // Expecting the difference to be in the qualifiers
-    expect(chunks[0].propPath).toBe('.definition.members[setByIndex].qualifiers');
+    expect(chunks[0].propPath).toBe('.definition.members[setByIndex].member.qualifiers');
+    expect(chunks[0].leftValue).toBeDefined();
+    expect(chunks[0].rightValue).toBeUndefined();
+  });
+
+  it('should return no chunks for overloaded functions rearranged', function() {
+    var firstMap = createMap(`
+      interface Test {
+        void f();
+        void f(double x);
+        void g();
+        void g(DOMString x);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        void g(DOMString x);
+        void f(double x);
+        void f();
+        void g();
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return 2 diff fragments for missing static attributes', function() {
+    var firstMap = createMap(`
+      interface Circle {
+        static readonly attribute long triangulationCount;
+        Point triangulate(Circle c1, Circle c2, Circle c3);
+      };`);
+    var secondMap = createMap(`
+      interface Circle {
+        readonly attribute long triangulationCount;
+        static Point triangulate(Circle c1, Circle c2, Circle c3);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(2);
+    // Expecting the differences to be at member level (since static is a
+    // different type of member).
+    var paths = chunks.map(function(chunk) {
+      return chunk.propPath;
+    });
+    expect(paths.includes('.definition.members[triangulate].member')).toBe(true);
+    expect(paths.includes('.definition.members[triangulationCount].member')).toBe(true);
+  });
+
+  it('should return no diff fragments for iterable rearranged', function() {
+    var firstMap = createMap(`
+      interface Test {
+        iterable<Session>;
+        iterable<String, String>;
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        iterable<String, String>;
+        iterable<Session>;
+      }`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return 2 chunks if iterable differs in parameter', function() {
+    var firstMap = createMap(`
+      interface Test {
+        iterable<String, Session>;
+        iterable<String, String>;
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        iterable<String, String>;
+        iterable<Session>;
+      }`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(2);
+    // Expecting the difference to be at member level.
+    expect(chunks[0].propPath).toBe('.definition.members');
+    expect(chunks[0].propPath).toBe('.definition.members');
+  });
+
+  it('should return no diff fragments for maplike / setlike rearranged', function() {
+    var firstMap = createMap(`
+      interface Test {
+        readonly maplike<String, Session>;
+        maplike<String, boolean>;
+        readonly setlike<long>;
+        setlike<String>;
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        setlike<String>;
+        maplike<String, boolean>;
+        readonly maplike<String, Session>;
+        readonly setlike<long>;
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
   });
 
   // Namespaces Tests Begin.
+  it('should not return any diff fragment for empty namespace', function() {
+    var firstMap = createMap(`namespace Test {};`);
+    var secondMap = createMap(`namespace Test { };`);
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return a diff fragment for partial vs non partial namespace', function() {
+    var firstMap = createMap(`partial namespace Test {};`);
+    var secondMap = createMap(`namespace Test {};`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be at isPartial at definition level.
+    expect(chunks[0].propPath).toBe('.definition.isPartial');
+    // Expecting left to be defined as partial, right to be non-partial.
+    expect(chunks[0].leftValue).toBe(true);
+    expect(chunks[0].rightValue).toBe(false);
+  });
+
+  it('should not return any diff fragments for rearranged namespace', function() {
+    var firstMap = createMap(`
+      namespace VectorUtils {
+        double dotProduct(Vector x, Vector y);
+        Vector crossProduct(Vector x, Vector y);
+      };`);
+    var secondMap = createMap(`
+      namespace VectorUtils {
+        Vector crossProduct(Vector x, Vector y);
+        double dotProduct(Vector x, Vector y);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
   // Dictionaries Tests Begin.
-  // Exceptions Tests Begin.
+  it('should not return any diff fragments for empty dictionaries', function() {
+    var firstMap = createMap(`dictionary Test {};`);
+    var secondMap = createMap(`dictionary Test { };`);
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return a diff fragment if one inherits, one does not', function() {
+    var firstMap = createMap(`dictionary Test : Base {};`);
+    var secondMap = createMap(`dictionary Test {};`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting difference to be in inheritsFrom of definition.
+    expect(chunks[0].propPath).toBe('.definition.inheritsFrom');
+    expect(chunks[0].leftValue).toBeDefined();
+    expect(chunks[0].leftValue).not.toBe(null);
+    expect(chunks[0].rightValue).toBe(null);
+  });
+
+  xit('should not return any fragments for rearranged members', function() {
+  });
+
+  xit('should return a fragment for missing member', function() {
+  });
+
+  xit('should return a fragment if member is declared as required in one, but not other', function() {
+  });
 
   // Enum Tests Begin.
   it('should not return any diff fragments for empty Enum', function() {
