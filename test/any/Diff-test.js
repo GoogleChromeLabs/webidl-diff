@@ -245,14 +245,14 @@ describe('Diff', function() {
     var firstMap = createMap(`
       [
         Constructor(DOMString type, optional EventInit eventInitDict),
-        Exposed=(Windows,Worker)
+        Exposed=(Window,Worker)
       ]
       interface Test {
         boolean someBooleanMethod();
       };`);
     var secondMap = createMap(`
       [
-        Exposed=(Windows,Worker),
+        Exposed=(Window,Worker),
         Constructor(DOMString type, optional EventInit eventInitDict)
       ]
       interface Test {
@@ -263,19 +263,18 @@ describe('Diff', function() {
     expect(chunks.length).toBe(0);
   });
 
-  xit('should return a fragment for difference in rearranged extended attributes', function() {
-    // TEST IS NOT PASSING. WILL HAVE TO TAKE CLOSER LOOK
+  it('should return a fragment for difference in rearranged extended attributes', function() {
     var firstMap = createMap(`
       [
         Constructor(DOMString type, EventInit eventInitDict),
-        Exposed=(Windows,Worker)
+        Exposed=(Window,Worker)
       ]
       interface Test {
         boolean someBooleanMethod();
       };`);
     var secondMap = createMap(`
       [
-        Exposed=(Windows,Worker),
+        Exposed=(Window,Worker),
         Constructor(DOMString type, optional EventInit eventInitDict)
       ]
       interface Test {
@@ -284,15 +283,210 @@ describe('Diff', function() {
 
     var chunks = differ.diff(firstMap, secondMap);
     expect(chunks.length).toBe(1);
+    // Expect difference to be in extended attributes field of definition.
+    expect(chunks[0].propPath).toBe('.attrs[Constructor].args[eventInitDict].isOptional');
+    expect(chunks[0].leftValue).toBe(false);
+    expect(chunks[0].rightValue).toBe(true);
   });
 
-  xit('should report differences in rearranged attributes', function() {
+  it('should return multiple fragments for multiple differences in rearranged extended attributes', function() {
+    var firstMap = createMap(`
+      [
+        Constructor(DOMString type, EventInit eventInitDict),
+        Exposed=(Window,Worker),
+        DependentLifetime,
+        RuntimeEnabled=Test,
+        RaisesException=Constructor
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+
+    var secondMap = createMap(`
+      [
+        Exposed=(Windows,Worker),
+        RaisesException=Exposed,
+        RuntimeEnabled=Test,
+        Constructor(DOMString type, optional EventInit eventInitDict)
+      ]
+      interface Test {
+        boolean someBooleanMethod();
+      };`);
+
+    // List of differences in text:
+    // 1. eventInitDict is optional in 2nd definition, but not 1st.
+    // 2. DependentLifetime is not present in 2nd definition.
+    // 3. RaisesException is Constructor in 1st, Test in 2nd.
+    // TODO: Smarter diff, one chunk for the following two items:
+    // 4. Exposed has Window in 1st definition, but not 2nd.
+    // 5. Exposed has Windows in 2nd definition, but not 1st.
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(5);
   });
 
-  xit('should report differences in parameter differences', function() {
+  it('should return no chunks for rearranged attributes', function() {
+    var firstMap = createMap(`
+      interface Test {
+        [SameObject, PerWorldBindings] readonly attribute NodeList childNodes;
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        [PerWorldBindings, SameObject] readonly attribute NodeList childNodes;
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
   });
+
+  it('should report differences in rearranged attributes', function() {
+    var firstMap = createMap(`
+      interface Test {
+        [DoNotTestNewObject, CEReactions, MeasureAs=EventSrcElement]
+        Node cloneNode(optional boolean deep = false);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        [MeasureAs=EventComposedPath, NewObject, CEReactions, DoNotTestNewObject]
+        Node cloneNode(optional boolean deep = false);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(2);
+    // Expecting the difference to be in the attributes field of member.
+    var paths = chunks.map(function(chunk) {
+      return chunk.propPath;
+    });
+    expect(paths.includes('.definition.members[cloneNode].attrs')).toBe(true);
+    expect(paths.includes('.definition.members[cloneNode].attrs[MeasureAs].value.literal')).toBe(true);
+    // FUTURE: Use smarter way of retrieving objects.
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+    expect(chunks[0].leftValue).toBe('EventSrcElement');
+    expect(chunks[0].rightValue).toBe('EventComposedPath');
+    expect(chunks[1].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+    expect(chunks[1].leftValue).toBeUndefined();
+    expect(chunks[1].rightValue).toBeDefined();
+  });
+
+  it('should return a chunk if there is a difference in parameter type suffix', function() {
+    var firstMap = createMap(`
+      interface Test {
+        boolean isEqualNode(Node[]? nodes);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        boolean isEqualNode(Node[] nodes);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in type suffixes of member args.
+    expect(chunks[0].propPath).toBe('.definition.members[isEqualNode].member.args[nodes].type.suffixes');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
+    // Expecting the left to be defined and right to be undefined.
+    expect(chunks[0].leftValue).toBeDefined();
+    expect(chunks[0].rightValue).toBeUndefined();
+  });
+
+  it('should return a chunk if a parameter is missing', function() {
+    var firstMap = createMap(`
+      interface Test {
+        boolean isEqualNode(Node b);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        boolean isEqualNode(Node a, Node b);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in args of members.
+    expect(chunks[0].propPath).toBe('.definition.members[isEqualNode].member.args');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+    // Expecting the left value to be undefined, right to be defined.
+    expect(chunks[0].leftValue).toBeUndefined();
+    expect(chunks[0].rightValue).toBeDefined();
+  });
+
+  it('should not return a chunk for rearranged definitions', function() {
+    var firstMap = createMap(`
+      interface First {
+        boolean isFirst();
+      };
+
+      interface Second {
+        boolean isSecond();
+      };`);
+    var secondMap = createMap(`
+      interface Second {
+        boolean isSecond();
+      };
+
+      interface First {
+        boolean isFirst();
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return 2 chunks for mismatched stringifier definitions.', function() {
+    // Note: Technically, stringifier DOMString () and stringifier are
+    // equivalent. However, Diff will treat these two as different definitions.
+    var firstMap = createMap(`
+      interface Test {
+        stringifier DOMString ();
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        stringifier;
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(2);
+  });
+
+  it('should not return a chunk for rearranged getter and setter', function() {
+    var firstMap = createMap(`
+      interface Test {
+        getter boolean isPotato(unsigned long id);
+        stringifier DOMString ();
+
+      };`);
+  });
+
+  // Namespaces Tests Begin.
+  // Dictionaries Tests Begin.
+  // Exceptions Tests Begin.
 
   // Enum Tests Begin.
+  it('should not return any diff fragments for empty Enum', function() {
+    var firstMap = createMap(`enum FoodEnum {};`);
+    var secondMap = createMap(`enum FoodEnum {};`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should not return any diff fragments for rearranged Enum', function() {
+    var firstMap = createMap(`
+      enum FoodEnum {
+        "Bread",
+        "Spaghetti",
+        "Sushi",
+        "Potato"
+      };`);
+    var secondMap = createMap(`
+      enum FoodEnum {
+        "Potato",
+        "Spaghetti",
+        "Sushi",
+        "Bread"
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
   it('should return a diff fragment for each missing Enum member', function() {
     var firstMap = createMap(`enum FoodEnum { "Bread", "Spaghetti" };`);
     var secondMap = createMap(`enum FoodEnum { "Spaghetti", "Sushi" };`);
@@ -313,4 +507,8 @@ describe('Diff', function() {
     expect(chunks[1].rightValue).toBeDefined();
     expect(chunks[1].rightValue.literal).toBe('Sushi');
   });
+
+  // Callback Function Tests Begin.
+  // Typedef Tests Begin.
+  // Implements Statements Tests Begin.
 });
