@@ -448,10 +448,55 @@ describe('Diff', function() {
   it('should not return a chunk for rearranged getter and setter', function() {
     var firstMap = createMap(`
       interface Test {
-        getter boolean isPotato(unsigned long id);
+        getter any getByIndex(unsigned long index);
         stringifier DOMString ();
-
+        setter void setByIndex(unsigned long index, any value);
       };`);
+    var secondMap = createMap(`
+      interface Test {
+        setter void setByIndex(unsigned long index, any value);
+        getter any getByIndex(unsigned long index);
+        stringifier DOMString ();
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
+  });
+
+  it('should return a chunk if getter differs in definition', function() {
+    var firstMap = createMap(`
+      interface Test {
+        getter boolean getByIndex(unsigned long index);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        getter any getByIndex(unsigned long index);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in the type of the definition.
+    expect(chunks[0].propPath).toBe('.definition.members[getByIndex].member.returnType.name.literal');
+    expect(chunks[0].leftValue).toBe('boolean');
+    expect(chunks[0].rightValue).toBe('any');
+  });
+
+  it('should return a chunk if getter (or setter) is missing from one definition', function() {
+    var firstMap = createMap(`
+      interface Test {
+        getter any getByIndex(unsigned long index);
+        setter void setByIndex(unsigned long index, any value);
+      };`);
+    var secondMap = createMap(`
+      interface Test {
+        getter any getByIndex(unsigned long index);
+        void setByIndex(unsigned long index, any value);
+      };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in the qualifiers
+    expect(chunks[0].propPath).toBe('.definition.members[setByIndex].qualifiers');
   });
 
   // Namespaces Tests Begin.
