@@ -4,29 +4,17 @@
 'use strict';
 
 describe('Diff', function() {
-  var Parser;
   var DiffStatus;
   var differ;
+  var createMap;
 
   beforeEach(function() {
     var Diff = foam.lookup('org.chromium.webidl.Diff');
+    var Parser = foam.lookup('org.chromium.webidl.Parser');
     DiffStatus = foam.lookup('org.chromium.webidl.DiffStatus');
-    Parser = foam.lookup('org.chromium.webidl.Parser');
     differ = Diff.create();
+    createMap = global.DIFF_CREATE_MAP.bind(this, Parser);
   });
-
-  var createMap = function(idl, opt_source) {
-    opt_source = opt_source || 'Test';
-    var map = {};
-    var results = Parser.create().parseString(idl, opt_source).value;
-    // If tests fails here, then the given fragment has syntax error.
-    expect(results.length > 0).toBe(true);
-
-    results.forEach(function(result) {
-      map[result.id] = result;
-    });
-    return map;
-  };
 
   describe('Interface', function() {
     it('should return no diff fragments for two empty definitions', function() {
@@ -115,7 +103,7 @@ describe('Diff', function() {
       expect(chunks.length).toBe(1);
       // Expecting difference to be in inheritsFrom field of definition.
       expect(chunks[0].propPath).toBe('.definition.inheritsFrom');
-      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
       // Expecting left to be null (as populated by the parser).
       expect(chunks[0].leftValue).toBe(null);
       // Expecting right to be an object (not null).
@@ -661,7 +649,7 @@ describe('Diff', function() {
       expect(chunks.length).toBe(1);
       // Expecting difference to be in inheritsFrom of definition.
       expect(chunks[0].propPath).toBe('.definition.inheritsFrom');
-      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].leftValue).not.toBe(null);
       expect(chunks[0].rightValue).toBe(null);
