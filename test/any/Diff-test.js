@@ -434,6 +434,7 @@ describe('Diff', function() {
   it('should return 2 chunks for mismatched stringifier definitions.', function() {
     // Note: Technically, stringifier DOMString () and stringifier are
     // equivalent. However, Diff will treat these two as different definitions.
+    // One chunk is produced for each of the definitions.
     var firstMap = createMap(`
       interface Test {
         stringifier DOMString ();
@@ -479,6 +480,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting the difference to be in the type of the definition.
     expect(chunks[0].propPath).toBe('.definition.members[getByIndex].member.returnType.name.literal');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     expect(chunks[0].leftValue).toBe('boolean');
     expect(chunks[0].rightValue).toBe('any');
   });
@@ -499,6 +501,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting the difference to be in the qualifiers
     expect(chunks[0].propPath).toBe('.definition.members[setByIndex].member.qualifiers');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
     expect(chunks[0].leftValue).toBeDefined();
     expect(chunks[0].rightValue).toBeUndefined();
   });
@@ -617,6 +620,7 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting the difference to be at isPartial at definition level.
     expect(chunks[0].propPath).toBe('.definition.isPartial');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     // Expecting left to be defined as partial, right to be non-partial.
     expect(chunks[0].leftValue).toBe(true);
     expect(chunks[0].rightValue).toBe(false);
@@ -654,18 +658,80 @@ describe('Diff', function() {
     expect(chunks.length).toBe(1);
     // Expecting difference to be in inheritsFrom of definition.
     expect(chunks[0].propPath).toBe('.definition.inheritsFrom');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     expect(chunks[0].leftValue).toBeDefined();
     expect(chunks[0].leftValue).not.toBe(null);
     expect(chunks[0].rightValue).toBe(null);
   });
 
-  xit('should not return any fragments for rearranged members', function() {
+  it('should return a diff fragment if one is partial, one is not', function() {
+    var firstMap = createMap(`dictionary Test {};`);
+    var secondMap = createMap(`partial dictionary Test {};`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting difference to be in isPartial of definition.
+    expect(chunks[0].propPath).toBe('.definition.isPartial');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+    expect(chunks[0].leftValue).toBe(false);
+    expect(chunks[0].rightValue).toBe(true);
   });
 
-  xit('should return a fragment for missing member', function() {
+  it('should not return any fragments for rearranged members', function() {
+    var firstMap = createMap(`dictionary PaintOptions {
+      DOMString? fillPattern = "black";
+      DOMString? strokePattern = null;
+      Point position;
+    };`);
+    var secondMap = createMap(`dictionary PaintOptions {
+      DOMString? strokePattern = null;
+      DOMString? fillPattern = "black";
+      Point position;
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(0);
   });
 
-  xit('should return a fragment if member is declared as required in one, but not other', function() {
+  it('should return a fragment for missing member', function() {
+    var firstMap = createMap(`dictionary PaintOptions {
+      DOMString? fillPattern = "black";
+      Point position;
+    };`);
+    var secondMap = createMap(`dictionary PaintOptions {
+      DOMString? strokePattern = null;
+      DOMString? fillPattern = "black";
+      Point position;
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in members of definition.
+    expect(chunks[0].propPath).toBe('.definition.members');
+    expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+    expect(chunks[0].leftValue).toBeUndefined();
+    expect(chunks[0].rightValue).toBeDefined();
+  });
+
+  it('should return a fragment if member is declared as required in one, but not other', function() {
+    var firstMap = createMap(`dictionary PaintOptions {
+      DOMString? fillPattern = "black";
+      required DOMString strokePattern = null;
+      Point position;
+    };`);
+    var secondMap = createMap(`dictionary PaintOptions {
+      DOMString strokePattern = null;
+      DOMString? fillPattern = "black";
+      Point position;
+    };`);
+
+    var chunks = differ.diff(firstMap, secondMap);
+    expect(chunks.length).toBe(1);
+    // Expecting the difference to be in the isRequired field of the member.
+    expect(chunks[0].propPath).toBe('.definition.members[strokePattern].member.isRequired');
+    expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+    expect(chunks[0].leftValue).toBe(true);
+    expect(chunks[0].rightValue).toBe(false);
   });
 
   // Enum Tests Begin.
