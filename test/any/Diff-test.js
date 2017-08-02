@@ -890,15 +890,84 @@ describe('Diff', function() {
       expect(chunks.length).toBe(0);
     });
 
-    it('should return two fragments if definitions are the different', function() {
+    it('should return one fragments if type is different', function() {
       var firstMap = createMap(`typedef unsigned long Points;`);
-      var secondMap = createMap(`typedef sequence<Point> Points;`);
+      var secondMap = createMap(`typedef long Points;`);
       var chunks = differ.diff(firstMap, secondMap);
-      expect(chunks.length).toBe(2);
+      expect(chunks.length).toBe(1);
     });
 
+    // Typedefs can be defined multiple times in the same source.
+    // This occurs after canonicalization.
+    it('should return no fragments if multiple definitions are the same', function() {
+      var firstDef = createMap(`typedef sequence<Point> Points;`, 'Src1');
+      var secondDef = createMap(`typedef sequence<Point> Points;`, 'Src2');
+      var thirdDef = createMap(`typedef sequence<Point> Points;`, 'Src3');
+      var fourthDef = createMap(`typedef sequence<Point> Points;`, 'Src4');
+
+      // Simulating canonicalization.
+      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
+      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(0);
+    });
+
+    it('should return no fragments if multiple definitions are the same', function() {
+      var firstDef = createMap(`typedef unsigned long Points;`, 'Src1');
+      var secondDef = createMap(`typedef unsigned long Points;`, 'Src2');
+      var thirdDef = createMap(`typedef long Points;`, 'Src3');
+      var fourthDef = createMap(`typedef long Points;`, 'Src4');
+
+      // Simulating canonicalization.
+      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
+      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be in types of definition.
+      expect(chunks[0].propPath).toBe('.definition.type.name.literal');
+      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+      expect(chunks[0].leftValue).toBe('unsigned long');
+      expect(chunks[0].rightValue).toBe('long');
+      // Expecting the sources to be merged together correctly.
+      expect(chunks[0].leftSources.includes('Src1')).toBe(true);
+      expect(chunks[0].leftSources.includes('Src2')).toBe(true);
+      expect(chunks[0].rightSources.includes('Src3')).toBe(true);
+      expect(chunks[0].rightSources.includes('Src4')).toBe(true);
+    });
   });
 
   describe('Implements', function() {
+    it('should return no fragments if definitions are the same', function() {
+      var firstMap = createMap(`Window implements SomeFunctionality;`);
+      var secondMap = createMap(`Window implements SomeFunctionality;`);
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(0);
+    });
+
+    it('should return a fragment if one definition has implements, and other does not', function() {
+      var firstMap = {};
+      var secondMap = createMap(`Window implements SomeFunctionality;`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      expect(chunks[0].propPath).toBe('');
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
+      expect(chunks[0].leftValue).toBeUndefined();
+      expect(chunks[0].rightValue).toBeDefined();
+    });
+
+    it('should return two fragment if definition implements different things', function() {
+      var firstMap = createMap(`Window implements SomeFunctionality;`);
+      var secondMap = createMap(`Window implements SomeOtherThing;`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(2);
+      // Expecting the difference to be at definition level.
+      expect(chunks[0].propPath).toBe('');
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
+      expect(chunks[1].propPath).toBe('');
+      expect(chunks[1].status).toBe(DiffStatus.MISSING_DEFINITION);
+    });
   });
 });
