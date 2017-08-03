@@ -5,21 +5,21 @@
 
 describe('FetchSpecRunner', function() {
   var MockHTTPRequest;
-  var PipelineMessage;
+  var URLCollection;
+
   var outputBox;
   var errorBox;
   var runner;
 
   beforeEach(function() {
-    PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
     global.defineAccumulatorBox();
 
     // Initialize MockHTTPRequest and have it overload RetryHTTPRequest.
     global.mockHTTPRequest('foam.net.RetryHTTPRequest');
     MockHTTPRequest = foam.lookup('org.chromium.webidl.test.MockHTTPRequest');
+    URLCollection = foam.lookup('org.chromium.webidl.URLCollection');
 
     var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
-    var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
     var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
 
     outputBox = AccumulatorBox.create();
@@ -27,8 +27,6 @@ describe('FetchSpecRunner', function() {
     runner = FetchSpecRunner.create({
       outputBox: outputBox,
       errorBox: errorBox,
-      source: WebPlatformEngine.BLINK,
-      parserClass: foam.lookup('org.chromium.webidl.Parser'),
     });
   });
 
@@ -40,18 +38,12 @@ describe('FetchSpecRunner', function() {
     expect(errorBox.results.length).toBe(1);
   });
 
-  it('should send an error if message is missing URLs', function() {
-    var msg = PipelineMessage.create();
-    runner.run(msg);
-    expect(errorBox.results.length).toBe(1);
-  });
-
   it('should fetch all of the given URLs', function(done) {
     var urls = [
       MockHTTPRequest.MICROSYNTAXES_URL,
       MockHTTPRequest.FETCHING_URL,
     ];
-    var msg = PipelineMessage.create({ urls: urls });
+    var msg = URLCollection.create({urls: urls});
     runner.run(msg);
 
     // Check back in a second to allow for fetching.
@@ -61,9 +53,7 @@ describe('FetchSpecRunner', function() {
       expect(outputBox.results.length).toBe(2);
       expect(errorBox.results.length).toBe(0);
 
-      var htmlFiles = outputBox.results.map(function(o) {
-        return o.htmlFile;
-      });
+      var htmlFiles = outputBox.results;
 
       // Verify that correct pages were fetched.
       expect(htmlFiles[0].id[0]).toBe(MockHTTPRequest.MICROSYNTAXES_URL);
@@ -79,7 +69,7 @@ describe('FetchSpecRunner', function() {
       MockHTTPRequest.MICROSYNTAXES_URL,
       MockHTTPRequest.MICROSYNTAXES_URL,
     ];
-    var msg = PipelineMessage.create({ urls: urls });
+    var msg = URLCollection.create({urls: urls});
     runner.run(msg);
 
     // Check back in a second to allow for fetching.
@@ -92,7 +82,7 @@ describe('FetchSpecRunner', function() {
 
   it('should send an error to errorBox if given a non-existent URL', function(done) {
     var urls = [MockHTTPRequest.NON_EXISTANT_SPEC];
-    var msg = PipelineMessage.create({ urls: urls });
+    var msg = URLCollection.create({urls: urls});
     runner.run(msg);
 
     setTimeout(function() {
