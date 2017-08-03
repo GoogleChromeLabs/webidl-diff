@@ -23,7 +23,6 @@ var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/, /css-houdini\.
 var exclude = [/web\.archive\.org/, /archives/ ];
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
-var Parser = foam.lookup('org.chromium.webidl.Parser');
 var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 var URLExtractor = foam.lookup('org.chromium.webidl.URLExtractor');
 var FetchSpecRunner = foam.lookup('org.chromium.webidl.FetchSpecRunner');
@@ -54,26 +53,25 @@ var sharedPath = PipelineBuilder.create(null, ctx)
 
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
   var corePath = PipelineBuilder.create(null, ctx)
-                                .append(ParserRunner.create())
+                                .append(ParserRunner.create({ Parser: config.parserClass }))
                                 .append(CanonicalizerRunner.create({ source: config.source }))
                                 .append(sharedPath);
 
   if (config.source === WebPlatformEngine.BLINK) {
     var blinkPL = PipelineBuilder.create(null, ctx)
-                                .append(FetchSpecRunner.create({
-                                  parserClass: Parser,
-                                  source: WebPlatformEngine.SPECIFICATION
-                                }))
+                                .append(FetchSpecRunner.create())
                                 .append(IDLFragmentExtractorRunner.create())
                                 .append(ParserRunner.create())
-                                .append(CanonicalizerRunner.create())
+                                .append(CanonicalizerRunner.create({ source: WebPlatformEngine.SPECIFICATION }))
                                 .build();
-  //  config.urlOutputBox = blinkPL;
+    config.urlOutputBox = blinkPL;
   }
   config.fileOutputBox = corePath.build();
   config.include = include;
   config.exclude = exclude;
   config.freshRepo = false; // For this purpose...
+  delete config.parserClass;
+  delete config.source;
 });
 
 
