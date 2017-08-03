@@ -4,7 +4,7 @@
 'use strict';
 
 describe('DiffRunner', function() {
-  var PipelineMessage;
+  var CanonicalCollection;
   var WebPlatformEngine;
 
   var outputBox;
@@ -13,7 +13,7 @@ describe('DiffRunner', function() {
   var createMap;
 
   beforeEach(function() {
-    PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
+    CanonicalCollection = foam.lookup('org.chromium.webidl.CanonicalCollection');
     WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 
     global.defineAccumulatorBox();
@@ -36,15 +36,9 @@ describe('DiffRunner', function() {
     expect(errorBox.results.length).toBe(1);
   });
 
-  it('should send an error if message object is missing properties', function() {
-    var missingArgs = PipelineMessage.create();
-    runner.run(missingArgs);
-    expect(errorBox.results.length).toBe(1);
-  });
-
   it('should return no diff chunks if only one source is provided', function() {
-    var msg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Test {};`),
+    var msg = CanonicalCollection.create({
+      definitions: createMap(`interface Test {};`),
       source: WebPlatformEngine.BLINK,
     });
 
@@ -54,12 +48,12 @@ describe('DiffRunner', function() {
   });
 
   it('should return diff chunk if definitions differ and they are from different sources', function() {
-    var firstMsg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Test {};`),
+    var firstMsg = CanonicalCollection.create({
+      definitions: createMap(`interface Test {};`),
       source: WebPlatformEngine.BLINK,
     });
-    var secondMsg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Test : Base {};`),
+    var secondMsg = CanonicalCollection.create({
+      definitions: createMap(`interface Test : Base {};`),
       source: WebPlatformEngine.GECKO,
     });
 
@@ -70,16 +64,16 @@ describe('DiffRunner', function() {
   });
 
   it('should perform diff between all sources', function() {
-    var firstMsg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Test {};`),
+    var firstMsg = CanonicalCollection.create({
+      definitions: createMap(`interface Test {};`),
       source: WebPlatformEngine.BLINK,
     });
-    var secondMsg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Test : Base {};`),
+    var secondMsg = CanonicalCollection.create({
+      definitions: createMap(`interface Test : Base {};`),
       source: WebPlatformEngine.GECKO,
     });
-    var thirdMsg = PipelineMessage.create({
-      canonicalMap: createMap(`interface Base {};`),
+    var thirdMsg = CanonicalCollection.create({
+      definitions: createMap(`interface Base {};`),
       source: WebPlatformEngine.WEBKIT
     });
 
@@ -98,7 +92,7 @@ describe('DiffRunner', function() {
     expect(outputBox.results[2].rightSource).toBe(WebPlatformEngine.GECKO);
 
     var chunks = outputBox.results.reduce(function(arr, res) {
-      return arr.concat(res.diffChunks);
+      return arr.concat(res.chunks);
     }, []);
 
     // Expecting 5 DiffChunks:
