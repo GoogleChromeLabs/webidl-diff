@@ -101,6 +101,10 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}GeckoParser.js`,
 
     // IDL file stuff
+    `lib${sep}org${sep}chromium${sep}webidl${sep}ASTCollection.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalCollection.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}URLCollection.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}BaseIDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLSpecFile.js`,
@@ -113,7 +117,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}WebPlatformEngine.js`,
 
     // Pipeline components
-    `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
