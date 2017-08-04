@@ -978,6 +978,23 @@ describe('Diff', function() {
       expect(chunks[0].leftValue.literal).toBe('Bread');
       expect(chunks[0].rightValue).toBeUndefined();
     });
+
+    it('should throw an error if multiple but different definitions occur', function() {
+      var firstEnum = createMap(
+          `enum FoodEnum { "Bread", "Sushi", "Potato" };`, 'Src1');
+      var secondEnum = createMap(
+          `enum FoodEnum { "Fish", "Potato", "Bread" };`, 'Src2');
+      var thirdEnum = createMap(
+          `enum FoodEnum { "Potato", "Sushi", "Spaghetti" };`, 'Src3');
+      var fourthEnum = createMap(
+          `enum FoodEnum { "Potato", "Spaghetti", "Sushi" };`, 'Src4');
+
+      // Pair up the sources (to simulate canonicalization).
+      var firstMap = { FoodEnum: [ firstEnum.FoodEnum, secondEnum.FoodEnum ] };
+      var secondMap = { FoodEnum: [ thirdEnum.FoodEnum, fourthEnum.FoodEnum ] };
+
+      expect(function() { differ.diff(firstMap, secondMap) }).toThrow();
+    });
   });
 
   describe('Callback', function() {
@@ -1078,6 +1095,19 @@ describe('Diff', function() {
       expect(chunks[0].leftSources.includes('Src2')).toBe(true);
       expect(chunks[0].rightSources.includes('Src3')).toBe(true);
       expect(chunks[0].rightSources.includes('Src4')).toBe(true);
+    });
+
+    it('should throw an error if multiple but different definitions exist', function() {
+      var firstDef = createMap(`typedef unsigned long Points;`, 'Src1');
+      var secondDef = createMap(`typedef long Points;`, 'Src2');
+      var thirdDef = createMap(`typedef long Points;`, 'Src3');
+      var fourthDef = createMap(`typedef long Points;`, 'Src4');
+
+      // Simulating canonicalization.
+      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
+      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
+
+      expect(function() { differ.diff(firstMap, secondMap); }).toThrow();
     });
   });
 
