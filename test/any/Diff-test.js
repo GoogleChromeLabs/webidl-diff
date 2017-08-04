@@ -979,7 +979,8 @@ describe('Diff', function() {
       expect(chunks[0].rightValue).toBeUndefined();
     });
 
-    it('should throw an error if multiple but different definitions occur', function() {
+    it('should log an error if multiple but different definitions occur', function() {
+      console.error = jasmine.createSpy('error');
       var firstEnum = createMap(
           `enum FoodEnum { "Bread", "Sushi", "Potato" };`, 'Src1');
       var secondEnum = createMap(
@@ -993,7 +994,16 @@ describe('Diff', function() {
       var firstMap = { FoodEnum: [ firstEnum.FoodEnum, secondEnum.FoodEnum ] };
       var secondMap = { FoodEnum: [ thirdEnum.FoodEnum, fourthEnum.FoodEnum ] };
 
-      expect(function() { differ.diff(firstMap, secondMap) }).toThrow();
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(console.error).toHaveBeenCalled();
+      expect(chunks.length).toBe(1);
+      // Expecting difference to be in the members field of definition.
+      expect(chunks[0].leftKey).toBe('');
+      expect(chunks[0].rightKey).toBe('');
+      // Expecting the definition to be removed from left.
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
+      expect(chunks[0].leftValue).toBeUndefined();
+      expect(chunks[0].rightValue).toBeDefined();
     });
   });
 
@@ -1020,8 +1030,8 @@ describe('Diff', function() {
       expect(chunks[0].leftKey).toBe('.definition.returnType.name.literal');
       expect(chunks[0].rightKey).toBe('.definition.returnType.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
-      expect(chunks[0].leftValue).toBe("void");
-      expect(chunks[0].rightValue).toBe("any");
+      expect(chunks[0].leftValue).toBe('void');
+      expect(chunks[0].rightValue).toBe('any');
     });
 
     it('should return fragment if definition has different parameters', function() {
@@ -1097,7 +1107,8 @@ describe('Diff', function() {
       expect(chunks[0].rightSources.includes('Src4')).toBe(true);
     });
 
-    it('should throw an error if multiple but different definitions exist', function() {
+    it('should log an error if multiple but different definitions exist', function() {
+      console.error = jasmine.createSpy('error');
       var firstDef = createMap(`typedef unsigned long Points;`, 'Src1');
       var secondDef = createMap(`typedef long Points;`, 'Src2');
       var thirdDef = createMap(`typedef long Points;`, 'Src3');
@@ -1107,7 +1118,15 @@ describe('Diff', function() {
       var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
       var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
 
-      expect(function() { differ.diff(firstMap, secondMap); }).toThrow();
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(console.error).toHaveBeenCalled();
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be at definition level.
+      expect(chunks[0].leftKey).toBe('');
+      expect(chunks[0].rightKey).toBe('');
+      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
+      expect(chunks[0].leftValue).toBeUndefined();
+      expect(chunks[0].rightValue).toBeDefined();
     });
   });
 
