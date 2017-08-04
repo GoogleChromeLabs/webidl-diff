@@ -620,6 +620,123 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(0);
     });
+
+    it('should return no diff fragments for overload operations rearranged', function() {
+      var firstMap = createMap(`
+        interface Test {
+          void f(DOMString a);
+          void f(Node a, DOMString b, double c);
+          void f();
+        };`);
+      var secondMap = createMap(`
+        interface Test {
+          void f(Node a, DOMString b, double c);
+          void f();
+          void f(DOMString a);
+        };`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(0);
+    });
+
+    it('should return one fragment for missing overload', function() {
+      var firstMap = createMap(`
+        interface Test {
+          void f(DOMString a);
+          void f();
+        };`);
+      var secondMap = createMap(`
+        interface Test {
+          void f(Node a, DOMString b, double c);
+          void f();
+          void f(DOMString a);
+        };`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be at the member level of definition.
+      expect(chunks[0].leftKey).toBe('.definition.members');
+      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
+      // Expecting the left value to be undefined, right to be defined.
+      expect(chunks[0].leftValue).toBeUndefined();
+      expect(chunks[0].rightValue).toBeDefined();
+    });
+
+    it('should return one fragment for overloads with mismatch types', function() {
+      var firstMap = createMap(`
+        interface Test {
+          void f();
+          void f(DOMString? a);
+        };`);
+      var secondMap = createMap(`
+        interface Test {
+          void f(DOMString a);
+          void f();
+        };`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be at the suffix of member type.
+      expect(chunks[0].leftKey).toBe('.definition.members[0].member.args[0].type.suffixes');
+      expect(chunks[0].rightKey).toBe('.definition.members[0].member.args[0].type.suffixes');
+      expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
+      // Expecting the left value to be undefined, right to be defined.
+      expect(chunks[0].leftValue).toBeDefined();
+      expect(chunks[0].rightValue).toBeUndefined();
+    });
+
+    it('should return 1 fragment for overloads with mismatch types', function() {
+      var firstMap = createMap(`
+        interface Test {
+          void f();
+          void f(double a);
+        };`);
+      var secondMap = createMap(`
+        interface Test {
+          void f(DOMString a);
+          void f();
+        };`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be at the suffix of member type.
+      expect(chunks[0].leftKey).toBe('.definition.members[0].member.args[0].type.name.literal');
+      expect(chunks[0].rightKey).toBe('.definition.members[0].member.args[0].type.name.literal');
+      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+      // Expecting the left value to be undefined, right to be defined.
+      expect(chunks[0].leftValue).toBe('double');
+      expect(chunks[0].rightValue).toBe('DOMString');
+    });
+
+    it('should return one fragment for missing static overload', function() {
+      var firstMap = createMap(`
+        interface Test {
+          static void f(DOMString a);
+          void f();
+        };`);
+      var secondMap = createMap(`
+        interface Test {
+          void f();
+          void f(DOMString a);
+        };`);
+
+      var chunks = differ.diff(firstMap, secondMap);
+      expect(chunks.length).toBe(1);
+      // Expecting the difference to be at the member level (static vs non-static is odd).
+      expect(chunks[0].leftKey).toBe('.definition.members[0].member');
+      expect(chunks[0].rightKey).toBe('.definition.members[0].member');
+      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+    });
+
+    // Note: There is no test for overloading by type diffing.
+    // Overloading by type is not supported. This is a WebIDL limitation.
+    // e.g.
+    // interface Test {
+    //   void f(DOMString x);
+    //   void f(double x);
+    // };
+    // is not valid, since the overload only differs by type and not length.
   });
 
   describe('Namespace', function() {
