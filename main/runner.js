@@ -63,6 +63,7 @@ var sharedPath = PipelineBuilder.create(null, ctx)
                                 .append(IDLFragmentExtractorRunner.create())
                                 .append(ParserRunner.create())
                                 .append(CanonicalizerRunner.create({ source: WebPlatformEngine.SPECIFICATION }))
+                                .append(sharedPath)
                                 .build();
     config.urlOutputBox = blinkPL;
   }
