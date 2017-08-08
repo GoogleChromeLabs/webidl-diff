@@ -101,7 +101,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}GeckoParser.js`,
 
     // IDL file stuff
-    `lib${sep}org${sep}chromium${sep}webidl${sep}ASTCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}BaseIDLFile.js`,
