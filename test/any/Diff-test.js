@@ -57,8 +57,8 @@ describe('Diff', function() {
       // Expecting status to represent no match.
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting difference to be in members field of definition.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       // Expecting left to be defined, and right undefined.
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].rightValue).toBeUndefined();
@@ -78,8 +78,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in the value field of the member[0].
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.value.literal');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.value.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.value.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.value.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('true');
       expect(chunks[0].rightValue).toBe('false');
@@ -92,8 +92,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in the type field of member.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.type.name.literal');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.type.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.type.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.type.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('boolean');
       expect(chunks[0].rightValue).toBe('unsigned long');
@@ -106,8 +106,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in inheritsFrom field of definition.
-      expect(chunks[0].leftKey).toBe('.definition.inheritsFrom');
-      expect(chunks[0].rightKey).toBe('.definition.inheritsFrom');
+      expect(chunks[0].leftKey).toBe('definition.inheritsFrom');
+      expect(chunks[0].rightKey).toBe('definition.inheritsFrom');
       expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
       // Expecting left to be null (as populated by the parser).
       expect(chunks[0].leftValue).toBe(null);
@@ -123,8 +123,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in inheritsFrom field of definition.
-      expect(chunks[0].leftKey).toBe('.definition.inheritsFrom.literal');
-      expect(chunks[0].rightKey).toBe('.definition.inheritsFrom.literal');
+      expect(chunks[0].leftKey).toBe('definition.inheritsFrom.literal');
+      expect(chunks[0].rightKey).toBe('definition.inheritsFrom.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('Potato');
       expect(chunks[0].rightValue).toBe('Tomato');
@@ -137,8 +137,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in attrs field.
-      expect(chunks[0].leftKey).toBe('.attrs');
-      expect(chunks[0].rightKey).toBe('.attrs');
+      expect(chunks[0].leftKey).toBe('attrs');
+      expect(chunks[0].rightKey).toBe('attrs');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting left value to be defined, right to be undefined.
       expect(chunks[0].leftValue).toBeDefined();
@@ -152,8 +152,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in attrs field of definition member.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.attrs');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.attrs');
+      expect(chunks[0].leftKey).toBe('definition.members.0.attrs');
+      expect(chunks[0].rightKey).toBe('definition.members.0.attrs');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       // Expecting left value to be defined, right to be undefined.
       expect(chunks[0].leftValue).toBeUndefined();
@@ -192,8 +192,8 @@ describe('Diff', function() {
       expect(chunks.length).toBe(1);
       // Expecting difference to be in values field of definition member.
       // Note: Indices are the member are same, since members are sorted.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.value.literal');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.value.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.value.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.value.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('false');
       expect(chunks[0].rightValue).toBe('true');
@@ -213,8 +213,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be at definition level.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       expect(chunks[0].rightValue.id).toBe('isPotato');
     });
@@ -234,11 +234,11 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(2);
       // Expecting difference to be at definition level.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
-      expect(chunks[1].leftKey).toBe('.definition.members');
-      expect(chunks[1].rightKey).toBe('.definition.members');
+      expect(chunks[1].leftKey).toBe('definition.members');
+      expect(chunks[1].rightKey).toBe('definition.members');
       expect(chunks[1].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       // Verify that name of definition that is reported.
       expect(chunks[0].leftValue.id).toBe('rating');
@@ -288,8 +288,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expect difference to be in extended attributes field of definition.
-      expect(chunks[0].leftKey).toBe('.attrs.0.args.0.isOptional');
-      expect(chunks[0].rightKey).toBe('.attrs.0.args.0.isOptional');
+      expect(chunks[0].leftKey).toBe('attrs.0.args.0.isOptional');
+      expect(chunks[0].rightKey).toBe('attrs.0.args.0.isOptional');
       expect(chunks[0].leftValue).toBe(false);
       expect(chunks[0].rightValue).toBe(true);
     });
@@ -364,10 +364,10 @@ describe('Diff', function() {
       var rightPaths = chunks.map(function(chunk) {
         return chunk.rightKey;
       });
-      expect(leftPaths.includes('.definition.members.0.attrs')).toBe(true);
-      expect(leftPaths.includes('.definition.members.0.attrs.0.value.literal')).toBe(true);
-      expect(rightPaths.includes('.definition.members.0.attrs')).toBe(true);
-      expect(rightPaths.includes('.definition.members.0.attrs.0.value.literal')).toBe(true);
+      expect(leftPaths.includes('definition.members.0.attrs')).toBe(true);
+      expect(leftPaths.includes('definition.members.0.attrs.0.value.literal')).toBe(true);
+      expect(rightPaths.includes('definition.members.0.attrs')).toBe(true);
+      expect(rightPaths.includes('definition.members.0.attrs.0.value.literal')).toBe(true);
       // FUTURE: Use smarter way of retrieving objects.
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('EventSrcElement');
@@ -390,8 +390,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in type suffixes of member args.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.args.0.type.suffixes');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.args.0.type.suffixes');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.args.0.type.suffixes');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.args.0.type.suffixes');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting the left to be defined and right to be undefined.
       expect(chunks[0].leftValue).toBeDefined();
@@ -411,8 +411,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in args of members.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.args');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.args');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.args');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.args');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBeUndefined();
@@ -489,8 +489,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in the type of the definition.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.returnType.name.literal');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.returnType.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.returnType.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.returnType.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('boolean');
       expect(chunks[0].rightValue).toBe('any');
@@ -511,8 +511,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in the qualifiers
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.qualifiers');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.qualifiers');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.qualifiers');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.qualifiers');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].rightValue).toBeUndefined();
@@ -560,10 +560,10 @@ describe('Diff', function() {
       var rightPaths = chunks.map(function(chunk) {
         return chunk.rightKey;
       });
-      expect(leftPaths.includes('.definition.members.0.member')).toBe(true);
-      expect(leftPaths.includes('.definition.members.1.member')).toBe(true);
-      expect(rightPaths.includes('.definition.members.0.member')).toBe(true);
-      expect(rightPaths.includes('.definition.members.1.member')).toBe(true);
+      expect(leftPaths.includes('definition.members.0.member')).toBe(true);
+      expect(leftPaths.includes('definition.members.1.member')).toBe(true);
+      expect(rightPaths.includes('definition.members.0.member')).toBe(true);
+      expect(rightPaths.includes('definition.members.1.member')).toBe(true);
     });
 
     it('should return no diff fragments for iterable rearranged', function() {
@@ -597,8 +597,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(2);
       // Expecting the difference to be at member level.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
     });
 
     it('should return no diff fragments for maplike / setlike rearranged', function() {
@@ -655,8 +655,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the member level of definition.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBeUndefined();
@@ -678,8 +678,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the suffix of member type.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.args.0.type.suffixes');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.args.0.type.suffixes');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.args.0.type.suffixes');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.args.0.type.suffixes');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBeDefined();
@@ -701,8 +701,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the suffix of member type.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.args.0.type.name.literal');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.args.0.type.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.args.0.type.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.args.0.type.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBe('double');
@@ -724,8 +724,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the member level (static vs non-static is odd).
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
     });
 
@@ -754,8 +754,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at isPartial at definition level.
-      expect(chunks[0].leftKey).toBe('.definition.isPartial');
-      expect(chunks[0].rightKey).toBe('.definition.isPartial');
+      expect(chunks[0].leftKey).toBe('definition.isPartial');
+      expect(chunks[0].rightKey).toBe('definition.isPartial');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       // Expecting left to be defined as partial, right to be non-partial.
       expect(chunks[0].leftValue).toBe(true);
@@ -794,8 +794,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in inheritsFrom of definition.
-      expect(chunks[0].leftKey).toBe('.definition.inheritsFrom');
-      expect(chunks[0].rightKey).toBe('.definition.inheritsFrom');
+      expect(chunks[0].leftKey).toBe('definition.inheritsFrom');
+      expect(chunks[0].rightKey).toBe('definition.inheritsFrom');
       expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].leftValue).not.toBe(null);
@@ -809,8 +809,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in isPartial of definition.
-      expect(chunks[0].leftKey).toBe('.definition.isPartial');
-      expect(chunks[0].rightKey).toBe('.definition.isPartial');
+      expect(chunks[0].leftKey).toBe('definition.isPartial');
+      expect(chunks[0].rightKey).toBe('definition.isPartial');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe(false);
       expect(chunks[0].rightValue).toBe(true);
@@ -846,8 +846,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in members of definition.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       expect(chunks[0].leftValue).toBeUndefined();
       expect(chunks[0].rightValue).toBeDefined();
@@ -868,8 +868,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in the isRequired field of the member.
-      expect(chunks[0].leftKey).toBe('.definition.members.0.member.isRequired');
-      expect(chunks[0].rightKey).toBe('.definition.members.0.member.isRequired');
+      expect(chunks[0].leftKey).toBe('definition.members.0.member.isRequired');
+      expect(chunks[0].rightKey).toBe('definition.members.0.member.isRequired');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe(true);
       expect(chunks[0].rightValue).toBe(false);
@@ -912,11 +912,11 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(2);
       // Expecting difference to be in members field of definition.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
-      expect(chunks[1].leftKey).toBe('.definition.members');
-      expect(chunks[1].rightKey).toBe('.definition.members');
+      expect(chunks[1].leftKey).toBe('definition.members');
+      expect(chunks[1].rightKey).toBe('definition.members');
       expect(chunks[1].status).toBe(DiffStatus.NO_MATCH_ON_LEFT);
       // Expecting the difference to have Bread defined in left but not right.
       expect(chunks[0].leftValue).toBeDefined();
@@ -965,8 +965,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in members field of definition.
-      expect(chunks[0].leftKey).toBe('.definition.members');
-      expect(chunks[0].rightKey).toBe('.definition.members');
+      expect(chunks[0].leftKey).toBe('definition.members');
+      expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting sources to be added together correctly.
       expect(chunks[0].leftSources.includes('Src1')).toBe(true);
@@ -1027,8 +1027,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in return type.
-      expect(chunks[0].leftKey).toBe('.definition.returnType.name.literal');
-      expect(chunks[0].rightKey).toBe('.definition.returnType.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.returnType.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.returnType.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('void');
       expect(chunks[0].rightValue).toBe('any');
@@ -1043,8 +1043,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting difference to be in args.
-      expect(chunks[0].leftKey).toBe('.definition.args');
-      expect(chunks[0].rightKey).toBe('.definition.args');
+      expect(chunks[0].leftKey).toBe('definition.args');
+      expect(chunks[0].rightKey).toBe('definition.args');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].rightValue).toBeUndefined();
@@ -1095,8 +1095,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in types of definition.
-      expect(chunks[0].leftKey).toBe('.definition.type.name.literal');
-      expect(chunks[0].rightKey).toBe('.definition.type.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.type.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.type.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe('unsigned long');
       expect(chunks[0].rightValue).toBe('long');
