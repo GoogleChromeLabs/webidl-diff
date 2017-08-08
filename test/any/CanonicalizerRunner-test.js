@@ -4,7 +4,6 @@
 'use strict';
 
 describe('CanonicalizerRunner', function() {
-  var ASTCollection;
   var IDLFile;
   var IDLFileContents;
   var Parser;
@@ -15,7 +14,6 @@ describe('CanonicalizerRunner', function() {
   var waitTime = 3; // 3 seconds before callback.
 
   beforeEach(function() {
-    ASTCollection = foam.lookup('org.chromium.webidl.ASTCollection');
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
@@ -71,15 +69,11 @@ describe('CanonicalizerRunner', function() {
     });
 
     // Perform a quick parse on the files to get AST.
-    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value;
-    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value;
+    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value[0];
+    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value[0];
 
-    // Prepare ASTCollection for CanonicalizerRunner.
-    var firstMessage = ASTCollection.create({asts: firstAst});
-    var secondMessage = ASTCollection.create({asts: secondAst});
-
-    runner.run(firstMessage);
-    runner.run(secondMessage);
+    runner.run(firstAst);
+    runner.run(secondAst);
 
     // TODO: Observe outputBox and errorBox in the future.
     // Expect results to take ~3 seconds to arrive.
