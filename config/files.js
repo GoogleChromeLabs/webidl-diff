@@ -59,7 +59,6 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}DecInteger.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Enum.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Namespace.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}StaticMember.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}OctInteger.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Attribute.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ast${sep}Exception.js`,
