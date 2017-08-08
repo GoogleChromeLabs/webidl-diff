@@ -20,7 +20,7 @@ const webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
 var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/, /css-houdini\.org/, /csswg\.org/, /svgwg\.org/, /drafts\.fxtf\.org/, /www\.khronos\.org\/(registry\/webgl\/specs\/latest\/[12]\.0|registry\/typedarray\/specs\/latest)/, /www\.w3\.org\/TR\/geolocation-API/, /dvcs\.w3\.org\/hg\/speech-api\/raw-file\/tip\/webspeechapi\.html/];
-var exclude = [/web\.archive\.org/, /archives/ ];
+var exclude = [/web\.archive\.org/, /archives/, /html\.spec\.whatwg\.org\/multipage/];
 
 var LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
 var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
