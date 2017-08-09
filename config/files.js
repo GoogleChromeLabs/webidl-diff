@@ -101,6 +101,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}GeckoParser.js`,
 
     // IDL file stuff
+    `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLSpecFile.js`,
@@ -111,16 +112,21 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}TagStack.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}Canonicalizer.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}WebPlatformEngine.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}Diff.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffChunk.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffStatus.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffResult.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineMessage.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}LocalGitRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}ParserRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalizerRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}FetchSpecRegistrySelector.js`,
-    `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFragmentExtractorRunner.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DiffRunner.js`,
   ];
 })();
