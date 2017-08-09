@@ -29,7 +29,7 @@ describe('Parser Runner', function() {
     return ParserRunner.create({
       outputBox: outputBox,
       errorBox: errorBox,
-      Parser: opt_parser,
+      parserType: opt_parser,
     });
   }
 
