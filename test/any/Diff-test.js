@@ -288,8 +288,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expect difference to be in extended attributes field of definition.
-      expect(chunks[0].leftKey).toBe('attrs.0.args.0.isOptional');
-      expect(chunks[0].rightKey).toBe('attrs.0.args.0.isOptional');
+      expect(chunks[0].leftKey).toBe('attrs.0.args.1.isOptional');
+      expect(chunks[0].rightKey).toBe('attrs.0.args.1.isOptional');
       expect(chunks[0].leftValue).toBe(false);
       expect(chunks[0].rightValue).toBe(true);
     });
@@ -560,10 +560,10 @@ describe('Diff', function() {
       var rightPaths = chunks.map(function(chunk) {
         return chunk.rightKey;
       });
-      expect(leftPaths.includes('definition.members.0.member')).toBe(true);
-      expect(leftPaths.includes('definition.members.1.member')).toBe(true);
-      expect(rightPaths.includes('definition.members.0.member')).toBe(true);
-      expect(rightPaths.includes('definition.members.1.member')).toBe(true);
+      expect(leftPaths.includes('definition.members.0.member.isStatic')).toBe(true);
+      expect(leftPaths.includes('definition.members.1.member.isStatic')).toBe(true);
+      expect(rightPaths.includes('definition.members.0.member.isStatic')).toBe(true);
+      expect(rightPaths.includes('definition.members.1.member.isStatic')).toBe(true);
     });
 
     it('should return no diff fragments for iterable rearranged', function() {
@@ -678,8 +678,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the suffix of member type.
-      expect(chunks[0].leftKey).toBe('definition.members.0.member.args.0.type.suffixes');
-      expect(chunks[0].rightKey).toBe('definition.members.0.member.args.0.type.suffixes');
+      expect(chunks[0].leftKey).toBe('definition.members.1.member.args.0.type.suffixes');
+      expect(chunks[0].rightKey).toBe('definition.members.1.member.args.0.type.suffixes');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBeDefined();
@@ -701,8 +701,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the suffix of member type.
-      expect(chunks[0].leftKey).toBe('definition.members.0.member.args.0.type.name.literal');
-      expect(chunks[0].rightKey).toBe('definition.members.0.member.args.0.type.name.literal');
+      expect(chunks[0].leftKey).toBe('definition.members.1.member.args.0.type.name.literal');
+      expect(chunks[0].rightKey).toBe('definition.members.1.member.args.0.type.name.literal');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       // Expecting the left value to be undefined, right to be defined.
       expect(chunks[0].leftValue).toBe('double');
@@ -724,9 +724,12 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be at the member level (static vs non-static is odd).
-      expect(chunks[0].leftKey).toBe('definition.members.0.member');
-      expect(chunks[0].rightKey).toBe('definition.members.0.member');
+      expect(chunks[0].leftKey).toBe('definition.members.1.member.isStatic');
+      expect(chunks[0].rightKey).toBe('definition.members.1.member.isStatic');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
+      // Expecting the left value to be true, right value to be false.
+      expect(chunks[0].leftValue).toBe(true);
+      expect(chunks[0].rightValue).toBe(false);
     });
 
     // Note: There is no test for overloading by type diffing.
