@@ -44,7 +44,7 @@ describe('PipelineRunner', function() {
 
   it('should send the message to outputBox and DAO if outputDAO exists', function(done) {
     var dao = foam.dao.MDAO.create({of: 'org.chromium.webidl.test.TestObj'});
-    var ctx = foam.createSubContext({outputDAO: dao});
+    var ctx = foam.createSubContext({outputDao: dao});
 
     var runner = PipelineRunner.create({
       outputBox: outputBox,

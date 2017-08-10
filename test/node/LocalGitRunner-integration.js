@@ -39,33 +39,15 @@ describe('LocalGitRunner integration', function() {
   });
 
   beforeEach(function() {
-    foam.CLASS({
-      package: 'foam.box.pipeline.test',
-      name: 'AccumulatorBox',
-      implements: [ 'foam.box.Box' ],
-
-      properties: [
-        {
-          class: 'Array',
-          name: 'outputs',
-        },
-      ],
-
-      methods: [
-        function send(message) {
-          this.outputs.push(message.object);
-        },
-        function clear() { this.outputs = []; }
-      ]
-    });
-    var AccumulatorBox = foam.lookup('foam.box.pipeline.test.AccumulatorBox');
-    defaultErrorBox = AccumulatorBox.create();
-    defaultOutputBox = AccumulatorBox.create();
-    urlOutputBox = AccumulatorBox.create();
-
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
     LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
+
+    global.defineAccumulatorBox();
+    var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
+    defaultErrorBox = AccumulatorBox.create();
+    defaultOutputBox = AccumulatorBox.create();
+    urlOutputBox = AccumulatorBox.create();
 
     config = {
       description: 'Scrape IDL Files from Blink Repository',
@@ -74,11 +56,10 @@ describe('LocalGitRunner integration', function() {
       sparsePath: 'third_party/WebKit/Source',
       findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
       extension: 'idl',
-      parser: 'Parser', // Default IDL Parser used for Blink.
       fileOutputBox: defaultOutputBox,
       urlOutputBox: urlOutputBox,
       errorBox: defaultErrorBox,
-      freshRepo: false,            // Do not clear mock files and attempt fetch
+      freshRepo: false,            // Do not clear mock files and attempt fetch.
     };
 
     config.idlFileContentsFactory = function(path, contents, urls) {
@@ -96,9 +77,9 @@ describe('LocalGitRunner integration', function() {
   });
 
   it('should stream mock included files', function(done) {
-    // Increasing timeout for the purpose of this test
+    // Increasing timeout for the purpose of this test.
     var origTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds.
 
     var localGitRunner = LocalGitRunner.create(config).run(false);
     var counter = 0;
@@ -107,25 +88,25 @@ describe('LocalGitRunner integration', function() {
       // We check every second for 10 seconds to see if the input
       // has arrived yet. On the 10th attempt (after 10 seconds),
       // we conclude the test has failed.
-      if (urlOutputBox.outputs.length === 0 && counter < 10) {
+      if (urlOutputBox.results.length === 0 && counter < 10) {
         ++counter;
         return;
       }
 
       var expectedPaths = global.testGitRepoData.includePaths;
-      var outputs = defaultOutputBox.outputs;
+      var outputs = defaultOutputBox.results;
       expect(outputs.length).toBe(expectedPaths.length);
-      expect(defaultErrorBox.outputs.length).toBe(0);
+      expect(defaultErrorBox.results.length).toBe(0);
 
       // Expecting urlOutputBox to have 1 output.
       // Only files with URLs will send an output.
-      expect(urlOutputBox.outputs.length).toBe(1);
+      expect(urlOutputBox.results.length).toBe(1);
 
       for (var i = 0; i < outputs.length; i++) {
         var file = outputs[i].idlFile;
         var actualPath = file.metadata.path;
 
-        // Verify that properties were populated correctly
+        // Verify that properties were populated correctly.
         expect(expectedPaths.includes(actualPath)).toBe(true);
         expect(file.id[0]).toBe(repositoryURL);
         expect(file.id[1]).toBe(gitHash);
@@ -136,4 +117,33 @@ describe('LocalGitRunner integration', function() {
       done();
     }, 1000);
   });
+
+  it('should stream files to DAO if runner is created within context with outputDAO', function(done) {
+    // Increasing timeout for the purpose of this test.
+    var origTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 seconds.
+    var dao = foam.dao.MDAO.create({of: 'org.chromium.webidl.IDLFileContents'});
+    var ctx = foam.createSubContext({outputDao: dao});
+
+    var localGitRunner = LocalGitRunner.create(config, ctx).run(false);
+    var counter = 0;
+
+    var interval = setInterval(function() {
+      if (defaultOutputBox.results.length === 0 && counter < 10) {
+        ++counter;
+        return;
+      }
+
+      dao.select().then(function(value) {
+        expect(value.array).toBeDefined();
+
+        var results = value.array;
+        expect(results.length).toBeDefined();
+        expect(results.length > 0).toBe(true);
+        clearInterval(interval);
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = origTimeout;
+        done();
+      });
+    });
+  }, 1000);
 });
