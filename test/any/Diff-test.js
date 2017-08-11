@@ -10,10 +10,11 @@ describe('Diff', function() {
 
   beforeEach(function() {
     var Diff = foam.lookup('org.chromium.webidl.Diff');
+    var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     var Parser = foam.lookup('org.chromium.webidl.Parser');
     DiffStatus = foam.lookup('org.chromium.webidl.DiffStatus');
     differ = Diff.create();
-    createMap = global.DIFF_CREATE_MAP.bind(this, Parser);
+    createMap = global.DIFF_CREATE_MAP.bind(this, Parser, IDLFileContents);
   });
 
   describe('Interface', function() {
@@ -65,10 +66,10 @@ describe('Diff', function() {
       // Expecting left source and right source to be correctly populated.
       expect(chunks[0].leftSources).toBeDefined();
       expect(chunks[0].leftSources.length).toBe(1);
-      expect(chunks[0].leftSources[0]).toBe(leftSrc);
+      expect(chunks[0].leftSources[0].id).toBe(leftSrc);
       expect(chunks[0].rightSources).toBeDefined();
       expect(chunks[0].rightSources.length).toBe(1);
-      expect(chunks[0].rightSources[0]).toBe(rightSrc);
+      expect(chunks[0].rightSources[0].id).toBe(rightSrc);
     });
 
     it('should return a diff fragment if members have different values', function() {
@@ -972,10 +973,16 @@ describe('Diff', function() {
       expect(chunks[0].rightKey).toBe('definition.members');
       expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
       // Expecting sources to be added together correctly.
-      expect(chunks[0].leftSources.includes('Src1')).toBe(true);
-      expect(chunks[0].leftSources.includes('Src2')).toBe(true);
-      expect(chunks[0].rightSources.includes('Src3')).toBe(true);
-      expect(chunks[0].rightSources.includes('Src4')).toBe(true);
+      var leftSources = chunks[0].leftSources.map(function(item) {
+        return item.id;
+      });
+      var rightSources = chunks[0].rightSources.map(function(item) {
+        return item.id;
+      });
+      expect(leftSources.includes('Src1')).toBe(true);
+      expect(leftSources.includes('Src2')).toBe(true);
+      expect(rightSources.includes('Src3')).toBe(true);
+      expect(rightSources.includes('Src4')).toBe(true);
       // Expecting the difference to have Bread defined in left, not right.
       expect(chunks[0].leftValue).toBeDefined();
       expect(chunks[0].leftValue.literal).toBe('Bread');
@@ -1104,10 +1111,16 @@ describe('Diff', function() {
       expect(chunks[0].leftValue).toBe('unsigned long');
       expect(chunks[0].rightValue).toBe('long');
       // Expecting the sources to be merged together correctly.
-      expect(chunks[0].leftSources.includes('Src1')).toBe(true);
-      expect(chunks[0].leftSources.includes('Src2')).toBe(true);
-      expect(chunks[0].rightSources.includes('Src3')).toBe(true);
-      expect(chunks[0].rightSources.includes('Src4')).toBe(true);
+      var leftSources = chunks[0].leftSources.map(function(item) {
+        return item.id;
+      });
+      var rightSources = chunks[0].rightSources.map(function(item) {
+        return item.id;
+      });
+      expect(leftSources.includes('Src1')).toBe(true);
+      expect(leftSources.includes('Src2')).toBe(true);
+      expect(rightSources.includes('Src3')).toBe(true);
+      expect(rightSources.includes('Src4')).toBe(true);
     });
 
     it('should log an error if multiple but different definitions exist', function() {

@@ -19,6 +19,7 @@ describe('DiffRunner', function() {
     global.defineAccumulatorBox();
     var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
     var DiffRunner = foam.lookup('org.chromium.webidl.DiffRunner');
+    var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     var Parser = foam.lookup('org.chromium.webidl.Parser');
 
     errorBox = AccumulatorBox.create();
@@ -27,7 +28,7 @@ describe('DiffRunner', function() {
       outputBox: outputBox,
       errorBox: errorBox,
     });
-    createMap = global.DIFF_CREATE_MAP.bind(this, Parser);
+    createMap = global.DIFF_CREATE_MAP.bind(this, Parser, IDLFileContents);
   });
 
   it('should send an error if invalid arguments are received as message', function() {

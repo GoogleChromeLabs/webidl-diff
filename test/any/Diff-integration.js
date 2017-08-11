@@ -9,9 +9,10 @@ describe('Diff Integration', function() {
 
   beforeEach(function() {
     var Diff = foam.lookup('org.chromium.webidl.Diff');
+    var IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     var Parser = foam.lookup('org.chromium.webidl.Parser');
     differ = Diff.create();
-    createMap = global.DIFF_CREATE_MAP.bind(this, Parser);
+    createMap = global.DIFF_CREATE_MAP.bind(this, Parser, IDLFileContents);
   });
 
   it('should return no fragments when performing diff on same source', function() {
