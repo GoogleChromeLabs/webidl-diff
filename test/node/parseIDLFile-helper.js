@@ -41,9 +41,7 @@ global.parseIDLFileTest = function(data) {
         expect(outputBox.results.length > 0).toBe(true);
         expect(errorBox.results.length).toBe(0);
 
-        var results = outputBox.results.map(function(result) {
-          return result.idlFile;
-        });
+        var results = outputBox.results;
         var parser = data.Parser.create();
 
         results.forEach(function(result) {
