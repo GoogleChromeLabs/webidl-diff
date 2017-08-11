@@ -7,8 +7,6 @@ describe('CanonicalizerRunner', function() {
   var IDLFile;
   var IDLFileContents;
   var Parser;
-  var PipelineMessage;
-  var WebPlatformEngine;
 
   var outputBox;
   var errorBox;
@@ -19,18 +17,18 @@ describe('CanonicalizerRunner', function() {
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
     Parser = foam.lookup('org.chromium.webidl.Parser');
-    PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 
     global.defineAccumulatorBox();
     var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
     var CanonicalizerRunner = foam.lookup('org.chromium.webidl.CanonicalizerRunner');
+    var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 
     outputBox = AccumulatorBox.create();
     errorBox = AccumulatorBox.create();
     runner = CanonicalizerRunner.create({
       outputBox: outputBox,
       errorBox: errorBox,
+      source: WebPlatformEngine.BLINK,
       waitTime: waitTime,
     });
   });
@@ -39,10 +37,6 @@ describe('CanonicalizerRunner', function() {
     var wrongObj = {};
     runner.run(wrongObj);
     expect(errorBox.results.length).toBe(1);
-
-    var missingArgs = PipelineMessage.create();
-    runner.run(missingArgs);
-    expect(errorBox.results.length).toBe(2);
   });
 
   it('should put IDL files together and return the canonical IDL file', function(done) {
@@ -75,24 +69,11 @@ describe('CanonicalizerRunner', function() {
     });
 
     // Perform a quick parse on the files to get AST.
-    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value;
-    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value;
+    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value[0];
+    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value[0];
 
-    // Prepare message for CanonicalizerRunner.
-    var firstMessage = PipelineMessage.create({
-      ast: firstAst,
-      idlFile: firstIdlFile,
-      source: WebPlatformEngine.BLINK,
-    });
-
-    var secondMessage = PipelineMessage.create({
-      ast: secondAst,
-      idlFile: secondIdlFile,
-      source: WebPlatformEngine.BLINK,
-    });
-
-    runner.run(firstMessage);
-    runner.run(secondMessage);
+    runner.run(firstAst);
+    runner.run(secondAst);
 
     // TODO: Observe outputBox and errorBox in the future.
     // Expect results to take ~3 seconds to arrive.
@@ -101,7 +82,7 @@ describe('CanonicalizerRunner', function() {
       expect(errorBox.results.length).toBe(0);
       expect(outputBox.results.length).toBe(1);
 
-      var canonicalInterfaces = outputBox.results[0].canonicalMap;
+      var canonicalInterfaces = outputBox.results[0].definitions;
       // We only expect one interface.
       expect(Object.keys(canonicalInterfaces).length).toBe(1);
       var canonical = canonicalInterfaces['SharedWorker'];

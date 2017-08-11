@@ -4,73 +4,43 @@
 'use strict';
 
 describe('Parser Runner', function() {
-  var ParserRunner;
-  var PipelineMessage;
   var IDLFile;
   var IDLFileContents;
-  var ResultBox;
+  var Parser;
+  var ParserRunner;
+
+  var outputBox;
+  var errorBox;
 
   beforeEach(function() {
-    foam.CLASS({
-      package: 'org.chromium.webidl.Test',
-      name: 'ResultBox',
-      implements: ['foam.box.Box'],
-
-      properties: [
-        {
-          class: 'Array',
-          name: 'results',
-        },
-      ],
-
-      methods: [
-        function send(msg) {
-          this.results.push(msg);
-        },
-        function clear() {
-          this.results = [];
-        }
-      ]
-    });
-
     IDLFile = foam.lookup('org.chromium.webidl.IDLFile');
     IDLFileContents = foam.lookup('org.chromium.webidl.IDLFileContents');
+    Parser = foam.lookup('org.chromium.webidl.Parser');
     ParserRunner = foam.lookup('org.chromium.webidl.ParserRunner');
-    PipelineMessage = foam.lookup('org.chromium.webidl.PipelineMessage');
-    ResultBox = foam.lookup('org.chromium.webidl.Test.ResultBox');
+
+    global.defineAccumulatorBox();
+    var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
+    outputBox = AccumulatorBox.create();
+    errorBox = AccumulatorBox.create();
   });
+
+  function createRunner(opt_parser) {
+    opt_parser = opt_parser || Parser;
+    return ParserRunner.create({
+      outputBox: outputBox,
+      errorBox: errorBox,
+      parserType: opt_parser,
+    });
+  }
 
   it('should send an error if invalid arguments are received as message', function() {
     var wrongObj = {};
-    var outputBox = ResultBox.create();
-    var errorBox = ResultBox.create();
-
-    var runner = ParserRunner.create({
-      outputBox: outputBox,
-      errorBox: errorBox
-    });
-
+    var runner = createRunner();
     runner.run(wrongObj);
     expect(errorBox.results.length).toBe(1);
-
-    var missingParser = PipelineMessage.create({
-      idlFile: IDLFileContents.create()
-    });
-    runner.run(missingParser);
-    expect(errorBox.results.length).toBe(2);
-
-    var missingFile = PipelineMessage.create({
-      parserClass: foam.lookup('org.chromium.webidl.Parser'),
-    });
-    runner.run(missingFile);
-    expect(errorBox.results.length).toBe(3);
-    expect(outputBox.results.length).toBe(0);
   });
 
   it('should send an error to errorBox if parsing with incorrect parser', function() {
-    var defaultOutputBox = ResultBox.create();
-    var defaultErrorBox = ResultBox.create();
-
     // Test details: An IDL file with preprocessor directives will be used. The
     // Blink parser is not capable of parsing preprocessor directives and the
     // test is expected to fail if the correct parser is injected.
@@ -88,26 +58,15 @@ describe('Parser Runner', function() {
         };`,
     });
 
-    var runner = ParserRunner.create({
-      outputBox: defaultOutputBox,
-      errorBox: defaultErrorBox,
-    });
+    var runner = createRunner();
 
     // Expect parsing with the wrong parser to fail.
-    var incorrectParser = PipelineMessage.create({
-      idlFile: idlFile,
-      parserClass: foam.lookup('org.chromium.webidl.Parser'), // Specifying Blink Parser.
-    });
-
-    runner.run(incorrectParser);
-    expect(defaultOutputBox.results.length).toBe(0);
-    expect(defaultErrorBox.results.length).toBe(1);
+    runner.run(idlFile);
+    expect(outputBox.results.length).toBe(0);
+    expect(errorBox.results.length).toBe(1);
   });
 
   it('should parse file with the correct parser and return message with results', function() {
-    var defaultOutputBox = ResultBox.create();
-    var defaultErrorBox = ResultBox.create();
-
     // Test details: An IDL file with preprocessor directives will be used. The
     // WebKit parser is capable of parsing preprocessor directives and the test
     // is expected to succeed if the correct parser is injected.
@@ -125,19 +84,12 @@ describe('Parser Runner', function() {
         };`,
     });
 
-    var runner = ParserRunner.create({
-      outputBox: defaultOutputBox,
-      errorBox: defaultErrorBox,
-    });
+    var WebKitParser = foam.lookup('org.chromium.webidl.WebKitParser');
+    var runner = createRunner(WebKitParser);
 
     // Expect parsing with the right parser to yield results.
-    var correctParser = PipelineMessage.create({
-      idlFile: idlFile,
-      parserClass: foam.lookup('org.chromium.webidl.WebKitParser'),
-    });
-
-    runner.run(correctParser);
-    expect(defaultOutputBox.results.length).toBe(1);
-    expect(defaultErrorBox.results.length).toBe(0);
+    runner.run(idlFile);
+    expect(outputBox.results.length).toBe(1);
+    expect(errorBox.results.length).toBe(0);
   });
 });
