@@ -53,7 +53,7 @@ var sharedPath = PipelineBuilder.create(null, ctx)
 
 [ blinkConfig, geckoConfig, webKitConfig ].forEach(function(config) {
   var corePath = PipelineBuilder.create(null, ctx)
-                                .append(ParserRunner.create({ Parser: config.parserClass }))
+                                .append(ParserRunner.create({ parserType: config.parserClass }))
                                 .append(CanonicalizerRunner.create({ source: config.source }))
                                 .append(sharedPath);
 
@@ -70,7 +70,7 @@ var sharedPath = PipelineBuilder.create(null, ctx)
   config.fileOutputBox = corePath.build();
   config.include = include;
   config.exclude = exclude;
-  config.freshRepo = false; // For this purpose...
+  config.freshRepo = true; // For this purpose...
   delete config.parserClass;
   delete config.source;
 });
