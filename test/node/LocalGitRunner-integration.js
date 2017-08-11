@@ -104,7 +104,9 @@ describe('LocalGitRunner integration', function() {
 
   it('should stream files to DAO if runner is created within context with outputDAO', function(done) {
     var dao = foam.dao.MDAO.create({of: 'org.chromium.webidl.IDLFileContents'});
-    var ctx = foam.createSubContext({outputDao: dao});
+    var ctx = foam.createSubContext({
+      getDAO: function() { return dao; },
+    });
 
     // Adding tests to be performed once fetch is done by LocalGitRunner.
     config.onDone = function() {
