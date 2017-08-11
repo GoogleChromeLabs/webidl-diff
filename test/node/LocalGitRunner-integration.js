@@ -88,7 +88,7 @@ describe('LocalGitRunner integration', function() {
       expect(urlOutputBox.results.length).toBe(1);
 
       for (var i = 0; i < outputs.length; i++) {
-        var file = outputs[i].idlFile;
+        var file = outputs[i];
         var actualPath = file.metadata.path;
 
         // Verify that properties were populated correctly.
