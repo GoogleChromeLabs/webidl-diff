@@ -98,4 +98,52 @@ describe('CanonicalizerRunner', function() {
       done();
     }, (waitTime + 1.5) * 1000);
   });
+
+  it('should put IDL file together and filter out disjoint Enums', function(done) {
+    // Setting up files for canonicalization.
+    var repository = 'https://chromium.googlesource.com/chromium/src.git';
+    var revision = '33c0cac5413dc579185641ffa5b8ff6ee81a05b2';
+
+    var firstIdlFile = IDLFileContents.create({
+      metadata: IDLFile.create({
+        repository: repository,
+        revision: revision,
+        path: 'Food.idl',
+      }),
+      contents: `
+        enum FoodEnum {
+          "Bread",
+          "Spaghetti",
+        };`,
+    });
+
+    var secondIdlFile = IDLFileContents.create({
+      metadata: IDLFile.create({
+        repository: repository,
+        revision: revision,
+        path: 'FoodEnum2.idl',
+      }),
+      contents: `
+        enum FoodEnum {
+          "Sushi",
+        };`,
+    });
+
+    // Perform a quick parse on the files to get AST.
+    var firstAst = Parser.create().parseString(firstIdlFile.contents, 'Test').value[0];
+    var secondAst = Parser.create().parseString(secondIdlFile.contents, 'Test').value[0];
+
+    runner.run(firstAst);
+    runner.run(secondAst);
+
+    setTimeout(function() {
+      expect(errorBox.results.length).toBe(0);
+      expect(outputBox.results.length).toBe(1);
+
+      var canonicalInterfaces = outputBox.results[0].definitions;
+      // We only expect one interface.
+      expect(Object.keys(canonicalInterfaces).length).toBe(0);
+      done();
+    }, (waitTime + 1.5) * 1000);
+  });
 });
