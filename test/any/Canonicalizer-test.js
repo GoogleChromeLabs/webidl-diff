@@ -347,7 +347,7 @@ describe('Canonicalizer', function() {
     });
 
     canonicalizer.addFragment(firstAst);
-    canonicalizer.addFragment(firstAst);
     canonicalizer.addFragment(secondAst);
+    canonicalizer.addFragment(firstAst);
   });
 });
