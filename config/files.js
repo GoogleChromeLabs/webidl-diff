@@ -118,6 +118,8 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}DiffStatus.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}DiffResult.js`,
 
+    `lib${sep}org${sep}chromium${sep}webidl${sep}JournalingContainer.js`,
+
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLExtractor.js`,
