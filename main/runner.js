@@ -60,13 +60,17 @@ var sharedPath = PipelineBuilder.create(null, ctx)
   if (config.source === WebPlatformEngine.BLINK) {
     var innerCtx = ctx.__subContext__.createSubContext({
       source: WebPlatformEngine.SPECIFICATION,
-//      registry: foam.box.SelectorRegistry.create({
-//        selector: FetchSpecRegistrySelector.create(null, ctx),
-//      }, ctx),
+      registry: foam.box.SelectorRegistry.create({
+        selector: FetchSpecRegistrySelector.create(null, ctx),
+      }, ctx),
     });
+    var otherCtx = foam.box.Context.create();
+    otherCtx.registry = foam.box.SelectorRegistry.create({
+      selector: FetchSpecRegistrySelector.create(null, ctx),
+    }, ctx);
 
-    var blinkPL = PipelineBuilder.create(null, innerCtx)
-        .append(FetchSpecRunner.create(null, innerCtx))
+    var blinkPL = PipelineBuilder.create(null, otherCtx)
+        .append(FetchSpecRunner.create(null, otherCtx))
         .append(IDLFragmentExtractorRunner.create(null, innerCtx))
         .append(ParserRunner.create(null, innerCtx))
         .append(CanonicalizerRunner.create({
