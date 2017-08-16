@@ -8,7 +8,6 @@ var GitilesIDLFile = foam.lookup('org.chromium.webidl.GitilesIDLFile');
 var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 var Parser = foam.lookup('org.chromium.webidl.Parser');
 
-var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
   source: WebPlatformEngine.BLINK,
   parserClass: Parser,
@@ -23,7 +22,7 @@ config.idlFileContentsFactory = function(path, contents, urls) {
   return IDLFileContents.create({
     metadata: GitilesIDLFile.create({
       repository: this.repositoryURL,
-      gitilesBaseURL: gitilesBaseURL,
+      gitilesBaseURL: 'https://chromium.googlesource.com/chromium/src/+',
       revision: this.commit,
       path: path,
     }),

@@ -8,7 +8,6 @@ var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
 var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 var WebKitParser = foam.lookup('org.chromium.webidl.WebKitParser');
 
-var githubBaseURL = 'https://github.com/WebKit/webkit';
 var config = {
   source: WebPlatformEngine.WEBKIT,
   parserClass: WebKitParser,
@@ -23,7 +22,7 @@ config.idlFileContentsFactory = function(path, contents) {
   return IDLFileContents.create({
     metadata: GithubIDLFile.create({
       repository: this.repositoryURL,
-      githubBaseURL: githubBaseURL,
+      githubBaseURL: 'https://github.com/WebKit/webkit',
       revision: this.commit,
       path: path,
     }),
