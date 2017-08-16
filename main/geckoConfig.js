@@ -8,7 +8,6 @@ var GithubIDLFile = foam.lookup('org.chromium.webidl.GithubIDLFile');
 var WebPlatformEngine = foam.lookup('org.chromium.webidl.WebPlatformEngine');
 var GeckoParser = foam.lookup('org.chromium.webidl.GeckoParser');
 
-var githubBaseURL = 'https://github.com/mozilla/gecko-dev';
 var config = {
   source: WebPlatformEngine.GECKO,
   parserClass: GeckoParser,
@@ -23,7 +22,7 @@ config.idlFileContentsFactory = function(path, contents) {
   return IDLFileContents.create({
     metadata: GithubIDLFile.create({
       repository: this.repositoryURL,
-      githubBaseURL: githubBaseURL,
+      githubBaseURL: 'https://github.com/mozilla/gecko-dev',
       revision: this.commit,
       path: path,
     }),
