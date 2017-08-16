@@ -20,7 +20,6 @@ var config = {
   freshRepo: true, // Forces the latest copy of repo to be fetched.
 };
 config.idlFileContentsFactory = function(path, contents) {
-  // Classes are injected by ...
   return IDLFileContents.create({
     metadata: GithubIDLFile.create({
       repository: this.repositoryURL,
