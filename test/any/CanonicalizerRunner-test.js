@@ -141,7 +141,7 @@ describe('CanonicalizerRunner', function() {
       expect(outputBox.results.length).toBe(1);
 
       var canonicalInterfaces = outputBox.results[0].definitions;
-      // We only expect one interface.
+      // We expect no definitions to be returned as disjoint enums are dropped.
       expect(Object.keys(canonicalInterfaces).length).toBe(0);
       done();
     }, (waitTime + 1.5) * 1000);
