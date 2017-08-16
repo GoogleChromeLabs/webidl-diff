@@ -11,16 +11,15 @@ var Parser = foam.lookup('org.chromium.webidl.Parser');
 var gitilesBaseURL = 'https://chromium.googlesource.com/chromium/src/+';
 var config = {
   source: WebPlatformEngine.BLINK,
+  parserClass: Parser,
   repositoryURL: 'https://chromium.googlesource.com/chromium/src.git',
   localRepositoryPath: require('path').resolve(__dirname, 'data/blink/git'),
   sparsePath: 'third_party/WebKit/Source',
   findExcludePatterns: ['*/testing/*', '*/bindings/tests/*', '*/mojo/*'],
   extension: 'idl',
-  parserClass: Parser,
-  freshRepo: false,
+  freshRepo: true, // Forces the latest copy of repo to be fetched.
 };
 config.idlFileContentsFactory = function(path, contents, urls) {
-  // Classes are injected by ...
   return IDLFileContents.create({
     metadata: GitilesIDLFile.create({
       repository: this.repositoryURL,
