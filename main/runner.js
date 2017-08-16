@@ -53,7 +53,11 @@ var sharedPath = PipelineBuilder.create(null, ctx)
   var localCtx = ctx.__subContext__.createSubContext({source: config.source});
   var corePath = PipelineBuilder.create(null, ctx)
       .append(ParserRunner.create({parserType: config.parserClass}, localCtx))
-      .append(CanonicalizerRunner.create({source: config.source}, localCtx))
+      .append(CanonicalizerRunner.create({
+        source: config.source,
+        // 8 minutes of waiting due to running on a single thread.
+        waitTime: 480,
+      }, localCtx))
       .append(sharedPath);
 
   // URL fetching pipeline for Blink repository.
@@ -71,6 +75,8 @@ var sharedPath = PipelineBuilder.create(null, ctx)
         .append(ParserRunner.create(null, innerCtx))
         .append(CanonicalizerRunner.create({
           source: WebPlatformEngine.SPECIFICATION,
+          // 8 minutes of waiting due to running on a single thread.
+          waitTime: 480,
         }, innerCtx))
         .append(sharedPath)
         .build();
