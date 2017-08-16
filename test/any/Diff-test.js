@@ -872,8 +872,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in the isRequired field of the member.
-      expect(chunks[0].leftKey).toBe('definition.members.0.member.isRequired');
-      expect(chunks[0].rightKey).toBe('definition.members.0.member.isRequired');
+      expect(chunks[0].leftKey).toBe('definition.members.2.member.isRequired');
+      expect(chunks[0].rightKey).toBe('definition.members.2.member.isRequired');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe(true);
       expect(chunks[0].rightValue).toBe(false);
