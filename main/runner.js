@@ -14,9 +14,9 @@ for (var i = 0; i < files.length; i++) {
 }
 
 //-----------------------------------------------------------------------------
-const blinkConfig = require('./blinkConfig.js').config;
-const geckoConfig = require('./geckoConfig.js').config;
-const webKitConfig = require('./webKitConfig.js').config;
+var blinkConfig = require('./blinkConfig.js').config;
+var geckoConfig = require('./geckoConfig.js').config;
+var webKitConfig = require('./webKitConfig.js').config;
 
 // URL Filters
 var include = [/dev\.w3\.org/, /github\.io/, /spec\.whatwg\.org/,
@@ -79,7 +79,6 @@ var sharedPath = PipelineBuilder.create(null, ctx)
   config.fileOutputBox = corePath.build();
   config.include = include;
   config.exclude = exclude;
-  config.freshRepo = false; // For this purpose...
 
   // Removing properties to prevent warning from FOAM.
   delete config.parserClass;
