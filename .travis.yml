@@ -10,5 +10,5 @@ before_script:
 script:
  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
  - if [ "$TRAVIS_EVENT_TYPE" != "cron" ] || [[ "$BRANCH" == *"parser"* ]]; then npm run coverage && codecov -f .coverage/coverage-final.json -f .coverage/lcov.info; fi
- - if [[ "$BRANCH" == *"parser"* ]]; then npm run testManual; fi
+ - if [ "$TRAVIS_EVENT_TYPE" == "cron" ] && [[ "$BRANCH" != "dataCollection" ]] || [[ "$BRANCH" == *"parser"* ]]; then npm run testManual; fi
  - if [[ "$BRANCH" == "dataCollection" ]]; then travis_wait 45 ./scripts/collect-and-commit-data.sh; fi
