@@ -8,5 +8,6 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
- - if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then npm run testManual; fi
- - if [ "$TRAVIS_EVENT_TYPE" != "cron" ]; then npm run coverage && codecov -f .coverage/coverage-final.json -f .coverage/lcov.info; fi
+ - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+ - if [ "$TRAVIS_EVENT_TYPE" != "cron" ] || [[ "$BRANCH" == *"parser"* ]]; then npm run coverage && codecov -f .coverage/coverage-final.json -f .coverage/lcov.info; fi
+ - if [[ "$BRANCH" == *"parser"* ]]; then npm run testManual; fi
