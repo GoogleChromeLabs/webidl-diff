@@ -83,7 +83,6 @@ var sharedPath = PipelineBuilder.create(null, ctx)
   config.fileOutputBox = corePath.build();
   config.include = include;
   config.exclude = exclude;
-  config.freshRepo = false; // For this purpose...
 
   // Removing properties to prevent warning from FOAM.
   delete config.parserClass;
