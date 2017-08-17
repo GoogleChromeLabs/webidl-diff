@@ -44,7 +44,7 @@ global.manualFetchAndParseTest = function(configPath, description) {
 
     afterAll(function() {
       // Reset context and clean up repo data.
-      foam.__context__ == oldContext;
+      foam.__context__ = oldContext;
       execSync(`/bin/rm -rf "${config.localRepositoryPath}"`);
     });
 
