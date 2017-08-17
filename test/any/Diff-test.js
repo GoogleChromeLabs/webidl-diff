@@ -872,8 +872,8 @@ describe('Diff', function() {
       var chunks = differ.diff(firstMap, secondMap);
       expect(chunks.length).toBe(1);
       // Expecting the difference to be in the isRequired field of the member.
-      expect(chunks[0].leftKey).toBe('definition.members.0.member.isRequired');
-      expect(chunks[0].rightKey).toBe('definition.members.0.member.isRequired');
+      expect(chunks[0].leftKey).toBe('definition.members.2.member.isRequired');
+      expect(chunks[0].rightKey).toBe('definition.members.2.member.isRequired');
       expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
       expect(chunks[0].leftValue).toBe(true);
       expect(chunks[0].rightValue).toBe(false);
@@ -932,8 +932,6 @@ describe('Diff', function() {
       expect(chunks[1].rightValue.literal).toBe('Sushi');
     });
 
-    // Enums can be defined multiple times in the same source.
-    // This occurs after canonicalization.
     it('should return no diff fragments for multiple identical definitions', function() {
       var firstEnum = createMap(
           `enum FoodEnum { "Bread", "Spaghetti", "Sushi", "Potato" };`, 'Src1');
@@ -944,76 +942,12 @@ describe('Diff', function() {
       var fourthEnum = createMap(
           `enum FoodEnum { "Bread", "Potato", "Spaghetti", "Sushi" };`, 'Src4');
 
-      // Pair up the sources (to simulate canonicalization).
-      var firstMap = { FoodEnum: [ firstEnum.FoodEnum, secondEnum.FoodEnum ] };
-      var secondMap = { FoodEnum: [ thirdEnum.FoodEnum, fourthEnum.FoodEnum ] };
-
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(chunks.length).toBe(0);
-    });
-
-    it('should return a diff fragment for multiple definition, with missing member', function() {
-      var firstEnum = createMap(
-          `enum FoodEnum { "Bread", "Spaghetti", "Sushi", "Potato" };`, 'Src1');
-      var secondEnum = createMap(
-          `enum FoodEnum { "Spaghetti", "Sushi", "Potato", "Bread" };`, 'Src2');
-      var thirdEnum = createMap(
-          `enum FoodEnum { "Potato", "Sushi", "Spaghetti" };`, 'Src3');
-      var fourthEnum = createMap(
-          `enum FoodEnum { "Potato", "Spaghetti", "Sushi" };`, 'Src4');
-
-      // Pair up the sources (to simulate canonicalization).
-      var firstMap = { FoodEnum: [ firstEnum.FoodEnum, secondEnum.FoodEnum ] };
-      var secondMap = { FoodEnum: [ thirdEnum.FoodEnum, fourthEnum.FoodEnum ] };
-
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(chunks.length).toBe(1);
-      // Expecting difference to be in members field of definition.
-      expect(chunks[0].leftKey).toBe('definition.members');
-      expect(chunks[0].rightKey).toBe('definition.members');
-      expect(chunks[0].status).toBe(DiffStatus.NO_MATCH_ON_RIGHT);
-      // Expecting sources to be added together correctly.
-      var leftSources = chunks[0].leftSources.map(function(item) {
-        return item.id;
+      var enumArr = [firstEnum, secondEnum, thirdEnum, fourthEnum];
+      enumArr.forEach(function(firstMap) {
+        enumArr.forEach(function(secondMap) {
+          expect(differ.diff(firstMap, secondMap).length).toBe(0);
+        });
       });
-      var rightSources = chunks[0].rightSources.map(function(item) {
-        return item.id;
-      });
-      expect(leftSources.includes('Src1')).toBe(true);
-      expect(leftSources.includes('Src2')).toBe(true);
-      expect(rightSources.includes('Src3')).toBe(true);
-      expect(rightSources.includes('Src4')).toBe(true);
-      // Expecting the difference to have Bread defined in left, not right.
-      expect(chunks[0].leftValue).toBeDefined();
-      expect(chunks[0].leftValue.literal).toBe('Bread');
-      expect(chunks[0].rightValue).toBeUndefined();
-    });
-
-    it('should log an error if multiple but different definitions occur', function() {
-      console.error = jasmine.createSpy('error');
-      var firstEnum = createMap(
-          `enum FoodEnum { "Bread", "Sushi", "Potato" };`, 'Src1');
-      var secondEnum = createMap(
-          `enum FoodEnum { "Fish", "Potato", "Bread" };`, 'Src2');
-      var thirdEnum = createMap(
-          `enum FoodEnum { "Potato", "Sushi", "Spaghetti" };`, 'Src3');
-      var fourthEnum = createMap(
-          `enum FoodEnum { "Potato", "Spaghetti", "Sushi" };`, 'Src4');
-
-      // Pair up the sources (to simulate canonicalization).
-      var firstMap = { FoodEnum: [ firstEnum.FoodEnum, secondEnum.FoodEnum ] };
-      var secondMap = { FoodEnum: [ thirdEnum.FoodEnum, fourthEnum.FoodEnum ] };
-
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(console.error).toHaveBeenCalled();
-      expect(chunks.length).toBe(1);
-      // Expecting difference to be in the members field of definition.
-      expect(chunks[0].leftKey).toBe('');
-      expect(chunks[0].rightKey).toBe('');
-      // Expecting the definition to be removed from left.
-      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
-      expect(chunks[0].leftValue).toBeUndefined();
-      expect(chunks[0].rightValue).toBeDefined();
     });
   });
 
@@ -1077,72 +1011,18 @@ describe('Diff', function() {
       expect(chunks.length).toBe(1);
     });
 
-    // Typedefs can be defined multiple times in the same source.
-    // This occurs after canonicalization.
     it('should return no fragments if multiple definitions are the same', function() {
       var firstDef = createMap(`typedef sequence<Point> Points;`, 'Src1');
       var secondDef = createMap(`typedef sequence<Point> Points;`, 'Src2');
       var thirdDef = createMap(`typedef sequence<Point> Points;`, 'Src3');
       var fourthDef = createMap(`typedef sequence<Point> Points;`, 'Src4');
 
-      // Simulating canonicalization.
-      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
-      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(chunks.length).toBe(0);
-    });
-
-    it('should return no fragments if multiple definitions are the same', function() {
-      var firstDef = createMap(`typedef unsigned long Points;`, 'Src1');
-      var secondDef = createMap(`typedef unsigned long Points;`, 'Src2');
-      var thirdDef = createMap(`typedef long Points;`, 'Src3');
-      var fourthDef = createMap(`typedef long Points;`, 'Src4');
-
-      // Simulating canonicalization.
-      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
-      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
-
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(chunks.length).toBe(1);
-      // Expecting the difference to be in types of definition.
-      expect(chunks[0].leftKey).toBe('definition.type.name.literal');
-      expect(chunks[0].rightKey).toBe('definition.type.name.literal');
-      expect(chunks[0].status).toBe(DiffStatus.VALUES_DIFFER);
-      expect(chunks[0].leftValue).toBe('unsigned long');
-      expect(chunks[0].rightValue).toBe('long');
-      // Expecting the sources to be merged together correctly.
-      var leftSources = chunks[0].leftSources.map(function(item) {
-        return item.id;
+      var defArr = [firstDef, secondDef, thirdDef, fourthDef];
+      defArr.forEach(function(firstDef) {
+        defArr.forEach(function(secondDef) {
+          expect(differ.diff(firstDef, secondDef).length).toBe(0);
+        });
       });
-      var rightSources = chunks[0].rightSources.map(function(item) {
-        return item.id;
-      });
-      expect(leftSources.includes('Src1')).toBe(true);
-      expect(leftSources.includes('Src2')).toBe(true);
-      expect(rightSources.includes('Src3')).toBe(true);
-      expect(rightSources.includes('Src4')).toBe(true);
-    });
-
-    it('should log an error if multiple but different definitions exist', function() {
-      console.error = jasmine.createSpy('error');
-      var firstDef = createMap(`typedef unsigned long Points;`, 'Src1');
-      var secondDef = createMap(`typedef long Points;`, 'Src2');
-      var thirdDef = createMap(`typedef long Points;`, 'Src3');
-      var fourthDef = createMap(`typedef long Points;`, 'Src4');
-
-      // Simulating canonicalization.
-      var firstMap = { Points: [ firstDef.Points, secondDef.Points ] };
-      var secondMap = { Points: [ thirdDef.Points, fourthDef.Points ] };
-
-      var chunks = differ.diff(firstMap, secondMap);
-      expect(console.error).toHaveBeenCalled();
-      expect(chunks.length).toBe(1);
-      // Expecting the difference to be at definition level.
-      expect(chunks[0].leftKey).toBe('');
-      expect(chunks[0].rightKey).toBe('');
-      expect(chunks[0].status).toBe(DiffStatus.MISSING_DEFINITION);
-      expect(chunks[0].leftValue).toBeUndefined();
-      expect(chunks[0].rightValue).toBeDefined();
     });
   });
 

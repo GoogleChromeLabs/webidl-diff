@@ -10,7 +10,8 @@ if [ "$#" -ne 3 ]; then
   exit 1
 fi
 
-set -ev
+# Exit immediately if command exits with non-zero status.
+set -e
 
 GIT="/usr/bin/git"
 RM="/bin/rm"
