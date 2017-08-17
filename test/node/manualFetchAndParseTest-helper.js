@@ -13,6 +13,7 @@ global.manualFetchAndParseTest = function(configPath, description) {
     var originalTimeout;
     var outputBox;
     var errorBox;
+    var failedFiles = [];
 
     beforeAll(function() {
       // Creating new context for AccumulatorBox to be defined in.
@@ -46,6 +47,14 @@ global.manualFetchAndParseTest = function(configPath, description) {
       // Reset context and clean up repo data.
       foam.__context__ = oldContext;
       execSync(`/bin/rm -rf "${config.localRepositoryPath}"`);
+
+      if (failedFiles.length !== 0) {
+        console.log(`
+            The following files failed to parse for this repository:`);
+        failedFiles.forEach(function(file) {
+          console.log(file);
+        });
+      }
     });
 
     it('should fetch git repo and send files to outputBox', function(done) {
@@ -66,6 +75,7 @@ global.manualFetchAndParseTest = function(configPath, description) {
       results.forEach(function(result) {
         var idl = result.contents;
         var parse = parser.parseString(idl, 'Test');
+        if (parse.pos !== idl.length) failedFiles.push(result.metadata.path);
         expect(parse.pos).toBe(idl.length);
         expect(parse.value).toBeDefined();
       }.bind(this));
