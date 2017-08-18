@@ -118,7 +118,9 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}DiffStatus.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}DiffResult.js`,
 
+    // Data persistence components
     `lib${sep}org${sep}chromium${sep}webidl${sep}JournalingContainer.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}DatastoreContainer.js`,
 
     // Pipeline components
     `lib${sep}org${sep}chromium${sep}webidl${sep}PipelineRunner.js`,
