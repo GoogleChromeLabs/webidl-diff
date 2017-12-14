@@ -1,0 +1,8 @@
+FROM webidl-diff-base
+
+# For dev usability
+RUN apk add --no-cache bash
+RUN apk add --no-cache bash-completion
+
+# TODO: Figure out how to make sure [arbitrary dev user] can own both project
+# dir and Google Cloud SDK dir
