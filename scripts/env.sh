@@ -1,11 +1,14 @@
 #!/bin/bash
 
+export GCLOUD_SDK_VERSION="183.0.0"
 export GCLOUD_PROJECT_ID="webidl-diff"
 
 # Development host configuration
-export H_APP_HOME=$(readlink -f $(dirname $0))
-export H_IMAGE_TAG="webidl-diff"
-export H_INSTANCE_NAME="webidl-diff-instance"
+export H_APP_HOME=$(readlink -f "$(dirname $0)/..")
+export H_BASE_IMAGE_TAG="webidl-diff-base"
+export H_DEV_IMAGE_TAG="webidl-diff-dev"
+export H_PROD_IMAGE_TAG="webidl-diff-dev"
+export H_DEV_INSTANCE_NAME="webidl-diff-dev-instance"
 
 # Container configuration
 export C_USER_HOME=${USER_HOME:-/home/webidl-diff}

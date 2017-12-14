@@ -1,0 +1,6 @@
+FROM webidl-diff-base
+
+ADD . "${APP_HOME}"
+
+WORKDIR "${APP_HOME}"
+RUN npm install --production

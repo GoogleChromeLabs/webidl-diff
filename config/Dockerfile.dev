@@ -1,0 +1,28 @@
+FROM webidl-diff-base
+
+ARG GCLOUD_SDK_VERSION="183.0.0"
+
+USER root
+
+# For dev usability
+RUN apk add --no-cache bash
+RUN apk add --no-cache bash-completion
+RUN usermod -s /bin/bash "${USER_NAME}"
+
+# For installing gcloud sdk
+RUN apk add --no-cache curl
+
+USER "${USER_NAME}"
+
+WORKDIR "${APP_HOME}"
+RUN npm install
+
+WORKDIR "${USER_HOME}"
+RUN curl \
+    -o "google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz" \
+    "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz"
+RUN tar xzf "google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz"
+RUN rm "google-cloud-sdk-${GCLOUD_SDK_VERSION}-linux-x86_64.tar.gz"
+RUN ./google-cloud-sdk/install.sh
+ENV PATH="${PATH}:${USER_HOME}/google-cloud-sdk/bin"
+RUN echo "${PATH}"

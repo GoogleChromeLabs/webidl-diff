@@ -1,0 +1,41 @@
+FROM node:alpine
+
+ARG GCLOUD_PROJECT_ID=webidl-diff
+
+# For fetching dependencies in npm
+RUN apk add --no-cache git
+
+# For installing grpc
+RUN apk add --no-cache python
+RUN apk add --no-cache build-base
+
+ARG USER_NAME=webidl-diff
+ARG USER_ID=1001
+ARG GROUP_NAME=webidl-diff
+ARG GROUP_ID=1001
+ARG USER_HOME=/home/webidl-diff
+ARG APP_HOME="${USER_HOME}/webidl-diff"
+
+
+# For user management
+RUN apk add --no-cache shadow
+
+RUN mkdir -p "${USER_HOME}"
+RUN groupadd -g "${GROUP_ID}" "${GROUP_NAME}"
+RUN useradd -r -u "${USER_ID}" -d "${USER_HOME}" -g "${GROUP_NAME}" "${USER_NAME}"
+RUN chown -R "${USER_NAME}:${GROUP_NAME}" "${USER_HOME}"
+
+# Local setup (user)
+WORKDIR "${USER_HOME}"
+USER "${USER_NAME}"
+
+RUN mkdir "${APP_HOME}"
+
+# Export args as environment variables
+ENV GCLOUD_PROJECT_ID=$GCLOUD_PROJECT_ID
+ENV USER_NAME=${USER_NAME}
+ENV USER_ID=${USER_ID}
+ENV GROUP_NAME=${GROUP_NAME}
+ENV GROUP_ID=${GROUP_ID}
+ENV USER_HOME=${USER_HOME}
+ARG APP_HOME="${APP_HOME}"
