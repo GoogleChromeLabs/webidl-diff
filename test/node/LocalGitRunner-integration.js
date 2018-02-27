@@ -93,9 +93,9 @@ describe('LocalGitRunner integration', function() {
 
         // Verify that properties were populated correctly.
         expect(expectedPaths.includes(actualPath)).toBe(true);
-        expect(file.id[0]).toBe(repositoryURL);
-        expect(file.id[1]).toBe(gitHash);
-        expect(file.id[2]).toBe(actualPath);
+        expect(file.id.repository).toBe(repositoryURL);
+        expect(file.id.revision).toBe(gitHash);
+        expect(file.id.path).toBe(actualPath);
       }
       done();
     };
