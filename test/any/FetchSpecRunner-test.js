@@ -56,8 +56,8 @@ describe('FetchSpecRunner', function() {
       var htmlFiles = outputBox.results;
 
       // Verify that correct pages were fetched.
-      expect(htmlFiles[0].id[0]).toBe(MockHTTPRequest.MICROSYNTAXES_URL);
-      expect(htmlFiles[1].id[0]).toBe(MockHTTPRequest.FETCHING_URL);
+      expect(htmlFiles[0].id.url).toBe(MockHTTPRequest.MICROSYNTAXES_URL);
+      expect(htmlFiles[1].id.url).toBe(MockHTTPRequest.FETCHING_URL);
       expect(htmlFiles[0].contents).toBe(MockHTTPRequest.MICROSYNTAXES_CONTENT);
       expect(htmlFiles[1].contents).toBe(MockHTTPRequest.FETCHING_CONTENT);
       done();

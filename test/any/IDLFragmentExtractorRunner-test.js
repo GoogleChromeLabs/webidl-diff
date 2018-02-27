@@ -58,9 +58,9 @@ describe('IDLFragmentExtractorRunner', function() {
     expect(results[0]).not.toEqual(results[1]);
 
     // Expect the metadata to be correct.
-    expect(results[0].id.includes(url)).toBe(true);
-    expect(results[0].id.includes(timestamp)).toBe(true);
-    expect(results[1].id.includes(url)).toBe(true);
-    expect(results[1].id.includes(timestamp)).toBe(true);
+    expect(results[0].id.url).toBe(url);
+    expect(results[0].id.timestamp).toEqual(timestamp);
+    expect(results[1].id.url).toBe(url);
+    expect(results[1].id.timestamp).toEqual(timestamp);
   });
 });
