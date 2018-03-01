@@ -13,10 +13,5 @@ beforeAll(function() {
   var rootDir = path.resolve(__dirname, '..', '..');
 
   // Load files into global.WEB_IDL_DIFF_FILES.
-  require(path.resolve(rootDir, 'config', 'files.js'));
-
-  var files = global.WEB_IDL_DIFF_FILES.slice();
-  for (var i = 0; i < files.length; i++) {
-    require(path.resolve(rootDir, files[i]));
-  }
+  require(path.resolve(rootDir, 'config', 'load_deps.js'));
 });

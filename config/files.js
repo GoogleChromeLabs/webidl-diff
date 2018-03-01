@@ -103,6 +103,7 @@
     `lib${sep}org${sep}chromium${sep}webidl${sep}CanonicalCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}URLCollection.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}BaseIDLFile.js`,
+    `lib${sep}org${sep}chromium${sep}webidl${sep}FileIterator.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFile.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLFileContents.js`,
     `lib${sep}org${sep}chromium${sep}webidl${sep}IDLSpecFile.js`,
