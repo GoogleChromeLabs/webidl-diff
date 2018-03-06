@@ -12,15 +12,16 @@ const fs = require('fs');
 const URL = require('url').URL
 const flags = require('flags');
 
-require(path.resolve(__dirname, '..', 'data/raw.js'));
 require(path.resolve(__dirname, 'specs.js'));
 
 flags.defineString('journal', './data/IDLFragmentExtractorRunner-WebSpec-journal.js', 'File containing the webidl-diff journal output.');
 flags.defineString('out', undefined, 'IDL file output directory');
+flags.defineString('spec', undefined, 'Specific spec IDL file to update/output');
 flags.parse();
 
 const OUT_DIR = flags.get('out');
 const JOURNAL_FILE = flags.get('journal');
+const SPEC_TO_UPDATE = flags.get('spec');
 
 // Use config/files.js to determine what order to load code in.
 var rootDir = path.resolve(__dirname, '..');
@@ -59,6 +60,14 @@ async function main() {
   });
   let extractedSpecs = (await journal.select()).array;
 
+  if (SPEC_TO_UPDATE) {
+    let spec = specs.find(s => s.id == SPEC_TO_UPDATE);
+    if (!spec) {
+      throw new Error(`spec with id ${SPEC_TO_UPDATE} not found`);
+    }
+    extractedSpecs = extractedSpecs.filter(e => sameSpec(spec, e.url));
+  }
+
   let extractedSpecsByURL = new Map();
   extractedSpecs.forEach(i => { extractedSpecsByURL.set(normalizedURL(i.url).href, []) });
   extractedSpecs.forEach(i => { extractedSpecsByURL.get(normalizedURL(i.url).href).push(i.contents) });
@@ -77,7 +86,7 @@ async function main() {
     let id = spec.id;
 
     let concat = snippets.join('\n\n')
-      .replace(/ +(\n|$)/g, '\n') // Drop trailing whitespace (per line)
+      .replace(/[ \t]+(\n|$)/g, '\n') // Drop trailing whitespace (per line)
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
 
@@ -90,14 +99,14 @@ async function main() {
 
     let filePath = path.resolve(outdir, `${id}.idl`);
 
-    if (missing.length) {
-      console.log(`Writing ${filePath}`);
-      fs.writeFileSync(filePath, concat);
-    }
+    console.log(`Writing ${filePath}`);
+    fs.writeFileSync(filePath, concat);
   })
 
-  console.log(`\n\nThe following ${missing.length} specs were not resolved:`)
-  missing.forEach(i => console.log(i));
+  if (missing.length) {
+    console.log(`\n\nThe following ${missing.length} specs were not resolved:`)
+    missing.forEach(i => console.log(i));
+  }
 }
 
 main();
