@@ -85,11 +85,14 @@ async function main() {
 
     let id = spec.id;
 
-    let concat = snippets.join('\n\n')
+    let concat = `// GENERATED CONTENT - DO NOT EDIT
+// Content of this file was automatically extracted from the ${id} spec.
+// See ${spec.href}
+
+${snippets.join('\n\n')}`
       .replace(/[ \t]+(\n|$)/g, '\n') // Drop trailing whitespace (per line)
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
-
 
     let outdir = OUT_DIR ||
       path.resolve(__dirname, '..', '..', 'web-platform-tests/interfaces');
