@@ -85,15 +85,19 @@ async function main() {
 
     let id = spec.id;
 
-    let concat = `// GENERATED CONTENT - DO NOT EDIT
-// Content of this file was automatically extracted from the ${spec.name} spec.
-// See ${spec.href}
-
-${snippets.join('\n\n')}`
+    let concat = snippets.join('\n\n')
       .replace(/^[ \t]*\n/, '') // Drop leading whitespace
       .replace(/[ \t]+(\n|$)/g, '\n') // Drop trailing whitespace (per line)
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
+
+    concat = trimCommonLeadingSpaces(concat);
+
+    let output = `// GENERATED CONTENT - DO NOT EDIT
+// Content of this file was automatically extracted from the ${spec.name} spec.
+// See ${spec.href}
+
+${concat}`;
 
     let outdir = OUT_DIR ||
       path.resolve(__dirname, '..', '..', 'web-platform-tests/interfaces');
@@ -104,13 +108,33 @@ ${snippets.join('\n\n')}`
     let filePath = path.resolve(outdir, `${id}.idl`);
 
     console.log(`Writing ${filePath}`);
-    fs.writeFileSync(filePath, concat);
+    fs.writeFileSync(filePath, output);
   })
 
   if (missing.length) {
     console.log(`\n\nThe following ${missing.length} specs were not resolved:`)
     missing.forEach(i => console.log(i));
   }
+}
+
+function trimCommonLeadingSpaces(idl) {
+  let tabConverted = idl.replace(/\t/g, '  ');
+  let lines = idl.split('\n');
+  let commonLeading = null;
+  for (let line of lines) {
+    if (!line) continue;
+    let match = line.match(/^ */);
+    let leading = match && match[0] || '';
+    if (!leading) {
+      return idl;
+    } else if (!commonLeading) {
+      commonLeading = leading;
+      continue;
+    }
+    // Shorter of the 2 is the new 'common'.
+    commonLeading = commonLeading.substr(0, Math.min(leading.length, commonLeading.length));
+  }
+  return idl.replace(new RegExp(commonLeading, 'g'), '');
 }
 
 main();
