@@ -86,10 +86,11 @@ async function main() {
     let id = spec.id;
 
     let concat = `// GENERATED CONTENT - DO NOT EDIT
-// Content of this file was automatically extracted from the ${id} spec.
+// Content of this file was automatically extracted from the ${spec.name} spec.
 // See ${spec.href}
 
 ${snippets.join('\n\n')}`
+      .replace(/^[ \t]*\n/, '') // Drop leading whitespace
       .replace(/[ \t]+(\n|$)/g, '\n') // Drop trailing whitespace (per line)
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
