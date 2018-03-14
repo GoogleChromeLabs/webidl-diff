@@ -47,7 +47,7 @@ function sameSpec(spec, href) {
     || spec.alt && spec.alt.find(url => normalizedURL(url).href == n);
 }
 
-async function main() {
+exports.main = async function() {
   if (!fs.existsSync(JOURNAL_FILE)) {
     throw new Error(`journal file ${JOURNAL_FILE} not found`);
   }
@@ -91,7 +91,7 @@ async function main() {
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
 
-    concat = trimCommonLeadingSpaces(concat);
+    concat = this.trimCommonLeadingSpaces(concat);
 
     let output = `// GENERATED CONTENT - DO NOT EDIT
 // Content of this file was automatically extracted from the ${spec.name} spec.
@@ -117,7 +117,7 @@ ${concat}`;
   }
 }
 
-function trimCommonLeadingSpaces(idl) {
+exports.trimCommonLeadingSpaces = function(idl) {
   let tabConverted = idl.replace(/\t/g, '  ');
   let lines = idl.split('\n');
   let commonLeading = null;
@@ -134,7 +134,5 @@ function trimCommonLeadingSpaces(idl) {
     // Shorter of the 2 is the new 'common'.
     commonLeading = commonLeading.substr(0, Math.min(leading.length, commonLeading.length));
   }
-  return idl.replace(new RegExp(commonLeading, 'g'), '');
+  return lines.map(l => l.replace(new RegExp(`^${commonLeading}`, 'g'), '')).join('\n');
 }
-
-main();
