@@ -3,6 +3,7 @@ const child = require('child_process');
 const flags = require('flags');
 
 flags.defineString('spec', undefined, 'Single spec to update');
+flags.defineString('push', undefined, 'Whether to push the update commit');
 flags.parse();
 
 // Checkout the update branch
@@ -61,6 +62,9 @@ for (let spec of changedSpecs) {
   }
   wptGitCmd(`add interfaces/${spec}.idl`);
   wptGitCmd(`commit -a -m "Updated ${spec} IDL file"`);
+  if (flags.get('push')) {
+    wptGitCmd(`git push -f`);
+  }
 }
 
 console.log('\n\nThe following specs were updated:')
