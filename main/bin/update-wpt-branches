@@ -1,0 +1,6 @@
+'use strict'
+
+const path = require('path');
+const updateWPTBranches = require(path.resolve(__dirname, '..', 'update-wpt-branches.js'));
+
+updateWPTBranches.main();

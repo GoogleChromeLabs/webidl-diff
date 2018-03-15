@@ -1,0 +1,6 @@
+'use strict'
+
+const path = require('path');
+const updateWPT = require(path.resolve(__dirname, '..', 'update-wpt.js'));
+
+updateWPT.main();
