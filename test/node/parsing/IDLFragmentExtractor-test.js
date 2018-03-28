@@ -63,6 +63,33 @@ describe('IDLFragmentExtractor', function() {
     expect(results[0]).toBe(idl);
   });
 
+  it('should exclude pre classes with exclusion CSS classes', function() {
+    var html1 = `<pre class="example idl">
+      interface Potato {
+        attribute unsigned long weight;
+      };
+    </pre>`;
+    var file1 = HTMLFileContents.create({
+      url: 'http://something.url',
+      timestamp: new Date(),
+      contents: html1,
+    });
+    var results1 = IDLFragmentExtractor.create().extract(file1);
+    expect(results1.length).toBe(0);
+    var html2 = `<pre class="idl note">
+      interface Tomato {
+        attribute unsigned long weight;
+      };
+    </pre>`;
+    var file2 = HTMLFileContents.create({
+      url: 'http://something.url',
+      timestamp: new Date(),
+      contents: html1,
+    });
+    var results2 = IDLFragmentExtractor.create().extract(file2);
+    expect(results2.length).toBe(0);
+  });
+
   it('should parse a HTML file with nested excludes', function() {
     var firstIDL = `
       interface Potato {
