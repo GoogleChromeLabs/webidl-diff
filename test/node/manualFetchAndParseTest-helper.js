@@ -24,7 +24,7 @@ global.manualFetchAndParseTest = function(configPath, description) {
       config = require(configPath).config;
       LocalGitRunner = foam.lookup('org.chromium.webidl.LocalGitRunner');
       Parser = config.parserClass;
-
+      
       var AccumulatorBox = foam.lookup('org.chromium.webidl.test.AccumulatorBox');
       outputBox = AccumulatorBox.create();
       errorBox = AccumulatorBox.create();
@@ -59,6 +59,7 @@ global.manualFetchAndParseTest = function(configPath, description) {
 
     it('should fetch git repo and send files to outputBox', function(done) {
       var onDone = function() {
+        console.log(`Found ${outputBox.results.length} results`);
         expect(outputBox.results.length > 0).toBe(true);
         expect(errorBox.results.length).toBe(0);
         done();
