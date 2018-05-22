@@ -85,13 +85,13 @@ exports.main = async function() {
 
     let id = spec.id;
 
-    let concat = snippets.join('\n\n')
+    let concat = snippets
+      .map(this.trimCommonLeadingSpaces)
+      .join('\n\n')
       .replace(/^[ \t]*\n/, '') // Drop leading whitespace
       .replace(/[ \t]+(\n|$)/g, '\n') // Drop trailing whitespace (per line)
       .replace(/\n\n+/g, '\n\n') // More that 2 newlines => 2 newlines
       .replace(/\n*$/, '\n');  // Finish with exactly one newline
-
-    concat = this.trimCommonLeadingSpaces(concat);
 
     let output = `// GENERATED CONTENT - DO NOT EDIT
 // Content of this file was automatically extracted from the ${spec.name} spec.
@@ -121,10 +121,12 @@ exports.trimCommonLeadingSpaces = function(idl) {
   let tabConverted = idl.replace(/\t/g, '  ');
   let lines = idl.split('\n');
   let commonLeading = null;
+  const justWhitespace = /^ *$/;
   for (let line of lines) {
-    if (!line) continue;
-    let match = line.match(/^ */);
-    let leading = match && match[0] || '';
+    // Ignore empty or whitespace-only lines.
+    if (line.match(justWhitespace)) continue;
+    let match = line.match(/^( *)/);
+    let leading = match && match[1] || '';
     if (!leading) {
       return idl;
     } else if (!commonLeading) {
@@ -132,7 +134,13 @@ exports.trimCommonLeadingSpaces = function(idl) {
       continue;
     }
     // Shorter of the 2 is the new 'common'.
+    if (leading.length < commonLeading.length) {
+      console.log(line)
+    }
     commonLeading = commonLeading.substr(0, Math.min(leading.length, commonLeading.length));
   }
-  return lines.map(l => l.replace(new RegExp(`^${commonLeading}`, 'g'), '')).join('\n');
+  return lines.map(l => {
+    if (l.match(justWhitespace)) return '';
+    return l.replace(new RegExp(`^${commonLeading}`, 'g'), '');
+  }).join('\n');;
 }
