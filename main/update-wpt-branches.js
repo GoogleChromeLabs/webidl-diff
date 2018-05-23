@@ -1,23 +1,29 @@
+// Copyright 2017 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+'use strict';
+
 const path = require('path');
 const child = require('child_process');
 const flags = require('flags');
-const updateWPT = require(path.resolve(__dirname, 'update-wpt.js'));
 
 flags.defineString('spec', undefined, 'Single spec to update');
 flags.defineString('push', undefined, 'Whether to push the update commit');
+flags.defineString('dry_run', false, 'Whether to detect differences only');
 flags.parse();
 
 // Checkout the update branch
-exports.main = function() {
-  let wptDir = path.resolve(__dirname, '..', '..', '..', 'lukebjerring/web-platform-tests')
+exports.main = async function() {
+  let wptDir = path.resolve(__dirname, '..', '..', '..', 'lukebjerring', 'web-platform-tests')
   let checkoutAggregateBranch = 'git checkout idl-file-updates';
   child.execSync(
     checkoutAggregateBranch,
     {
       cwd: wptDir
     })
-  
-  function updateIDLFile(spec) {
+
+  async function updateIDLFile(spec) {
+    const updateWPT = path.resolve(__dirname, 'update-wpt')
     if (spec) {
       console.log(`Extracting ${spec} IDL...`);
     }
@@ -29,34 +35,43 @@ exports.main = function() {
       args.push(`--spec=${spec}`);
     }
     flags.parse(args);
-    updateWPT.main();
+    child.execSync(
+      `node bin/update-wpt ${args.join(' ')}` , {
+        cwd: __dirname
+      })
   }
-  
+
   // Update all the files
-  updateIDLFile(flags.get('spec'));
-  
+  await updateIDLFile(flags.get('spec'));
+
   function wptGitCmd(cmd) {
     let gitCmd = `/usr/bin/git ${cmd}`;
     console.log(gitCmd);
     return child.execSync(gitCmd, { cwd: wptDir }).toString();
   }
-  
-  let diffOutput = wptGitCmd('diff --name-only');
-  
+
+  wptGitCmd(' add interfaces/');
+  let diffOutput = wptGitCmd('diff --name-only HEAD');
+
   let changedSpecs = diffOutput
     .trim()
     .split('\n')
     .map(i => i.match(/interfaces\/(.*)\.idl/))
     .filter(i => !!i)
     .map(m => m[1]);
-  
+
   console.log(`${changedSpecs.length} specs changed.`);
-  
+
   wptGitCmd('reset --hard HEAD');
-  
+
   for (let spec of changedSpecs) {
     console.log(`\n\nUpdating ${spec}`);
+    if (flags.get('dry_run')) {
+      continue;
+    }
     wptGitCmd(`checkout idl-file-updates-${spec}`);
+    wptGitCmd(`pull`);
+    wptGitCmd(`merge -X theirs master`);
     updateIDLFile(spec);
     if (!wptGitCmd(`diff --name-only`)) {
       console.log('Nothing changed, skipping...');
@@ -65,10 +80,10 @@ exports.main = function() {
     wptGitCmd(`add interfaces/${spec}.idl`);
     wptGitCmd(`commit -a -m "Updated ${spec} IDL file"`);
     if (flags.get('push')) {
-      wptGitCmd(`git push -f`);
+      wptGitCmd(`push`);
     }
   }
-  
+
   console.log('\n\nThe following specs were updated:')
   changedSpecs.forEach(s => console.log(s));
 }
