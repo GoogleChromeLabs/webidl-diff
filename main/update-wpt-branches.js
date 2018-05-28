@@ -60,7 +60,8 @@ exports.main = async function() {
     .filter(i => !!i)
     .map(m => m[1]);
 
-  console.log(`${changedSpecs.length} specs changed.`);
+  console.log(`${changedSpecs.length} specs changed:`);
+  changedSpecs.forEach(s => console.log(s));
 
   wptGitCmd('reset --hard HEAD');
 
@@ -83,7 +84,4 @@ exports.main = async function() {
       wptGitCmd(`push`);
     }
   }
-
-  console.log('\n\nThe following specs were updated:')
-  changedSpecs.forEach(s => console.log(s));
 }
