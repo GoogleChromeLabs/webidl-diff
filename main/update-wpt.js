@@ -74,7 +74,7 @@ exports.main = async function() {
 
   let missing = []
   extractedSpecsByURL.forEach((snippets, specURL) => {
-    console.log(`IDC Spec ${specURL} : ${snippets.length} snippets`);
+    console.log(`IDL Spec ${specURL} : ${snippets.length} snippets`);
 
     let spec = specs.find(i => sameSpec(i, specURL));
     if (!spec) {

@@ -10,6 +10,7 @@ const flags = require('flags');
 flags.defineString('spec', undefined, 'Single spec to update');
 flags.defineString('push', undefined, 'Whether to push the update commit');
 flags.defineString('dry_run', false, 'Whether to detect differences only');
+flags.defineString('start', undefined, 'Spec to skip to');
 flags.parse();
 
 // Checkout the update branch
@@ -22,23 +23,25 @@ exports.main = async function() {
       cwd: wptDir
     })
 
+  console.log('Ensuring reffy-report files end with a newline...')
+  const reportsDir = path.resolve(__dirname, '..', '..', '..', 'tidoust', 'reffy-reports', 'whatwg', 'idl');
+  // Ensure newlines
+  child.execSync(
+    'for f in *.idl; do tail -c1 $f | read -r _ || echo >> $f; done',
+    {
+      cwd: reportsDir
+    })
+
   async function updateIDLFile(spec) {
-    const updateWPT = path.resolve(__dirname, 'update-wpt')
+    const singleFile = spec ? `${spec}.idl` : '';
+    const wpt = path.resolve(__dirname, '..', '..', '..', 'lukebjerring', 'web-platform-tests', 'interfaces');
     if (spec) {
       console.log(`Extracting ${spec} IDL...`);
     }
-    let args = [
-      `--out=${path.resolve(wptDir, 'interfaces')}`,
-      `--journal=${path.resolve(__dirname, '..', 'data/IDLFragmentExtractorRunner-WebSpec-journal.js')}`,
-    ];
-    if (spec) {
-      args.push(`--spec=${spec}`);
-    }
-    flags.parse(args);
     child.execSync(
-      `node bin/update-wpt ${args.join(' ')}` , {
-        cwd: __dirname
-      })
+      `${singleFile ? 'cp' : 'rsync -r'} ${reportsDir}/${singleFile} .`, {
+        cwd: wpt
+      });
   }
 
   // Update all the files
@@ -65,23 +68,30 @@ exports.main = async function() {
 
   wptGitCmd('reset --hard HEAD');
 
+  let skipTo = flags.get('start');
   for (let spec of changedSpecs) {
+    if (skipTo && skipTo !== spec) {
+      continue;
+    }
+    skipTo = null;
+
     console.log(`\n\nUpdating ${spec}`);
     if (flags.get('dry_run')) {
       continue;
     }
-    wptGitCmd(`checkout idl-file-updates-${spec}`);
-    wptGitCmd(`pull`);
-    wptGitCmd(`merge -X theirs master`);
+    wptGitCmd(`checkout idl-file-updates-${spec} || git checkout -b idl-file-updates-${spec}`);
+    wptGitCmd('rev-parse @{u} > /dev/null 2>&1 && git pull && git merge -X theirs master || echo "[New branch]"');
     updateIDLFile(spec);
-    if (!wptGitCmd(`diff --name-only`)) {
-      console.log('Nothing changed, skipping...');
+    wptGitCmd(`add interfaces/${spec}.idl`);
+    if (wptGitCmd(`diff --name-only HEAD`)) {
+      wptGitCmd(`commit -a -m "Updated ${spec} IDL file"`);
+    }
+    if (!wptGitCmd(`diff --name-only origin interfaces/${spec}.idl`)) {
+      console.log('${spec}.idl is unchanged vs origin, skipping...');
       continue;
     }
-    wptGitCmd(`add interfaces/${spec}.idl`);
-    wptGitCmd(`commit -a -m "Updated ${spec} IDL file"`);
     if (flags.get('push')) {
-      wptGitCmd(`push`);
+      wptGitCmd(`rev-parse @{u} > /dev/null 2>&1 && git push || git push --set-upstream origin idl-file-updates-${spec}`);
     }
   }
 }
