@@ -23,13 +23,20 @@ exports.main = async function() {
       cwd: wptDir
     })
 
-  console.log('Ensuring reffy-report files end with a newline...')
-  const reportsDir = path.resolve(__dirname, '..', '..', '..', 'tidoust', 'reffy-reports', 'whatwg', 'idl');
+  const reportsDir = path.resolve(__dirname, '..', '..', '..', 'tidoust', 'reffy-reports');
+  const idlDir = path.resolve(__dirname, '..', '..', '..', 'tidoust', 'reffy-reports', 'whatwg', 'idl');
+  console.log('Checking out reffy-report @ master...');
+  child.execSync('git reset --hard HEAD', { cwd: reportsDir });
+  child.execSync('git checkout master', { cwd: reportsDir });
+  child.execSync('git fetch', { cwd: reportsDir });
+  child.execSync('git pull', { cwd: reportsDir });
+
   // Ensure newlines
+  console.log('Ensuring reffy-report files end with a newline...');
   child.execSync(
     'for f in *.idl; do tail -c1 $f | read -r _ || echo >> $f; done',
     {
-      cwd: reportsDir
+      cwd: idlDir
     })
 
   async function updateIDLFile(spec) {
@@ -39,7 +46,7 @@ exports.main = async function() {
       console.log(`Extracting ${spec} IDL...`);
     }
     child.execSync(
-      `${singleFile ? 'cp' : 'rsync -r'} ${reportsDir}/${singleFile} .`, {
+      `${singleFile ? 'cp' : 'rsync -r'} ${idlDir}/${singleFile} .`, {
         cwd: wpt
       });
   }
@@ -47,9 +54,11 @@ exports.main = async function() {
   // Update all the files
   await updateIDLFile(flags.get('spec'));
 
-  function wptGitCmd(cmd) {
+  function wptGitCmd(cmd, silent) {
     let gitCmd = `/usr/bin/git ${cmd}`;
-    console.log(gitCmd);
+    if (!silent) {
+      console.log(gitCmd);
+    }
     return child.execSync(gitCmd, { cwd: wptDir }).toString();
   }
 
@@ -63,12 +72,27 @@ exports.main = async function() {
     .filter(i => !!i)
     .map(m => m[1]);
 
-  console.log(`${changedSpecs.length} specs changed:`);
+  console.log(`\n${changedSpecs.length} specs differ from master:`);
+  changedSpecs.forEach(s => console.log(s));
+
+  console.log('\nChecking differences with branches...');
+  changedSpecs = changedSpecs.filter(s => {
+    let diff = wptGitCmd(`diff --name-only origin/idl-file-updates-${s} interfaces/${s}.idl`, true);
+    if (!diff) {
+      console.log(`${s} is up to date with branch, skipping.`)
+    }
+    return diff;
+  });
+
+  console.log(`\n${changedSpecs.length} specs differ from their current branches:`);
   changedSpecs.forEach(s => console.log(s));
 
   wptGitCmd('reset --hard HEAD');
 
   let skipTo = flags.get('start');
+  if (skipTo) {
+    console.log(`Skipping to ${skipTo}...`);
+  }
   for (let spec of changedSpecs) {
     if (skipTo && skipTo !== spec) {
       continue;
@@ -77,6 +101,7 @@ exports.main = async function() {
 
     console.log(`\n\nUpdating ${spec}`);
     if (flags.get('dry_run')) {
+      console.log('Dry run. Skipping.');
       continue;
     }
     wptGitCmd(`checkout idl-file-updates-${spec} || git checkout -b idl-file-updates-${spec}`);
