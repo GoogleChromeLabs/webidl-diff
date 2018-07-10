@@ -51,6 +51,13 @@ exports.main = async function() {
       });
   }
 
+  const allSpecs = child
+    .execSync('ls | grep .idl$', { cwd: idlDir })
+    .toString()
+    .trim()
+    .split('\n')
+    .map(i => i.replace(/\.idl$/, ''));
+
   // Update all the files
   await updateIDLFile(flags.get('spec'));
 
@@ -68,21 +75,31 @@ exports.main = async function() {
   let changedSpecs = diffOutput
     .trim()
     .split('\n')
-    .map(i => i.match(/interfaces\/(.*)\.idl/))
+    .map(i => i.match(/^\/interfaces\/(.*)\.idl/))
     .filter(i => !!i)
     .map(m => m[1]);
 
   console.log(`\n${changedSpecs.length} specs differ from master:`);
-  changedSpecs.forEach(s => console.log(s));
+  changedSpecs.forEach(s => {
+    console.log(s);
+    wptGitCmd('diff --stat HEAD');
+  });
 
   console.log('\nChecking differences with branches...');
-  changedSpecs = changedSpecs.filter(s => {
-    let diff = wptGitCmd(`diff --name-only origin/idl-file-updates-${s} interfaces/${s}.idl`, true);
-    if (!diff) {
-      console.log(`${s} is up to date with branch, skipping.`)
-    }
-    return diff;
-  });
+  changedSpecs = allSpecs
+    .filter(s => !flags.get('spec') || s === flags.get('spec'))
+    .filter(s => {
+      try {
+        let diff = wptGitCmd(`diff --name-only origin/idl-file-updates-${s} interfaces/${s}.idl`, true);
+        if (!diff) {
+          console.log(`${s} is up to date with branch, skipping.`)
+        }
+        return diff;
+      } catch (e) {
+        console.log(`Failed to diff ${s}`);
+      }
+      return false;
+    });
 
   console.log(`\n${changedSpecs.length} specs differ from their current branches:`);
   changedSpecs.forEach(s => console.log(s));
@@ -118,5 +135,39 @@ exports.main = async function() {
     if (flags.get('push')) {
       wptGitCmd(`rev-parse @{u} > /dev/null 2>&1 && git push || git push --set-upstream origin idl-file-updates-${spec}`);
     }
+  }
+
+  // Just check for local branches that differ; the next check checks against
+  // remote branches.
+  wptGitCmd(' checkout master');
+  console.log('\nChecking which branches differ from master...');
+  changedSpecs = allSpecs.filter(s => {
+    try {
+      return wptGitCmd(`diff --name-only idl-file-updates-${s} interfaces/${s}.idl`, true);
+    } catch (e) {
+      console.log(`Failed to diff ${s}`);
+    }
+    return false;
+  });
+  console.log(`\n${changedSpecs.length} branches differ from master:`);
+  for (const s of changedSpecs) {
+    console.log(s);
+    wptGitCmd(`diff --stat idl-file-updates-${s} interfaces/${s}.idl`, true);
+  }
+
+  wptGitCmd(' checkout master');
+  console.log('\nChecking which branches differ from their remote...');
+  changedSpecs = allSpecs.filter(s => {
+    try {
+      return wptGitCmd(`diff --name-only idl-file-updates-${s}..origin/idl-file-updates-${s} interfaces/${s}.idl`, true);
+    } catch (e) {
+      console.log(`Failed to diff ${s}`);
+    }
+    return false;
+  });
+  console.log(`\n${changedSpecs.length} branches differ from their remote:`);
+  for (const s of changedSpecs) {
+    console.log(s);
+    wptGitCmd(`diff --stat idl-file-updates-${s}..origin/idl-file-updates-${s} interfaces/${s}.idl`, true);
   }
 }
